@@ -23,6 +23,7 @@
 		this._composerView = null;
 	};
 
+
 	TextFormatCardView.prototype._buildContent = function()
 	{
 		return FormatCardView.prototype._buildContent.apply(this)

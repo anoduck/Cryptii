@@ -19,8 +19,8 @@
 		// call parent init
 		TextFormat.prototype._init.apply(this, arguments);
 
-		// attributes
-		this._options['separator'] = new Cryptii.TextOption('Separator', ' ');
+		// options
+		this.registerOption('separator', new Cryptii.Option('Separator', ' '));
 	};
 
 

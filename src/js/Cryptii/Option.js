@@ -15,10 +15,15 @@ var Cryptii = Cryptii || {};
 	Option.prototype._init = function(label, value)
 	{
 		// attributes
+		this._optionView = null;
+		this._format = null;
 		this._label = label;
 		this._value = value;
+	};
 
-		this._optionView = null;
+	Option.prototype._createOptionView = function()
+	{
+		return new Cryptii.TextOptionView(this);
 	};
 
 
@@ -51,7 +56,31 @@ var Cryptii = Cryptii || {};
 
 	Option.prototype.getOptionView = function()
 	{
+		if (this._optionView === null)
+		{
+			this._optionView = this._createOptionView();
+		}
+
 		return this._optionView;
+	};
+
+	Option.prototype.setFormat = function(format)
+	{
+		this._format = format;
+	};
+
+	//
+	// event handling
+	//
+
+	Option.prototype.onOptionViewChange = function(optionView, value)
+	{
+		this._value = value;
+
+		if (this._format !== null)
+		{
+			this._format.onOptionChange(this, value);
+		}
 	};
 
 })(Cryptii, jQuery);

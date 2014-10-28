@@ -44,6 +44,9 @@ var Cryptii = Cryptii || {};
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
+
+		// focus deck
+		this._deckView.focus();
 	};
 
 })(Cryptii, jQuery);
@@ -91,17 +94,22 @@ var Cryptii = Cryptii || {};
 			format.setConversation(this);
 
 			// convert
-			format.convert(this, this._blocks, this._calculateDifference(this._blocks));
+			format.convert(this._blocks, this.calculateDifference());
 
 			// add card of format to the deck
 			this._deckView.addCardView(format.getCardView());
 		}
 	};
 
+	Conversation.prototype.getBlocks = function()
+	{
+		return this._blocks;
+	}
+
 	Conversation.prototype.setBlocks = function(blocks, triggeredByFormat)
 	{
 		// determin difference range
-		var difference = this._calculateDifference(blocks, this._blocks);
+		var difference = this.calculateDifference(blocks, this._blocks);
 
 		// is there a difference
 		if (difference !== null)
@@ -115,7 +123,7 @@ var Cryptii = Cryptii || {};
 				// do not call convert on the format which triggered the change
 				if (this._formats[i] !== triggeredByFormat)
 				{
-					this._formats[i].convert(this, this._blocks, difference);
+					this._formats[i].convert(this._blocks, difference);
 				}
 			}
 
@@ -123,12 +131,17 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype._calculateDifference = function(blocks, previousBlocks)
+	Conversation.prototype.calculateDifference = function(blocks, previousBlocks)
 	{
 		// discussed here:
 		// http://stackoverflow.com/questions/26208569
 
-		// default state: everything has changed
+		// calling this method without any parameters
+		//  returns a difference where every block changed
+		if (blocks === undefined) {
+			blocks = this._blocks;
+		}
+
 		var length = blocks.length;
 		var start = 0;
 		var end = 0;
@@ -266,20 +279,28 @@ var Cryptii = Cryptii || {};
 		this._options = {};
 	};
 
+	Format.prototype._createCardView = function()
+	{
+		// override this method
+		return null;
+	};
+	
+
 	Format.prototype.getTitle = function()
 	{
+		// override this method
 		return 'Untitled';
 	};
 
 	Format.prototype.interpret = function(content)
 	{
-		// not implemented
+		// override this method
 		return [];
 	};
 
-	Format.prototype.convert = function(conversion)
+	Format.prototype.convert = function(blocks, difference)
 	{
-		// not implemented
+		// override this method
 	};
 
 	//
@@ -305,6 +326,14 @@ var Cryptii = Cryptii || {};
 
 	};
 
+	Format.prototype.onOptionChange = function(option, value)
+	{
+		// convert every block
+		this.convert(
+			this._conversion.getBlocks(),
+			this._conversion.calculateDifference());
+	};
+
 	Format.prototype.onCardViewClose = function()
 	{
 		// forward to conversation
@@ -322,6 +351,11 @@ var Cryptii = Cryptii || {};
 
 	Format.prototype.getCardView = function()
 	{
+		if (this._cardView === null)
+		{
+			this._cardView = this._createCardView();
+		}
+
 		return this._cardView;
 	};
 
@@ -340,20 +374,15 @@ var Cryptii = Cryptii || {};
 		return this._options[name].getValue();
 	};
 
-	Format.prototype.hasOptions = function()
-	{
-		var count = 0;
-		for (name in this._options)
-		{
-			count ++;
-		}
-
-		return count !== 0;
-	};
-
 	Format.prototype.getOptions = function()
 	{
 		return this._options;
+	};
+
+	Format.prototype.registerOption = function(name, option)
+	{
+		this._options[name] = option;
+		option.setFormat(this);
 	};
 
 })(Cryptii, jQuery);
@@ -377,10 +406,15 @@ var Cryptii = Cryptii || {};
 	Option.prototype._init = function(label, value)
 	{
 		// attributes
+		this._optionView = null;
+		this._format = null;
 		this._label = label;
 		this._value = value;
+	};
 
-		this._optionView = null;
+	Option.prototype._createOptionView = function()
+	{
+		return new Cryptii.TextOptionView(this);
 	};
 
 
@@ -413,7 +447,31 @@ var Cryptii = Cryptii || {};
 
 	Option.prototype.getOptionView = function()
 	{
+		if (this._optionView === null)
+		{
+			this._optionView = this._createOptionView();
+		}
+
 		return this._optionView;
+	};
+
+	Option.prototype.setFormat = function(format)
+	{
+		this._format = format;
+	};
+
+	//
+	// event handling
+	//
+
+	Option.prototype.onOptionViewChange = function(optionView, value)
+	{
+		this._value = value;
+
+		if (this._format !== null)
+		{
+			this._format.onOptionChange(this, value);
+		}
 	};
 
 })(Cryptii, jQuery);
@@ -544,8 +602,13 @@ var Cryptii = Cryptii || {};
 		Format.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._cardView = new Cryptii.TextFormatCardView(this);
 		this._blockMeta = [];
+	};
+
+	TextFormat.prototype._createCardView = function()
+	{
+		// choose card view for this format
+		return new Cryptii.TextFormatCardView(this);
 	};
 
 
@@ -675,7 +738,7 @@ var Cryptii = Cryptii || {};
 		return blocks;
 	};
 
-	TextFormat.prototype.convert = function(conversion, blocks, difference)
+	TextFormat.prototype.convert = function(blocks, difference)
 	{
 		var separator = this._getSeparator();
 		var separatorLength = this._getSeparatorLength();
@@ -808,8 +871,8 @@ var Cryptii = Cryptii || {};
 		// call parent init
 		TextFormat.prototype._init.apply(this, arguments);
 
-		// attributes
-		this._options['separator'] = new Cryptii.TextOption('Separator', ' ');
+		// options
+		this.registerOption('separator', new Cryptii.Option('Separator', ' '));
 	};
 
 
@@ -969,50 +1032,6 @@ var Cryptii = Cryptii || {};
 ;
 
 
-var Cryptii = Cryptii || {};
-
-(function(Cryptii, $) {
-	'use strict';
-
-	// define class
-	var Option = Cryptii.Option;
-	var TextOption = (function() {
-		this._init.apply(this, arguments);
-	});
-
-	TextOption.prototype = Object.create(Option.prototype);
-	Cryptii.TextOption = TextOption;
-	
-
-	TextOption.prototype._init = function(label, value)
-	{
-		// call parent init
-		Option.prototype._init.apply(this, arguments);
-
-		// attributes
-		this._optionView = new Cryptii.TextOptionView(this);
-	};
-	
-
-	TextOption.prototype._buildContent = function()
-	{
-		return CardView.prototype._buildContent.apply(this)
-			.append(
-				$('<input>')
-					.attr('type', 'text')
-			);
-	};
-
-	TextOption.prototype.validateValue = function(value)
-	{
-		return true;
-	};
-
-})(Cryptii, jQuery);
-
-;
-
-
 // requires Cryptii.View
 
 (function(Cryptii, $) {
@@ -1111,6 +1130,16 @@ var Cryptii = Cryptii || {};
 		
 	};
 
+	CardView.prototype.canFocus = function()
+	{
+		return false;
+	};
+
+	CardView.prototype.focus = function()
+	{
+
+	};
+
 	CardView.prototype.tick = function()
 	{
 		// gets called regularly by a timer inside the deck
@@ -1191,7 +1220,7 @@ var Cryptii = Cryptii || {};
 
 		// events
 		$element.on('click', $.proxy(function() {
-			this._$textarea.focus();
+			this.focus();
 		}, this));
 
 		return $element;
@@ -1297,6 +1326,12 @@ var Cryptii = Cryptii || {};
 		}
 
 		return null;
+	};
+
+	ComposerView.prototype.focus = function()
+	{
+		this.getElement();
+		this._$textarea.focus();
 	};
 
 })(Cryptii, jQuery);
@@ -1470,6 +1505,25 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	DeckView.prototype.focus = function()
+	{
+			// focus first card view that can be focused
+		if (this._cardViews.length > 0)
+		{
+			var i = 0;
+			while (
+				i < this._cardViews.length
+				&& !this._cardViews[i].canFocus()
+			) {
+				i ++;
+			}
+
+			if (this._cardViews[i].canFocus()) {
+				this._cardViews[i].focus();
+			}
+		}
+	};
+
 })(Cryptii, jQuery);
 
 ;
@@ -1497,7 +1551,9 @@ var Cryptii = Cryptii || {};
 
 		// attributes
 		this._option = option;
+		this._lastKnownValue = option.getValue();
 	};
+
 
 	OptionView.prototype._build = function()
 	{
@@ -1527,6 +1583,44 @@ var Cryptii = Cryptii || {};
 			.addClass('field');
 	};
 
+	OptionView.prototype.getValue = function()
+	{
+		// override this method
+		return null;
+	};
+
+	OptionView.prototype._applyValue = function(value)
+	{
+		// override this method
+	};
+
+	OptionView.prototype.setValue = function(value)
+	{
+		this._lastKnownValue = value;
+		this._applyValue(value);
+	};
+
+	OptionView.prototype.tick = function()
+	{
+		this._trackChanges();
+	};
+
+	OptionView.prototype._trackChanges = function()
+	{
+		var value = this.getValue();
+
+		// check if the value has been changed
+		if (value != this._lastKnownValue)
+		{
+			this._lastKnownValue = value;
+
+			if (this._option.isValueValid(value))
+			{
+				this._option.onOptionViewChange(this, value);
+			}
+		}
+	};
+
 })(Cryptii, jQuery);
 
 ;
@@ -1554,7 +1648,17 @@ var Cryptii = Cryptii || {};
 		
 		// attributes
 		this._format = format;
+
+		// collect option views
+		this._optionViews = [];
+		var options = format.getOptions();
+		for (var name in options)
+		{
+			var optionView = options[name].getOptionView();
+			this._optionViews.push(optionView);
+		}
 	};
+
 
 	FormatCardView.prototype._buildHeader = function()
 	{
@@ -1570,21 +1674,19 @@ var Cryptii = Cryptii || {};
 	{
 		var $content = CardView.prototype._buildContent.apply(this);
 
-		// append options container
-		if (this._format.hasOptions())
+		// handle format options
+		if (this._optionViews.length > 0)
 		{
 			var $options =
 				$('<div></div>')
 					.addClass('options');
 
-			// append format options
-			var options = this._format.getOptions();
-			for (var name in options)
-			{
-				var optionView = options[name].getOptionView();
-				$options.append(optionView.getElement());
+			// append option views to container
+			for (var i = 0; i < this._optionViews.length; i ++) {
+				$options.append(this._optionViews[i].getElement());
 			}
 
+			// append options
 			$content.append($options);
 		}
 
@@ -1598,7 +1700,11 @@ var Cryptii = Cryptii || {};
 
 	FormatCardView.prototype.tick = function()
 	{
-
+		// forward tick to embedded option views
+		for (var i = 0; i < this._optionViews.length; i ++)
+		{
+			this._optionViews[i].tick();
+		}
 	};
 
 	//
@@ -1631,12 +1737,41 @@ var Cryptii = Cryptii || {};
 	Cryptii.TextOptionView = TextOptionView;
 
 
+	TextOptionView.prototype._init = function(option)
+	{
+		// call parent init
+		OptionView.prototype._init.apply(this, arguments);
+
+		// attributes
+		this._$input = null;
+	};
+
+
 	TextOptionView.prototype._buildField = function()
 	{
-		return OptionView.prototype._buildField.apply(this)
-			.append(
-				$('<input>')
-			);
+		// call parent
+		var $element = OptionView.prototype._buildField.apply(this)
+		
+		// input element
+		this._$input =
+			$('<input>')
+				.keyup(this._trackChanges.bind(this));
+
+		this._applyValue(this._lastKnownValue);
+
+		$element.append(this._$input);
+
+		return $element;
+	};
+
+	TextOptionView.prototype.getValue = function()
+	{
+		return this._$input.val();
+	};
+
+	TextOptionView.prototype._applyValue = function(value)
+	{
+		this._$input.val(value);
 	};
 
 })(Cryptii, jQuery);
@@ -1668,6 +1803,7 @@ var Cryptii = Cryptii || {};
 		this._composerView = null;
 	};
 
+
 	TextFormatCardView.prototype._buildContent = function()
 	{
 		return FormatCardView.prototype._buildContent.apply(this)
@@ -1681,6 +1817,17 @@ var Cryptii = Cryptii || {};
 
 		// layout composer view
 		this.getComposerView().layout();
+	};
+
+	TextFormatCardView.prototype.canFocus = function()
+	{
+		return true;
+	};
+
+	TextFormatCardView.prototype.focus = function()
+	{
+		// focus composer view
+		this.getComposerView().focus();
 	};
 
 	TextFormatCardView.prototype.tick = function()

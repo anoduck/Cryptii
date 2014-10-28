@@ -20,8 +20,13 @@
 		Format.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._cardView = new Cryptii.TextFormatCardView(this);
 		this._blockMeta = [];
+	};
+
+	TextFormat.prototype._createCardView = function()
+	{
+		// choose card view for this format
+		return new Cryptii.TextFormatCardView(this);
 	};
 
 
@@ -151,7 +156,7 @@
 		return blocks;
 	};
 
-	TextFormat.prototype.convert = function(conversion, blocks, difference)
+	TextFormat.prototype.convert = function(blocks, difference)
 	{
 		var separator = this._getSeparator();
 		var separatorLength = this._getSeparatorLength();

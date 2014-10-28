@@ -21,7 +21,9 @@
 
 		// attributes
 		this._option = option;
+		this._lastKnownValue = option.getValue();
 	};
+
 
 	OptionView.prototype._build = function()
 	{
@@ -49,6 +51,44 @@
 	{
 		return $('<div></div>')
 			.addClass('field');
+	};
+
+	OptionView.prototype.getValue = function()
+	{
+		// override this method
+		return null;
+	};
+
+	OptionView.prototype._applyValue = function(value)
+	{
+		// override this method
+	};
+
+	OptionView.prototype.setValue = function(value)
+	{
+		this._lastKnownValue = value;
+		this._applyValue(value);
+	};
+
+	OptionView.prototype.tick = function()
+	{
+		this._trackChanges();
+	};
+
+	OptionView.prototype._trackChanges = function()
+	{
+		var value = this.getValue();
+
+		// check if the value has been changed
+		if (value != this._lastKnownValue)
+		{
+			this._lastKnownValue = value;
+
+			if (this._option.isValueValid(value))
+			{
+				this._option.onOptionViewChange(this, value);
+			}
+		}
 	};
 
 })(Cryptii, jQuery);

@@ -22,20 +22,28 @@ var Cryptii = Cryptii || {};
 		this._options = {};
 	};
 
+	Format.prototype._createCardView = function()
+	{
+		// override this method
+		return null;
+	};
+	
+
 	Format.prototype.getTitle = function()
 	{
+		// override this method
 		return 'Untitled';
 	};
 
 	Format.prototype.interpret = function(content)
 	{
-		// not implemented
+		// override this method
 		return [];
 	};
 
-	Format.prototype.convert = function(conversion)
+	Format.prototype.convert = function(blocks, difference)
 	{
-		// not implemented
+		// override this method
 	};
 
 	//
@@ -61,6 +69,14 @@ var Cryptii = Cryptii || {};
 
 	};
 
+	Format.prototype.onOptionChange = function(option, value)
+	{
+		// convert every block
+		this.convert(
+			this._conversion.getBlocks(),
+			this._conversion.calculateDifference());
+	};
+
 	Format.prototype.onCardViewClose = function()
 	{
 		// forward to conversation
@@ -78,6 +94,11 @@ var Cryptii = Cryptii || {};
 
 	Format.prototype.getCardView = function()
 	{
+		if (this._cardView === null)
+		{
+			this._cardView = this._createCardView();
+		}
+
 		return this._cardView;
 	};
 
@@ -96,20 +117,15 @@ var Cryptii = Cryptii || {};
 		return this._options[name].getValue();
 	};
 
-	Format.prototype.hasOptions = function()
-	{
-		var count = 0;
-		for (name in this._options)
-		{
-			count ++;
-		}
-
-		return count !== 0;
-	};
-
 	Format.prototype.getOptions = function()
 	{
 		return this._options;
+	};
+
+	Format.prototype.registerOption = function(name, option)
+	{
+		this._options[name] = option;
+		option.setFormat(this);
 	};
 
 })(Cryptii, jQuery);
