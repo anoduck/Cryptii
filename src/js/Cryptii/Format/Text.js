@@ -1,0 +1,262 @@
+
+// requires Cryptii.Format
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var Format = Cryptii.Format;
+	var TextFormat = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	TextFormat.prototype = Object.create(Format.prototype);
+	Cryptii.TextFormat = TextFormat;
+
+
+	TextFormat.prototype._init = function(options)
+	{
+		// call parent init
+		Format.prototype._init.apply(this, arguments);
+
+		// attributes
+		this._cardView = new Cryptii.TextFormatCardView(this);
+		this._blockMeta = [];
+	};
+
+
+	TextFormat.prototype.getTitle = function()
+	{
+		return 'Text';
+	};
+
+	TextFormat.prototype._getSeparator = function()
+	{
+		return null;
+	};
+
+	TextFormat.prototype._getSeparatorLength = function()
+	{
+		return (this._getSeparator() !== null ? this._getSeparator().length : 0);
+	};
+
+	TextFormat.prototype.createBlockElement = function(decimal, contentBlock)
+	{
+		return $(decimal !== null ? '<b></b>' : '<i></i>').text(contentBlock);
+	};
+
+	TextFormat.prototype.createSeparatorElement = function()
+	{
+		var separator = this._getSeparator();
+
+		if (separator === null)
+		{
+			return null;
+		}
+
+		return $('<u>' + separator + '</u>');
+	};
+
+	TextFormat.prototype.interpretBlock = function(contentBlock)
+	{
+		return contentBlock.charCodeAt(0);
+	};
+
+	TextFormat.prototype.convertBlock = function(decimal)
+	{
+		return String.fromCharCode(decimal);
+	};
+
+	TextFormat.prototype.blockRangeByContentRange = function(contentRange)
+	{
+		var separatorLength = this._getSeparatorLength();
+
+		var index = 0;
+		var contentIndex = 0;
+		var start = null;
+
+		while (
+			index < this._blockMeta.length
+			&& contentIndex < contentRange.getEnd()
+		) {
+			index += 1;
+			contentIndex += this._blockMeta[index].content.length + separatorLength;
+
+			if (
+				start === null
+				&& contentIndex > contentRange.getStart()
+			) {
+				start = index;
+			}
+		}
+
+		return new Cryptii.Range(start, index);
+	};
+
+	TextFormat.prototype.contentRangeByBlockRange = function(blockRange)
+	{
+		var separatorLength = this._getSeparatorLength();
+
+		var contentIndex = 0;
+		var start = null;
+
+		for (var index = 0; index < blockRange.getEnd(); index ++) {
+			contentIndex += this._blockMeta[index].content.length + separatorLength;
+
+			if (index == blockRange.getStart())
+			{
+				start = contentIndex;
+			}
+		}
+
+		return new Cryptii.Range(start, contentIndex);
+	};
+
+	TextFormat.prototype.interpret = function(content)
+	{
+		var separator = this._getSeparator();
+
+		var $highlighter = this.getHighlighterElement();
+
+		// clear highlighter
+		$highlighter.empty();
+
+		var blockMeta = [];
+		var blocks = [];
+
+		// get content blocks by separator
+		var contentBlocks = (separator === null ? content : content.split(separator));
+
+		for (var i = 0; i < contentBlocks.length; i ++)
+		{
+			var contentBlock = contentBlocks[i];
+			var decimal = this.interpretBlock(contentBlock);
+
+			// create highlighter elements
+			var $block = this.createBlockElement(decimal, contentBlock);
+			var $separator = this.createSeparatorElement();
+			$highlighter.append($block, $separator);
+
+			// store data
+			blocks.push(decimal);
+			blockMeta.push({
+				content: '' + contentBlock,
+				element: $block,
+				separatorElement: $separator
+			});
+		}
+
+		this._blockMeta = blockMeta;
+
+		return blocks;
+	};
+
+	TextFormat.prototype.convert = function(conversion, blocks, difference)
+	{
+		var separator = this._getSeparator();
+		var separatorLength = this._getSeparatorLength();
+
+		var composerView = this.getComposerView();
+		var $highlighter = this.getHighlighterElement();
+
+		// determin unchanged content parts
+		var lastContent = composerView.getContent();
+		var leftUnchangedContent = lastContent;
+		var rightUnchangedContent = lastContent;
+
+		// left unchanged content part
+		if (difference.getStartOffset() != this._blockMeta.length)
+		{
+			var contentStartLength = 0;
+			for (var i = 0; i < difference.getStartOffset(); i ++) {
+				contentStartLength += this._blockMeta[i].content.length + separatorLength;
+			}
+
+			leftUnchangedContent = lastContent.substr(0, contentStartLength);
+		}
+
+		// right unchanged content part
+		if (difference.getEndOffset() != this._blockMeta.length)
+		{
+			var contentEndIndex = lastContent.length;
+			for (var i = 0; i < difference.getEndOffset(); i ++) {
+				contentEndIndex -= this._blockMeta[this._blockMeta.length - 1 - i].content.length + separatorLength;
+			}
+
+			rightUnchangedContent = lastContent.substr(contentEndIndex);
+		}
+
+		// compose content and update highlighting elements
+		var content = leftUnchangedContent;
+
+		// remove blocks in changing range
+		for (var i = this._blockMeta.length - difference.getEndOffset() - 1; i >= difference.getStartOffset(); i --)
+		{
+			// remove highlighter elements from dom
+			this._blockMeta[i].element.remove();
+
+			if (this._blockMeta[i].separatorElement !== null) {
+				this._blockMeta[i].separatorElement.remove();
+			}
+		
+			this._blockMeta.splice(i, 1);
+		}
+
+		// collect new elements and add up content
+		var elements = [];
+		var replacementBlocks = difference.getBlocks();
+
+		for (var i = 0; i < replacementBlocks.length; i ++)
+		{
+			var index = difference.getStartOffset() + i;
+			var decimal = replacementBlocks[i];
+			var contentBlock = this.convertBlock(decimal);
+
+			// create highlighter elements
+			var $block = this.createBlockElement(decimal, contentBlock);
+			var $separator = this.createSeparatorElement();
+
+			// add content block
+			content += contentBlock;
+			elements.push($block[0]);
+
+			// add separator
+			if (separator !== null)
+			{
+				content += separator;
+				elements.push($separator[0]);
+			}
+
+			// store data
+			this._blockMeta.splice(index, 0, {
+				content: '' + contentBlock,
+				element: $block,
+				separatorElement: $separator
+			});
+		}
+
+		// insert elements
+		if (difference.getStartOffset() > 0)
+		{
+			// append after element
+			var blockBefore = this._blockMeta[difference.getStartOffset() - 1];
+			var $before = (blockBefore.separatorElement !== null ? blockBefore.separatorElement : blockBefore.element);
+			$before.after(elements)
+		}
+		else
+		{
+			// prepent to parent
+			$highlighter.prepend(elements);
+		}
+
+		// add right unchanged content part
+		content += rightUnchangedContent;
+
+		// force repaint
+		composerView.forceRepaint();
+
+		// update content
+		composerView.setContent(content);
+	};
+
+})(Cryptii, jQuery);
