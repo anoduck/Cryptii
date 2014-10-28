@@ -38,6 +38,17 @@
 		this.getComposerView().layout();
 	};
 
+	TextFormatCardView.prototype.canFocus = function()
+	{
+		return true;
+	};
+
+	TextFormatCardView.prototype.focus = function()
+	{
+		// focus composer view
+		this.getComposerView().focus();
+	};
+
 	TextFormatCardView.prototype.tick = function()
 	{
 		// call parent

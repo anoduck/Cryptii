@@ -57,7 +57,7 @@
 
 		// events
 		$element.on('click', $.proxy(function() {
-			this._$textarea.focus();
+			this.focus();
 		}, this));
 
 		return $element;
@@ -163,6 +163,12 @@
 		}
 
 		return null;
+	};
+
+	ComposerView.prototype.focus = function()
+	{
+		this.getElement();
+		this._$textarea.focus();
 	};
 
 })(Cryptii, jQuery);

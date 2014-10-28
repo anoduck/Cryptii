@@ -32,6 +32,9 @@ var Cryptii = Cryptii || {};
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
+
+		// focus deck
+		this._deckView.focus();
 	};
 
 })(Cryptii, jQuery);

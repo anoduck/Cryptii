@@ -165,4 +165,23 @@
 		}
 	};
 
+	DeckView.prototype.focus = function()
+	{
+			// focus first card view that can be focused
+		if (this._cardViews.length > 0)
+		{
+			var i = 0;
+			while (
+				i < this._cardViews.length
+				&& !this._cardViews[i].canFocus()
+			) {
+				i ++;
+			}
+
+			if (this._cardViews[i].canFocus()) {
+				this._cardViews[i].focus();
+			}
+		}
+	};
+
 })(Cryptii, jQuery);

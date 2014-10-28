@@ -97,6 +97,16 @@
 		
 	};
 
+	CardView.prototype.canFocus = function()
+	{
+		return false;
+	};
+
+	CardView.prototype.focus = function()
+	{
+
+	};
+
 	CardView.prototype.tick = function()
 	{
 		// gets called regularly by a timer inside the deck
