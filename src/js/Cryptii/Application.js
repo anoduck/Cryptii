@@ -17,6 +17,15 @@ var Cryptii = Cryptii || {};
 		this._deckView = new Cryptii.DeckView();
 		this._conversation = new Cryptii.Conversation(this._deckView);
 
+		// register formats
+		this._conversation.registerFormat([
+			Cryptii.TextFormat,
+			Cryptii.DecimalFormat,
+			Cryptii.BinaryFormat,
+			Cryptii.HexadecimalFormat,
+			Cryptii.OctalFormat
+		]);
+
 		// default blocks
 		this._conversation.setBlocks([
 			84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114,
@@ -28,12 +37,12 @@ var Cryptii = Cryptii || {};
 		// add example cards
 		this._conversation.addFormat(new Cryptii.TextFormat());
 		this._conversation.addFormat(new Cryptii.DecimalFormat());
-		this._conversation.addFormat(new Cryptii.DecimalFormat());
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
 
-		// focus deck
+		// finalize initialization
+		this._conversation.updateLocation();
 		this._deckView.focus();
 	};
 

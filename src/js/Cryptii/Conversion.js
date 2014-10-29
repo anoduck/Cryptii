@@ -17,10 +17,13 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._deckView = deckView;
 
+		this._registeredFormat = [];
 		this._formats = [];
-		this._blocks = [];
 
+		this._blocks = [];
 		this._difference = [];
+
+		this._location = new Cryptii.Location();
 	};
 
 	Conversation.prototype.addFormat = function(format)
@@ -43,6 +46,25 @@ var Cryptii = Cryptii || {};
 
 			// add card of format to the deck
 			this._deckView.addCardView(format.getCardView());
+		}
+	};
+
+	Conversation.prototype.registerFormat = function(Format)
+	{
+		if (Object.prototype.toString.call(Format) !== "[object Array]")
+		{
+			// retrieve the slug by a format instance
+			var slug = new Format().getSlug();
+			this._registeredFormat[slug] = Format;
+		}
+		else
+		{
+			// register each format
+			var Formats = Format;
+			for (var i = 0; i < Formats.length; i ++)
+			{
+				this.registerFormat(Formats[i]);
+			}
 		}
 	};
 
@@ -136,6 +158,37 @@ var Cryptii = Cryptii || {};
 		return new Cryptii.Difference(start, end, rangeBlocks);
 	};
 
+	Conversation.prototype.updateLocation = function()
+	{
+		// compose url
+		var url = '/';
+
+		for (var i = 0; i < this._formats.length; i ++)
+		{
+			var format = this._formats[i];
+
+			// add format name
+			url += (i > 0 ? '+' : '') + format.getSlug();
+
+			// add options
+			var options = format.getOptions();
+			for (var name in options)
+			{
+				var option = options[name];
+
+				// only add non-default options
+				//  to keep the url short
+				if (!option.isDefaultValue())
+				{
+					url += '~' + name + '=' + option.getEscapedValue();
+				}
+			}
+		}
+
+		// change location
+		this._location.setUrl(url);
+	};
+
 	//
 	// event handling
 	//
@@ -143,6 +196,11 @@ var Cryptii = Cryptii || {};
 	Conversation.prototype.onFormatContentChange = function(format, blocks)
 	{
 		this.setBlocks(blocks, format);
+	};
+
+	Conversation.prototype.onFormatOptionChange = function(format)
+	{
+		this.updateLocation();
 	};
 
 	Conversation.prototype.onFormatRemove = function(format)

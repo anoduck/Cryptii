@@ -12,13 +12,14 @@ var Cryptii = Cryptii || {};
 	Cryptii.Option = Option;
 	
 
-	Option.prototype._init = function(label, value)
+	Option.prototype._init = function(label, defaultValue)
 	{
 		// attributes
 		this._optionView = null;
 		this._format = null;
 		this._label = label;
-		this._value = value;
+		this._defaultValue = defaultValue;
+		this._value = defaultValue;
 	};
 
 	Option.prototype._createOptionView = function()
@@ -41,6 +42,17 @@ var Cryptii = Cryptii || {};
 	Option.prototype.getValue = function()
 	{
 		return this._value;
+	};
+
+	Option.prototype.getEscapedValue = function()
+	{
+		// escapes every special character except !*()'
+		return encodeURIComponent(this.getValue()).replace(/~/g, '%7e');
+	};
+
+	Option.prototype.isDefaultValue = function()
+	{
+		return (this._value == this._defaultValue);
 	};
 
 	Option.prototype.setValue = function(value)

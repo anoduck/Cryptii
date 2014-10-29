@@ -29,6 +29,15 @@ var Cryptii = Cryptii || {};
 		this._deckView = new Cryptii.DeckView();
 		this._conversation = new Cryptii.Conversation(this._deckView);
 
+		// register formats
+		this._conversation.registerFormat([
+			Cryptii.TextFormat,
+			Cryptii.DecimalFormat,
+			Cryptii.BinaryFormat,
+			Cryptii.HexadecimalFormat,
+			Cryptii.OctalFormat
+		]);
+
 		// default blocks
 		this._conversation.setBlocks([
 			84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114,
@@ -40,12 +49,12 @@ var Cryptii = Cryptii || {};
 		// add example cards
 		this._conversation.addFormat(new Cryptii.TextFormat());
 		this._conversation.addFormat(new Cryptii.DecimalFormat());
-		this._conversation.addFormat(new Cryptii.DecimalFormat());
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
 
-		// focus deck
+		// finalize initialization
+		this._conversation.updateLocation();
 		this._deckView.focus();
 	};
 
@@ -72,10 +81,13 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._deckView = deckView;
 
+		this._registeredFormat = [];
 		this._formats = [];
-		this._blocks = [];
 
+		this._blocks = [];
 		this._difference = [];
+
+		this._location = new Cryptii.Location();
 	};
 
 	Conversation.prototype.addFormat = function(format)
@@ -98,6 +110,25 @@ var Cryptii = Cryptii || {};
 
 			// add card of format to the deck
 			this._deckView.addCardView(format.getCardView());
+		}
+	};
+
+	Conversation.prototype.registerFormat = function(Format)
+	{
+		if (Object.prototype.toString.call(Format) !== "[object Array]")
+		{
+			// retrieve the slug by a format instance
+			var slug = new Format().getSlug();
+			this._registeredFormat[slug] = Format;
+		}
+		else
+		{
+			// register each format
+			var Formats = Format;
+			for (var i = 0; i < Formats.length; i ++)
+			{
+				this.registerFormat(Formats[i]);
+			}
 		}
 	};
 
@@ -191,6 +222,37 @@ var Cryptii = Cryptii || {};
 		return new Cryptii.Difference(start, end, rangeBlocks);
 	};
 
+	Conversation.prototype.updateLocation = function()
+	{
+		// compose url
+		var url = '/';
+
+		for (var i = 0; i < this._formats.length; i ++)
+		{
+			var format = this._formats[i];
+
+			// add format name
+			url += (i > 0 ? '+' : '') + format.getSlug();
+
+			// add options
+			var options = format.getOptions();
+			for (var name in options)
+			{
+				var option = options[name];
+
+				// only add non-default options
+				//  to keep the url short
+				if (!option.isDefaultValue())
+				{
+					url += '~' + name + '=' + option.getEscapedValue();
+				}
+			}
+		}
+
+		// change location
+		this._location.setUrl(url);
+	};
+
 	//
 	// event handling
 	//
@@ -198,6 +260,11 @@ var Cryptii = Cryptii || {};
 	Conversation.prototype.onFormatContentChange = function(format, blocks)
 	{
 		this.setBlocks(blocks, format);
+	};
+
+	Conversation.prototype.onFormatOptionChange = function(format)
+	{
+		this.updateLocation();
 	};
 
 	Conversation.prototype.onFormatRemove = function(format)
@@ -292,6 +359,29 @@ var Cryptii = Cryptii || {};
 		return 'Untitled';
 	};
 
+	Format.prototype.getSlug = function()
+	{
+		// creates a slug version of the title
+		var slug = this.getTitle();
+		slug = slug.toLowerCase();
+		slug = slug.replace(/ /g,'-');
+
+		var specialCharacters = {
+			'ä': 'a', 'à': 'a', 'á': 'a',
+			'ë': 'e', 'è': 'e', 'é': 'e',
+			'ü': 'u', 'ù': 'u', 'ú': 'u',
+			'ö': 'o', 'ò': 'o', 'ó': 'o'
+		};
+
+		for (var character in specialCharacters) {
+			slug = slug.replace(
+				new RegExp(character, 'g'),
+				specialCharacters[character]);
+		}
+
+		return slug;
+	};
+
 	Format.prototype.interpret = function(content)
 	{
 		// override this method
@@ -332,11 +422,14 @@ var Cryptii = Cryptii || {};
 		this.convert(
 			this._conversion.getBlocks(),
 			this._conversion.calculateDifference());
+
+		// forward event to conversation
+		this._conversion.onFormatOptionChange(this);
 	};
 
 	Format.prototype.onCardViewClose = function()
 	{
-		// forward to conversation
+		// forward event to conversation
 		this._conversion.onFormatRemove(this);
 	};
 
@@ -396,6 +489,61 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Location = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	Cryptii.Location = Location;
+	
+
+	Location.prototype._init = function()
+	{
+
+	};
+
+
+	Location.prototype._useHashFallback = function()
+	{
+		// use hash fallback if history is not available
+		//  or if this app gets used locally
+		return location.hostname == '' || window.history === undefined;
+	};
+
+	Location.prototype.setUrl = function(url)
+	{
+		if (!this._useHashFallback())
+		{
+
+		}
+		else
+		{
+			location.href = '#!' + url;
+		}
+	};
+
+	Location.prototype.getUrl = function(url)
+	{
+		if (!this._useHashFallback())
+		{
+
+		}
+		else
+		{
+			
+		}
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+var Cryptii = Cryptii || {};
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
 	var Option = (function() {
 		this._init.apply(this, arguments);
 	});
@@ -403,13 +551,14 @@ var Cryptii = Cryptii || {};
 	Cryptii.Option = Option;
 	
 
-	Option.prototype._init = function(label, value)
+	Option.prototype._init = function(label, defaultValue)
 	{
 		// attributes
 		this._optionView = null;
 		this._format = null;
 		this._label = label;
-		this._value = value;
+		this._defaultValue = defaultValue;
+		this._value = defaultValue;
 	};
 
 	Option.prototype._createOptionView = function()
@@ -432,6 +581,17 @@ var Cryptii = Cryptii || {};
 	Option.prototype.getValue = function()
 	{
 		return this._value;
+	};
+
+	Option.prototype.getEscapedValue = function()
+	{
+		// escapes every special character except !*()'
+		return encodeURIComponent(this.getValue()).replace(/~/g, '%7e');
+	};
+
+	Option.prototype.isDefaultValue = function()
+	{
+		return (this._value == this._defaultValue);
 	};
 
 	Option.prototype.setValue = function(value)
