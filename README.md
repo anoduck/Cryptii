@@ -1,82 +1,13 @@
+# Cryptii
 
-Cryptii
-=======
+An OpenSource web application used under the MIT license where you can convert, encrypt and decrypt content between different codes and formats. This happens fully in the browser using JavaScript with no server connection involved.
 
-Input
-  |
-  |
-  |
-  V
-Blocks of decimal
-  |          |
-  |          |
-  |          |
-  V          V
-Output     Output
+## License
+The MIT License (MIT)
 
+Copyright (c) 2014 Fränz Friederes <[fraenz@frieder.es](mailto:fraenz@frieder.es)>
 
-When input changes, it keeps track of which blocks changed (Added / Removed Blocks):
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-
-var current = 'Hello World';
-function differenceRange(from, to)
-{
-	var length = Math.min(from.length, to.length);
-	var start = 0;
-	var end = 0;
-
-	while (
-		start < length
-		&& from[start] == to[start]
-	) {
-		start ++;
-	}
-
-	while (
-		end < length - start
-		&& from[from.length - end - 1] == to[to.length - end - 1]
-	) {
-		end ++;
-	}
-
-	if (start == length - 1)
-	{
-		// no difference
-		return null;
-	}
-
-	// range of difference
-	return {
-		start: start,
-		end: to.length - end - 1,
-		length: to.length - start - end
-	};
-
-	var difference = current.substr(0, start) + '[' + input.substr(start, input.length - start - end) + ']' + current.substr(current.length - end);
-
-	console.log('Start: ' + start + ', Length: ' + (input.length - start - end));
-	console.log('Difference: ' + difference);
-}
-
-function difference(from, to)
-{
-	var range = differenceRange(from, to);
-
-	if (range !== null)
-	{
-		console.log(from.substr(0, start) + '[' + to.substr(start, input.length - start - end) + ']' + from.substr(current.length - end);
-	}
-}
-
-
-Hello World
-
-1 deletion
-'o' removed
-Hell World
->>>><<<<<<
-
-1 addition
-'o added'
-Hello World
->>>>!<<<<<<
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
