@@ -1603,7 +1603,15 @@ var Cryptii = Cryptii || {};
 			{
 				var $column =
 					$('<div></div>')
-						.addClass('column');
+						.addClass('column')
+						.sortable({
+							connectWith: '.column',
+							handle: '.header',
+							cancel: 'a',
+							placeholder: 'card ghost',
+							distance: 10,
+							items: '> .card'
+						});
 
 				this.getElement().append($column);
 			}

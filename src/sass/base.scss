@@ -51,6 +51,16 @@ body {
 	border: 1px solid $card-border-color;
 	border-radius: 3px;
 
+	&.ui-sortable-helper {
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+	}
+
+	&.ghost {
+		height: 100px;
+		background: transparent;
+		border-style: dashed;
+	}
+
 	.header {
 		position: relative;
 		border-bottom: 1px solid $card-content-border-color;

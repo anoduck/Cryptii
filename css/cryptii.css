@@ -1,6 +1,6 @@
 //
 // Cryptii
-// 2014-10-28
+// 2014-10-30
 //
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
@@ -98,6 +98,12 @@ body {
   background: #fcfcfc;
   border: 1px solid #dddddd;
   border-radius: 3px; }
+  .card.ui-sortable-helper {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); }
+  .card.ghost {
+    height: 100px;
+    background: transparent;
+    border-style: dashed; }
   .card .header {
     position: relative;
     border-bottom: 1px solid #eeeeee;
