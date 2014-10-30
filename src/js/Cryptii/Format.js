@@ -151,7 +151,7 @@ var Cryptii = Cryptii || {};
 	Format.prototype.registerOption = function(name, option)
 	{
 		this._options[name] = option;
-		option.setFormat(this);
+		option.setDelegate(this);
 	};
 
 })(Cryptii, jQuery);

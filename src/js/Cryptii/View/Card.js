@@ -79,7 +79,7 @@
 			if (deckView === null)
 			{
 				// the card has been closed
-				this._onClose();
+				this.onClose();
 			}
 		}
 	};
@@ -119,7 +119,7 @@
 	// event handling
 	//
 
-	CardView.prototype._onClose = function()
+	CardView.prototype.onClose = function()
 	{
 		
 	};

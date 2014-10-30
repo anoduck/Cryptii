@@ -88,6 +88,7 @@ var Cryptii = Cryptii || {};
 		this._difference = [];
 
 		this._location = new Cryptii.Location();
+		this._location.setDelegate(this);
 	};
 
 	Conversation.prototype.addFormat = function(format)
@@ -475,7 +476,7 @@ var Cryptii = Cryptii || {};
 	Format.prototype.registerOption = function(name, option)
 	{
 		this._options[name] = option;
-		option.setFormat(this);
+		option.setDelegate(this);
 	};
 
 })(Cryptii, jQuery);
@@ -498,7 +499,8 @@ var Cryptii = Cryptii || {};
 
 	Location.prototype._init = function()
 	{
-
+		// attributes
+		this._delegate = null;
 	};
 
 
@@ -533,6 +535,11 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	Location.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
+	};
+
 })(Cryptii, jQuery);
 
 ;
@@ -554,9 +561,12 @@ var Cryptii = Cryptii || {};
 	Option.prototype._init = function(label, defaultValue)
 	{
 		// attributes
+		this._delegate = null;
+
 		this._optionView = null;
-		this._format = null;
+
 		this._label = label;
+
 		this._defaultValue = defaultValue;
 		this._value = defaultValue;
 	};
@@ -574,7 +584,7 @@ var Cryptii = Cryptii || {};
 
 	Option.prototype.isValueValid = function(value)
 	{
-		// the base class validates every value
+		// in the base option, every value is valid
 		return true;
 	};
 
@@ -615,9 +625,9 @@ var Cryptii = Cryptii || {};
 		return this._optionView;
 	};
 
-	Option.prototype.setFormat = function(format)
+	Option.prototype.setDelegate = function(delegate)
 	{
-		this._format = format;
+		this._delegate = delegate;
 	};
 
 	//
@@ -628,9 +638,11 @@ var Cryptii = Cryptii || {};
 	{
 		this._value = value;
 
-		if (this._format !== null)
-		{
-			this._format.onOptionChange(this, value);
+		if (
+			this._delegate !== null
+			&& this._delegate.onOptionChange !== undefined
+		) {
+			this._delegate.onOptionChange(this, value);
 		}
 	};
 
@@ -1272,7 +1284,7 @@ var Cryptii = Cryptii || {};
 			if (deckView === null)
 			{
 				// the card has been closed
-				this._onClose();
+				this.onClose();
 			}
 		}
 	};
@@ -1312,7 +1324,7 @@ var Cryptii = Cryptii || {};
 	// event handling
 	//
 
-	CardView.prototype._onClose = function()
+	CardView.prototype.onClose = function()
 	{
 		
 	};
@@ -1337,13 +1349,13 @@ var Cryptii = Cryptii || {};
 	Cryptii.ComposerView = ComposerView;
 
 
-	ComposerView.prototype._init = function(cardView)
+	ComposerView.prototype._init = function()
 	{
 		// call parent init
 		View.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._cardView = cardView;
+		this._delegate = null;
 
 		this._$highlighter = null;
 		this._$textarea = null;
@@ -1351,6 +1363,7 @@ var Cryptii = Cryptii || {};
 		this._lastKnownContent = '';
 		this._lastKnownSelection = null;
 	};
+
 
 	ComposerView.prototype._build = function()
 	{
@@ -1409,7 +1422,12 @@ var Cryptii = Cryptii || {};
 			this._lastKnownContent = content;
 
 			// fire event
-			this._cardView.onComposerViewChange(this, content);
+			if (
+				this._delegate !== null
+				&& this._delegate.onComposerViewChange !== undefined
+			) {
+				this._delegate.onComposerViewChange(this, content);
+			}
 
 			// the content size depends on the actual content
 			this.layout();
@@ -1423,7 +1441,12 @@ var Cryptii = Cryptii || {};
 			this._lastKnownSelection = selection;
 
 			// fire event
-			this._cardView.onComposerViewSelect(this, selection);
+			if (
+				this._delegate !== null
+				&& this._delegate.onComposerViewSelect !== undefined
+			) {
+				this._delegate.onComposerViewSelect(this, selection);
+			}
 		}
 	}
 
@@ -1492,6 +1515,11 @@ var Cryptii = Cryptii || {};
 	{
 		this.getElement();
 		this._$textarea.focus();
+	};
+
+	ComposerView.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
@@ -1871,7 +1899,7 @@ var Cryptii = Cryptii || {};
 	// event handling
 	//
 
-	FormatCardView.prototype._onClose = function()
+	FormatCardView.prototype.onClose = function()
 	{
 		// forward to format
 		this._format.onCardViewClose(this);
@@ -2022,7 +2050,8 @@ var Cryptii = Cryptii || {};
 	TextFormatCardView.prototype.getComposerView = function()
 	{
 		if (this._composerView === null) {
-			this._composerView = new Cryptii.ComposerView(this);
+			this._composerView = new Cryptii.ComposerView();
+			this._composerView.setDelegate(this);
 		}
 
 		return this._composerView;

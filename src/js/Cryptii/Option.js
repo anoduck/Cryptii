@@ -15,9 +15,12 @@ var Cryptii = Cryptii || {};
 	Option.prototype._init = function(label, defaultValue)
 	{
 		// attributes
+		this._delegate = null;
+
 		this._optionView = null;
-		this._format = null;
+
 		this._label = label;
+
 		this._defaultValue = defaultValue;
 		this._value = defaultValue;
 	};
@@ -35,7 +38,7 @@ var Cryptii = Cryptii || {};
 
 	Option.prototype.isValueValid = function(value)
 	{
-		// the base class validates every value
+		// in the base option, every value is valid
 		return true;
 	};
 
@@ -76,9 +79,9 @@ var Cryptii = Cryptii || {};
 		return this._optionView;
 	};
 
-	Option.prototype.setFormat = function(format)
+	Option.prototype.setDelegate = function(delegate)
 	{
-		this._format = format;
+		this._delegate = delegate;
 	};
 
 	//
@@ -89,9 +92,11 @@ var Cryptii = Cryptii || {};
 	{
 		this._value = value;
 
-		if (this._format !== null)
-		{
-			this._format.onOptionChange(this, value);
+		if (
+			this._delegate !== null
+			&& this._delegate.onOptionChange !== undefined
+		) {
+			this._delegate.onOptionChange(this, value);
 		}
 	};
 

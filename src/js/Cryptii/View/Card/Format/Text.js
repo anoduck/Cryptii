@@ -82,7 +82,8 @@
 	TextFormatCardView.prototype.getComposerView = function()
 	{
 		if (this._composerView === null) {
-			this._composerView = new Cryptii.ComposerView(this);
+			this._composerView = new Cryptii.ComposerView();
+			this._composerView.setDelegate(this);
 		}
 
 		return this._composerView;

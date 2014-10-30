@@ -24,6 +24,7 @@ var Cryptii = Cryptii || {};
 		this._difference = [];
 
 		this._location = new Cryptii.Location();
+		this._location.setDelegate(this);
 	};
 
 	Conversation.prototype.addFormat = function(format)

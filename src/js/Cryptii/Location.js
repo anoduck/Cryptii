@@ -14,7 +14,8 @@ var Cryptii = Cryptii || {};
 
 	Location.prototype._init = function()
 	{
-
+		// attributes
+		this._delegate = null;
 	};
 
 
@@ -47,6 +48,11 @@ var Cryptii = Cryptii || {};
 		{
 			
 		}
+	};
+
+	Location.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);

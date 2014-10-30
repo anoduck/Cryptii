@@ -14,13 +14,13 @@
 	Cryptii.ComposerView = ComposerView;
 
 
-	ComposerView.prototype._init = function(cardView)
+	ComposerView.prototype._init = function()
 	{
 		// call parent init
 		View.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._cardView = cardView;
+		this._delegate = null;
 
 		this._$highlighter = null;
 		this._$textarea = null;
@@ -28,6 +28,7 @@
 		this._lastKnownContent = '';
 		this._lastKnownSelection = null;
 	};
+
 
 	ComposerView.prototype._build = function()
 	{
@@ -86,7 +87,12 @@
 			this._lastKnownContent = content;
 
 			// fire event
-			this._cardView.onComposerViewChange(this, content);
+			if (
+				this._delegate !== null
+				&& this._delegate.onComposerViewChange !== undefined
+			) {
+				this._delegate.onComposerViewChange(this, content);
+			}
 
 			// the content size depends on the actual content
 			this.layout();
@@ -100,7 +106,12 @@
 			this._lastKnownSelection = selection;
 
 			// fire event
-			this._cardView.onComposerViewSelect(this, selection);
+			if (
+				this._delegate !== null
+				&& this._delegate.onComposerViewSelect !== undefined
+			) {
+				this._delegate.onComposerViewSelect(this, selection);
+			}
 		}
 	}
 
@@ -169,6 +180,11 @@
 	{
 		this.getElement();
 		this._$textarea.focus();
+	};
+
+	ComposerView.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
