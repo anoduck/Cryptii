@@ -513,7 +513,7 @@ var Cryptii = Cryptii || {};
 	{
 		if (!this._useHashFallback())
 		{
-
+			history.replaceState({}, null, url);
 		}
 		else
 		{
