@@ -1548,8 +1548,8 @@ var Cryptii = Cryptii || {};
 		View.prototype._init.apply(this, arguments);
 
 		// constants
-		this._MIN_COLUMN_WIDTH = 400;
-		this._COLUMN_MARGIN = 30;
+		this._MIN_COLUMN_WIDTH = 375;
+		this._MARGIN = 30;
 		this._TICK_INTERVAL = 1000;
 
 		// attributes
@@ -1584,9 +1584,13 @@ var Cryptii = Cryptii || {};
 	DeckView.prototype.layout = function()
 	{
 		var width = $(window).width();
-		var columnCount = Math.max(parseInt((width - this._COLUMN_MARGIN) / (this._MIN_COLUMN_WIDTH + this._COLUMN_MARGIN)), 1);
+		var columnCount =
+			Math.max(parseInt(
+				(width - this._MARGIN) /
+				(this._MIN_COLUMN_WIDTH + this._MARGIN)
+			), 1);
 		
-		// check if column count has changed
+		// handle changes in column count
 		if (this._columnCount != columnCount)
 		{
 			this._columnCount = columnCount;
@@ -1596,9 +1600,10 @@ var Cryptii = Cryptii || {};
 			for (var i = 0; i < this._cardViews.length; i ++)
 				this._cardViews[i].getElement().detach();
 
-			// build columns
+			// remove all columns
 			this.getElement().empty();
 
+			// build columns
 			for (var i = 0; i < columnCount; i ++)
 			{
 				var $column =
@@ -1610,24 +1615,64 @@ var Cryptii = Cryptii || {};
 							cancel: 'a',
 							placeholder: 'card ghost',
 							distance: 10,
-							items: '> .card'
+							items: '> .card',
+							update: function(event, ui) {
+								this.layout();
+							}.bind(this)
 						});
 
 				this.getElement().append($column);
 			}
 
-			// distribute cards in column system
+			// distribute cards to columns
 			this._distributeCardView(this._cardViews);
 		}
 
-		// resize columns
-		var columnWidth = parseInt((width - this._COLUMN_MARGIN) / columnCount);
-		this.getElement().children().width(columnWidth - this._COLUMN_MARGIN);
+		// get visible columns
+		var $columns = this.getElement().children();
+
+		// layout column width
+		// when only one column is visible
+		//  it takes the full width available
+		if (this._columnCount > 1)
+		{
+			// set a fixed column width
+			var columnWidth = parseInt((width - this._MARGIN) / columnCount);
+			$columns
+				.width(columnWidth - this._MARGIN)
+				.addClass('fixed-width');
+		}
 
 		// layout each card view
 		for (var i = 0; i < this._cardViews.length; i ++)
 		{
 			this._cardViews[i].layout();
+		}
+
+		// layout column height
+		if (this._columnCount > 1)
+		{
+			// retrieve the height of the largest column
+			var maxColumnHeight = 0;
+			for (var i = 0; i < $columns.length; i ++)
+			{
+				var $column = $($columns.get(i));
+				var $cards = $column.children();
+
+				// mesure the height of this column
+				var height = 0;
+				for (var j = 0; j < $cards.length; j ++)
+				{
+					// add up margin card height and border width
+					height += this._MARGIN + $($cards.get(j)).height() + 2;
+				}
+
+				maxColumnHeight = Math.max(maxColumnHeight, height);
+			}
+
+			// set a fixed height for all columns
+			// to improve the sortable interaction
+			$columns.height(maxColumnHeight);
 		}
 	};
 
@@ -1641,6 +1686,8 @@ var Cryptii = Cryptii || {};
 			// append card to column
 			var $column = $(this.getElement().children().get(columnIndex));
 			$column.append(cardView.getElement());
+
+			this.layout();
 		}
 		else if (Object.prototype.toString.call(cardView) === '[object Array]')
 		{

@@ -1,0 +1,20 @@
+
+body {
+	background: $card-background-color;
+}
+
+#deck {
+	padding-left: 0;
+
+	.column {
+		padding: 0;
+	}
+
+	.card {
+		border-left: none;
+		border-right: none;
+		border-top: none;
+		border-radius: 0;
+		margin-top: 0;
+	}
+}

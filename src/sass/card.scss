@@ -1,0 +1,181 @@
+
+.card {
+	margin-top: 30px;
+	background: $card-background-color;
+	border: 1px solid $card-border-color;
+	border-radius: 3px;
+
+	.header {
+		position: relative;
+		border-bottom: 1px solid $card-content-border-color;
+		padding: 5px 0;
+		line-height: 0;
+		cursor: default;
+
+		h3 {
+			display: table;
+			margin: 0 0 0 -2px;
+			height: $card-format-header-height;
+			text-transform: uppercase;
+			font-size: 14px;
+			line-height: $card-format-header-height;
+			font-weight: normal;
+
+			&.format {
+				position: relative;
+				padding: 0 ($card-format-header-height * 0.5 + 10px) 0 ($card-content-padding-horizontal + 2px);
+				background: $card-format-color;
+				color: $card-background-color;
+
+				&:after {
+					content: '';
+					display: block;
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: ($card-format-header-height * 0.5);
+					border-right-width: 0;
+					border-color: $card-format-color;
+					border-left-color: $card-background-color;
+				}
+
+				&:after {
+					right: 0;
+					border-color: $card-background-color;
+					border-left-color: $card-format-color;
+				}
+			}
+		}
+
+		.toolbar {
+			display: table;
+			position: absolute;
+			top: 9px;
+			right: 9px;
+			bottom: 9px;
+
+			.item {
+				display: table;
+				background: url(../images/icons.svg) no-repeat 0 0;
+				width: 16px;
+				height: 16px;
+
+				&:hover {
+					background-position: -17px 0;
+				}
+			}
+		}
+	}
+
+	&.ui-sortable-helper {
+		// card styles when being dragged
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+	}
+
+	&.ghost {
+		// drag destination ghost card styles
+		height: 100px;
+		background: transparent;
+		border-style: dashed;
+	}
+}
+
+.options {
+
+	.option {
+		border-bottom: 1px solid $card-content-border-color;
+		padding: 0 $card-content-padding-horizontal 0;
+
+		label,
+		.field {
+			display: block;
+			height: $options-height;
+		}
+
+		label {
+			width: $options-label-width;
+			border-right: 1px solid $card-content-border-color;
+			float: left;
+			font-size: 14px;
+			line-height: 1;
+			line-height: $options-height;
+			color: $options-label-color;
+		}
+
+		.field {
+			margin-left: ($options-label-width + 1px);
+			padding-left: $options-padding-horizontal;
+
+			input {
+				font-family: "Source Code Pro", monospace;
+				font-size: 14px;
+				line-height: 1;
+				color: $options-color;
+				background: $card-background-color;
+				width: 100%;
+				height: $options-height;
+				padding: 0;
+				margin: 0;
+				border: none;
+			}
+		}
+	}
+}
+
+.composer {
+	position: relative;
+	padding: $card-content-padding-vertical $card-content-padding-horizontal 0;
+	cursor: text;
+
+	textarea,
+	.highlighter {
+
+		&, i, b, u {
+			font-family: "Source Code Pro", monospace;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1.7;
+			text-decoration: none;
+			word-wrap: break-word;
+			white-space: pre-wrap;
+		}
+	}
+
+	.highlighter {
+		position: absolute;
+		top: 20px;
+		left: 25px;
+		right: 25px;
+		color: transparent;
+		min-height: 50px;
+
+		b {
+			background: $composer-block-color;
+			border-radius: 2px;
+		}
+
+		i {
+			background: $composer-block-error-color;
+			border-radius: 2px;
+		}
+	}
+
+	textarea {
+		position: relative;
+		z-index: 1;
+		color: $composer-color;
+		width: 100%;
+		min-height: 100px;
+		padding: 0;
+		margin: 0;
+		background: transparent;
+		resize: none;
+		outline: none;
+		border: none;
+		overflow: hidden;
+	}
+}
