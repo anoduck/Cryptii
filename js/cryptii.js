@@ -46,16 +46,62 @@ var Cryptii = Cryptii || {};
 			122, 121, 32, 100, 111, 103, 115, 46
 		]);
 
+		// attributes
+		this._tickTimer = null;
+
+		// finalize initialization
+		this._conversation.updateLocation();
+		this._applicationView.focus();
+		this._setTickTimerEnabled(true);
+
+		// is page visibility api available
+		if (document.hidden !== undefined)
+		{
+			// bind to change event
+			document.addEventListener(
+				'visibilitychange',
+				this.onVisibilityChange.bind(this));
+		}
+
 		// add example cards
 		this._conversation.addFormat(new Cryptii.TextFormat());
 		this._conversation.addFormat(new Cryptii.DecimalFormat());
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
+	};
 
-		// finalize initialization
-		this._conversation.updateLocation();
-		this._applicationView.focus();
+
+	Application.prototype.tick = function()
+	{
+		// forward tick to application view
+		this._applicationView.tick();
+	};
+	
+	Application.prototype._setTickTimerEnabled = function(enabled)
+	{
+		if ((this._tickTimer !== null) !== enabled)
+		{
+			if (enabled)
+			{
+				// enable timer
+				this._tickTimer = setInterval(
+					this.tick.bind(this), 1000);
+			}
+			else
+			{
+				// disable timer
+				clearInterval(this._tickTimer);
+				this._tickTimer = null;
+			}
+		}
+	};
+
+	Application.prototype.onVisibilityChange = function()
+	{
+		// disable tick timer based on document visibility
+		//  for performance reasons
+		this._setTickTimerEnabled(!document.hidden);
 	};
 
 })(Cryptii, jQuery);
@@ -1230,7 +1276,7 @@ var Cryptii = Cryptii || {};
 		this._sideView = null;
 		this._deckView = null;
 
-		this._isHamburgerMenuVisible = false;
+		this._sideVisible = false;
 
 		// the curtain drops
 		// lets bring this beautiful app to the screen
@@ -1253,13 +1299,13 @@ var Cryptii = Cryptii || {};
 					$('<button></button>')
 						.addClass('hamburger')
 						.click(function() {
-							this.toggleHamburgerMenu();
+							this.toggleSide();
 						}.bind(this)),
 					this.getDeckView().getElement(),
 					$('<div></div>')
 						.addClass('overlay')
 						.click(function() {
-							this.toggleHamburgerMenu();
+							this.toggleSide();
 						}.bind(this))
 				);
 
@@ -1272,16 +1318,16 @@ var Cryptii = Cryptii || {};
 		return $element;
 	};
 
-	ApplicationView.prototype.toggleHamburgerMenu = function()
+	ApplicationView.prototype.toggleSide = function()
 	{
-		this._isHamburgerMenuVisible = !this._isHamburgerMenuVisible;
+		this._sideVisible = !this._sideVisible;
 
-		if (this._isHamburgerMenuVisible)
+		if (this._sideVisible)
 		{
 			// show side
-			this.getSideView().getElement().show();
+			this.getSideView().setHidden(false);
 
-			// animate side intro
+			// animate side intro after showing element
 			setTimeout(function() {
 				this._$element.addClass('side-visible');
 			}.bind(this), 10);
@@ -1291,10 +1337,23 @@ var Cryptii = Cryptii || {};
 			// animate side outro
 			this._$element.removeClass('side-visible');
 
-			// hide side
+			// hide side after animation
 			setTimeout(function() {
-				this.getSideView().getElement().hide();
+				this.getSideView().setHidden(true);
 			}.bind(this), 400);
+		}
+	};
+
+	ApplicationView.prototype.tick = function()
+	{
+		// forward to deck view
+		if (this._deckView !== null) {
+			this._deckView.tick();
+		}
+
+		// forward to side view
+		if (this._sideView !== null) {
+			this._sideView.tick();
 		}
 	};
 
@@ -1673,17 +1732,12 @@ var Cryptii = Cryptii || {};
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
 		this._CARD_MARGIN = 30;
-		this._TICK_INTERVAL = 1000;
 
 		// attributes
 		this._cardViews = [];
 
 		this._columnCount = 0;
 		this._columnCardDistributeIndex = 0;
-
-		this._tickTimer = setInterval(
-			this._tick.bind(this),
-			this._TICK_INTERVAL);
 
 		// turn on animation after the initial state has been built
 		setTimeout(function() {
@@ -1841,9 +1895,9 @@ var Cryptii = Cryptii || {};
 		this._distributeCardView(this._cardViews);
 	};
 
-	DeckView.prototype._tick = function()
+	DeckView.prototype.tick = function()
 	{
-		// distribute tick to all cards
+		// distribute tick to cards
 		for (var i = 0; i < this._cardViews.length; i ++)
 		{
 			this._cardViews[i].tick();
@@ -1897,6 +1951,132 @@ var Cryptii = Cryptii || {};
 			if (this._cardViews[i].canFocus()) {
 				this._cardViews[i].focus();
 			}
+		}
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+// requires Cryptii.View
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var View = Cryptii.View;
+	var LogoView = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	LogoView.prototype = Object.create(View.prototype);
+	Cryptii.LogoView = LogoView;
+
+
+	LogoView.prototype._init = function()
+	{
+		// call parent init
+		View.prototype._init.apply(this, arguments);
+
+		// attributes
+		this._$canvas = null;
+
+		// pixel data
+		this._content =
+			'XXX XX  X X XX XXX X X'
+		  + 'X   XX  XXX XX  X  X X'
+		  + 'XXX X X  X  X   X  X X';
+
+		// pixel dimensions
+		this._contentWidth = 22;
+		this._contentHeight = 3;
+
+		this._pixelSize = 5;
+
+		// glitch probability per second
+		this._glitchProbability = 0.2;
+	};
+
+
+	LogoView.prototype._build = function()
+	{
+		// call parent
+		var $element =
+			$('<h1></h1>');
+
+		// create canvas
+		this._$canvas =
+			$('<canvas></canvas>')
+				.attr('width', this._contentWidth * this._pixelSize)
+				.attr('height', this._contentHeight * this._pixelSize);
+
+		// initial draw
+		this.draw(false);
+
+		// populate element
+		$element.append(this._$canvas);
+
+		return $element;
+	};
+
+	LogoView.prototype.draw = function(glitched)
+	{
+		var context = this._$canvas.get(0).getContext("2d");
+		var noiseDensity = (glitched ? 0.1 + Math.random() * 0.3 : 0);
+
+		// go through each pixel in matrix
+		for (var i = 0; i < this._contentHeight * this._contentWidth; i ++)
+		{
+			var isWhite = (this._content[i] == 'X');
+
+			// make noise
+			if (
+				noiseDensity != 0
+				&& Math.random() > noiseDensity
+			) {
+				isWhite = (Math.random() > 0.5);
+			}
+
+			// choose color
+			context.fillStyle = (isWhite ? '#aeaeae' : '#191918');
+
+			// draw pixel
+			context.fillRect(
+				(i % this._contentWidth) * this._pixelSize,
+				Math.floor(i / this._contentWidth) * this._pixelSize,
+				this._pixelSize,
+				this._pixelSize
+			);
+		}
+	};
+
+	LogoView.prototype.animateGlitch = function()
+	{
+		// draw glitched matrix
+		this.draw(true);
+
+		// wait 100ms
+		setTimeout(function()
+		{
+			// draw another glitched matrix
+			this.draw(true);
+
+			// wait 100ms
+			setTimeout(function()
+			{
+				// draw correct matrix
+				this.draw(false);
+
+			}.bind(this), 100);
+
+		}.bind(this), 100);
+	};
+
+	LogoView.prototype.tick = function()
+	{
+		if (Math.random() < this._glitchProbability) {
+			this.animateGlitch();
 		}
 	};
 
@@ -2021,6 +2201,10 @@ var Cryptii = Cryptii || {};
 	{
 		// call parent init
 		View.prototype._init.apply(this, arguments);
+
+		// attributes
+		this._logoView = null;
+		this._hidden = true;
 	};
 
 
@@ -2032,10 +2216,53 @@ var Cryptii = Cryptii || {};
 		// populate element
 		$element
 			.attr('id', 'side')
-			.css('display', 'none')
-			.text('Hello World');
+			.append(this.getLogoView().getElement());
+
+		if (this._hidden) {
+			$element.css('display', 'none');
+		}
 
 		return $element;
+	};
+
+	SideView.prototype.tick = function()
+	{
+		// only handle ticks when visible
+		if (!this._hidden)
+		{
+			// forward tick to logo view
+			if (this._logoView !== null) {
+				this._logoView.tick();
+			}
+		}
+	};
+
+	SideView.prototype.setHidden = function(hidden)
+	{
+		if (this._hidden != hidden)
+		{
+			this._hidden = hidden;
+
+			if (hidden)
+			{
+				// hide element
+				this.getElement().hide();
+			}
+			else
+			{
+				// show element
+				this.getElement().show();
+			}
+		}
+	};
+
+	SideView.prototype.getLogoView = function()
+	{
+		if (this._logoView === null) {
+			this._logoView = new Cryptii.LogoView();
+		}
+
+		return this._logoView;
 	};
 
 })(Cryptii, jQuery);

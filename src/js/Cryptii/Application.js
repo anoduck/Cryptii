@@ -34,16 +34,62 @@ var Cryptii = Cryptii || {};
 			122, 121, 32, 100, 111, 103, 115, 46
 		]);
 
+		// attributes
+		this._tickTimer = null;
+
+		// finalize initialization
+		this._conversation.updateLocation();
+		this._applicationView.focus();
+		this._setTickTimerEnabled(true);
+
+		// is page visibility api available
+		if (document.hidden !== undefined)
+		{
+			// bind to change event
+			document.addEventListener(
+				'visibilitychange',
+				this.onVisibilityChange.bind(this));
+		}
+
 		// add example cards
 		this._conversation.addFormat(new Cryptii.TextFormat());
 		this._conversation.addFormat(new Cryptii.DecimalFormat());
 		this._conversation.addFormat(new Cryptii.BinaryFormat());
 		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
 		this._conversation.addFormat(new Cryptii.OctalFormat());
+	};
 
-		// finalize initialization
-		this._conversation.updateLocation();
-		this._applicationView.focus();
+
+	Application.prototype.tick = function()
+	{
+		// forward tick to application view
+		this._applicationView.tick();
+	};
+	
+	Application.prototype._setTickTimerEnabled = function(enabled)
+	{
+		if ((this._tickTimer !== null) !== enabled)
+		{
+			if (enabled)
+			{
+				// enable timer
+				this._tickTimer = setInterval(
+					this.tick.bind(this), 1000);
+			}
+			else
+			{
+				// disable timer
+				clearInterval(this._tickTimer);
+				this._tickTimer = null;
+			}
+		}
+	};
+
+	Application.prototype.onVisibilityChange = function()
+	{
+		// disable tick timer based on document visibility
+		//  for performance reasons
+		this._setTickTimerEnabled(!document.hidden);
 	};
 
 })(Cryptii, jQuery);

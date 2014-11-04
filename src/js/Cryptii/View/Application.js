@@ -25,7 +25,7 @@
 		this._sideView = null;
 		this._deckView = null;
 
-		this._isHamburgerMenuVisible = false;
+		this._sideVisible = false;
 
 		// the curtain drops
 		// lets bring this beautiful app to the screen
@@ -48,13 +48,13 @@
 					$('<button></button>')
 						.addClass('hamburger')
 						.click(function() {
-							this.toggleHamburgerMenu();
+							this.toggleSide();
 						}.bind(this)),
 					this.getDeckView().getElement(),
 					$('<div></div>')
 						.addClass('overlay')
 						.click(function() {
-							this.toggleHamburgerMenu();
+							this.toggleSide();
 						}.bind(this))
 				);
 
@@ -67,16 +67,16 @@
 		return $element;
 	};
 
-	ApplicationView.prototype.toggleHamburgerMenu = function()
+	ApplicationView.prototype.toggleSide = function()
 	{
-		this._isHamburgerMenuVisible = !this._isHamburgerMenuVisible;
+		this._sideVisible = !this._sideVisible;
 
-		if (this._isHamburgerMenuVisible)
+		if (this._sideVisible)
 		{
 			// show side
-			this.getSideView().getElement().show();
+			this.getSideView().setHidden(false);
 
-			// animate side intro
+			// animate side intro after showing element
 			setTimeout(function() {
 				this._$element.addClass('side-visible');
 			}.bind(this), 10);
@@ -86,10 +86,23 @@
 			// animate side outro
 			this._$element.removeClass('side-visible');
 
-			// hide side
+			// hide side after animation
 			setTimeout(function() {
-				this.getSideView().getElement().hide();
+				this.getSideView().setHidden(true);
 			}.bind(this), 400);
+		}
+	};
+
+	ApplicationView.prototype.tick = function()
+	{
+		// forward to deck view
+		if (this._deckView !== null) {
+			this._deckView.tick();
+		}
+
+		// forward to side view
+		if (this._sideView !== null) {
+			this._sideView.tick();
 		}
 	};
 

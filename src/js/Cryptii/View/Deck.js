@@ -22,17 +22,12 @@
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
 		this._CARD_MARGIN = 30;
-		this._TICK_INTERVAL = 1000;
 
 		// attributes
 		this._cardViews = [];
 
 		this._columnCount = 0;
 		this._columnCardDistributeIndex = 0;
-
-		this._tickTimer = setInterval(
-			this._tick.bind(this),
-			this._TICK_INTERVAL);
 
 		// turn on animation after the initial state has been built
 		setTimeout(function() {
@@ -190,9 +185,9 @@
 		this._distributeCardView(this._cardViews);
 	};
 
-	DeckView.prototype._tick = function()
+	DeckView.prototype.tick = function()
 	{
-		// distribute tick to all cards
+		// distribute tick to cards
 		for (var i = 0; i < this._cardViews.length; i ++)
 		{
 			this._cardViews[i].tick();
