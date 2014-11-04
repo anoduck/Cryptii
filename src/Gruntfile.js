@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 		},
 		sass: {
 			options: {
-				banner: '//\n// <%= pkg.name %>\n// <%= grunt.template.today("yyyy-mm-dd") %>\n//\n'
+				banner: '/*\n<%= pkg.name %>\n<%= grunt.template.today("yyyy-mm-dd") %>\n*/\n'
 			},
 			development: {
 				files: {
