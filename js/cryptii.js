@@ -26,8 +26,8 @@ var Cryptii = Cryptii || {};
 
 	Application.prototype._init = function()
 	{
-		this._deckView = new Cryptii.DeckView();
-		this._conversation = new Cryptii.Conversation(this._deckView);
+		this._applicationView = new Cryptii.ApplicationView();
+		this._conversation = new Cryptii.Conversation(this._applicationView);
 
 		// register formats
 		this._conversation.registerFormat([
@@ -55,7 +55,7 @@ var Cryptii = Cryptii || {};
 
 		// finalize initialization
 		this._conversation.updateLocation();
-		this._deckView.focus();
+		this._applicationView.focus();
 	};
 
 })(Cryptii, jQuery);
@@ -76,10 +76,10 @@ var Cryptii = Cryptii || {};
 	Cryptii.Conversation = Conversation;
 	
 
-	Conversation.prototype._init = function(deckView)
+	Conversation.prototype._init = function(applicationView)
 	{
 		// attributes
-		this._deckView = deckView;
+		this._applicationView = applicationView;
 
 		this._registeredFormat = [];
 		this._formats = [];
@@ -110,7 +110,7 @@ var Cryptii = Cryptii || {};
 			format.convert(this._blocks, this.calculateDifference());
 
 			// add card of format to the deck
-			this._deckView.addCardView(format.getCardView());
+			this._applicationView.getDeckView().addCardView(format.getCardView());
 		}
 	};
 
@@ -1211,6 +1211,129 @@ var Cryptii = Cryptii || {};
 
 	// define class
 	var View = Cryptii.View;
+	var ApplicationView = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	ApplicationView.prototype = Object.create(View.prototype);
+	Cryptii.ApplicationView = ApplicationView;
+
+
+	ApplicationView.prototype._init = function()
+	{
+		// call parent init
+		View.prototype._init.apply(this, arguments);
+
+		// attributes
+		this._$main = null;
+
+		this._sideView = null;
+		this._deckView = null;
+
+		this._isHamburgerMenuVisible = false;
+
+		// the curtain drops
+		// lets bring this beautiful app to the screen
+		$('body').append(this.getElement());
+	};
+
+
+	ApplicationView.prototype._build = function()
+	{
+		// call parent
+		var $element =
+			View.prototype._build.apply(this)
+				.attr('id', 'application');
+
+		// build and populate main
+		this._$main =
+			$('<div></div>')
+				.attr('id', 'main')
+				.append(
+					$('<button></button>')
+						.addClass('hamburger')
+						.click(function() {
+							this.toggleHamburgerMenu();
+						}.bind(this)),
+					this.getDeckView().getElement(),
+					$('<div></div>')
+						.addClass('overlay')
+						.click(function() {
+							this.toggleHamburgerMenu();
+						}.bind(this))
+				);
+
+		// populate element
+		$element.append(
+			this.getSideView().getElement(),
+			this._$main
+		);
+
+		return $element;
+	};
+
+	ApplicationView.prototype.toggleHamburgerMenu = function()
+	{
+		this._isHamburgerMenuVisible = !this._isHamburgerMenuVisible;
+
+		if (this._isHamburgerMenuVisible)
+		{
+			// show side
+			this.getSideView().getElement().show();
+
+			// animate side intro
+			setTimeout(function() {
+				this._$element.addClass('side-visible');
+			}.bind(this), 10);
+		}
+		else
+		{
+			// animate side outro
+			this._$element.removeClass('side-visible');
+
+			// hide side
+			setTimeout(function() {
+				this.getSideView().getElement().hide();
+			}.bind(this), 400);
+		}
+	};
+
+	ApplicationView.prototype.focus = function()
+	{
+		// focus deck view
+		this.getDeckView().focus();
+	};
+
+	ApplicationView.prototype.getSideView = function()
+	{
+		if (this._sideView === null) {
+			this._sideView = new Cryptii.SideView();
+		}
+
+		return this._sideView;
+	};
+
+	ApplicationView.prototype.getDeckView = function()
+	{
+		if (this._deckView === null) {
+			this._deckView = new Cryptii.DeckView();
+		}
+
+		return this._deckView;
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+// requires Cryptii.View
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var View = Cryptii.View;
 	var CardView = (function() {
 		this._init.apply(this, arguments);
 	});
@@ -1549,7 +1672,7 @@ var Cryptii = Cryptii || {};
 
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
-		this._MARGIN = 30;
+		this._CARD_MARGIN = 30;
 		this._TICK_INTERVAL = 1000;
 
 		// attributes
@@ -1570,7 +1693,10 @@ var Cryptii = Cryptii || {};
 
 	DeckView.prototype._build = function()
 	{
-		this._$element = $('#deck');
+		// call parent
+		this._$element =
+			View.prototype._build.apply(this)
+				.attr('id', 'deck');
 
 		// bind events
 		$(window).resize(function(e) {
@@ -1583,11 +1709,11 @@ var Cryptii = Cryptii || {};
 
 	DeckView.prototype.layout = function()
 	{
-		var width = $(window).width();
+		var deckWidth = this._$element.width();
 		var columnCount =
 			Math.max(parseInt(
-				(width - this._MARGIN) /
-				(this._MIN_COLUMN_WIDTH + this._MARGIN)
+				(deckWidth + this._CARD_MARGIN) /
+				(this._MIN_COLUMN_WIDTH + this._CARD_MARGIN)
 			), 1);
 		
 		// handle changes in column count
@@ -1637,9 +1763,9 @@ var Cryptii = Cryptii || {};
 		if (this._columnCount > 1)
 		{
 			// set a fixed column width
-			var columnWidth = parseInt((width - this._MARGIN) / columnCount);
+			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / columnCount);
 			$columns
-				.width(columnWidth - this._MARGIN)
+				.width(columnWidth - this._CARD_MARGIN)
 				.addClass('fixed-width');
 		}
 
@@ -1664,15 +1790,19 @@ var Cryptii = Cryptii || {};
 				for (var j = 0; j < $cards.length; j ++)
 				{
 					// add up margin card height and border width
-					height += this._MARGIN + $($cards.get(j)).height() + 2;
+					height += this._CARD_MARGIN + $($cards.get(j)).height() + 2;
 				}
 
 				maxColumnHeight = Math.max(maxColumnHeight, height);
 			}
 
 			// set a fixed height for all columns
-			// to improve the sortable interaction
+			//  to improve the sortable interaction
 			$columns.height(maxColumnHeight);
+
+			// also set a fixed height for the deck
+			//  element because the columns float
+			this._$element.height(maxColumnHeight);
 		}
 	};
 
@@ -1745,6 +1875,9 @@ var Cryptii = Cryptii || {};
 
 			// redistribute cards
 			this._redistributeCardViews();
+
+			// layout
+			this.layout();
 		}
 	};
 
@@ -1862,6 +1995,47 @@ var Cryptii = Cryptii || {};
 				this._option.onOptionViewChange(this, value);
 			}
 		}
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+// requires Cryptii.View
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var View = Cryptii.View;
+	var SideView = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	SideView.prototype = Object.create(View.prototype);
+	Cryptii.SideView = SideView;
+
+
+	SideView.prototype._init = function()
+	{
+		// call parent init
+		View.prototype._init.apply(this, arguments);
+	};
+
+
+	SideView.prototype._build = function()
+	{
+		// call parent
+		var $element = View.prototype._build.apply(this);
+
+		// populate element
+		$element
+			.attr('id', 'side')
+			.css('display', 'none')
+			.text('Hello World');
+
+		return $element;
 	};
 
 })(Cryptii, jQuery);

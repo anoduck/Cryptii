@@ -2,13 +2,11 @@
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="33px" height="250px" viewBox="0 0 33 250" enable-background="new 0 0 33 250" xml:space="preserve">
-<g>
-	<line fill="none" stroke="#DDDDDD" stroke-width="3" stroke-miterlimit="10" x1="1.335" y1="1.5" x2="14.667" y2="14.833"/>
-	<line fill="none" stroke="#DDDDDD" stroke-width="3" stroke-miterlimit="10" x1="14.667" y1="1.5" x2="1.335" y2="14.833"/>
-</g>
-<g>
-	<line fill="none" stroke="#249DB3" stroke-width="3" stroke-miterlimit="10" x1="18.335" y1="1.5" x2="31.667" y2="14.833"/>
-	<line fill="none" stroke="#249DB3" stroke-width="3" stroke-miterlimit="10" x1="31.667" y1="1.5" x2="18.335" y2="14.833"/>
-</g>
+	 width="50px" height="250px" viewBox="0 0 50 250" enable-background="new 0 0 50 250" xml:space="preserve">
+<polygon fill="#DDDDDD" points="20,2.234 17.766,0 10,7.766 2.234,0 0,2.234 7.766,10 0,17.766 2.234,20 10,12.234 17.766,20 
+	20,17.766 12.234,10 "/>
+<polygon fill="#249DB3" points="50,2.234 47.766,0 40,7.766 32.233,0 30,2.234 37.766,10 30,17.766 32.233,20 40,12.234 47.766,20 
+	50,17.766 42.233,10 "/>
+<path fill="#249DB3" d="M20,30v2.797H0V30H20z M0,38.725h20v-2.796H0V38.725z M0,44.652h20v-2.796H0V44.652z"/>
+<path fill="#F7F7F7" d="M50,30v2.797H30V30H50z M30,38.725h20v-2.796H30V38.725z M30,44.652h20v-2.796H30V44.652z"/>
 </svg>

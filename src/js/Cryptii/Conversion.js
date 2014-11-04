@@ -12,10 +12,10 @@ var Cryptii = Cryptii || {};
 	Cryptii.Conversation = Conversation;
 	
 
-	Conversation.prototype._init = function(deckView)
+	Conversation.prototype._init = function(applicationView)
 	{
 		// attributes
-		this._deckView = deckView;
+		this._applicationView = applicationView;
 
 		this._registeredFormat = [];
 		this._formats = [];
@@ -46,7 +46,7 @@ var Cryptii = Cryptii || {};
 			format.convert(this._blocks, this.calculateDifference());
 
 			// add card of format to the deck
-			this._deckView.addCardView(format.getCardView());
+			this._applicationView.getDeckView().addCardView(format.getCardView());
 		}
 	};
 

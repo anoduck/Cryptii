@@ -1,9 +1,14 @@
 
 #deck {
-	padding: $header-main-height 0 0 30px;
+	padding: $body-margin;
+	padding-left: $body-margin * 3;
 
 	.column {
-		padding: 0 30px 30px 0;
+		padding-right: $card-margin;
+
+		&:last-child {
+			padding-right: 0;
+		}
 
 		&.fixed-width {
 			// non-fixed-width columns take
@@ -13,11 +18,4 @@
 	}
 
 	@import "card";
-
-	&.animated {
-
-		.composer textarea {
-			transition: height 0.2s;
-		}
-	}
 }

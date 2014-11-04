@@ -4,20 +4,19 @@
 @import "variables";
 @import "font";
 
+@import "mixins";
+
+html, body {
+	height: 100%;
+}
+
 body {
 	background: $background-color;
+	margin: 0;
+	padding: 0;
 }
 
-#wrapper {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
-
-@import "header";
-@import "deck";
+@import "application";
 
 @media screen and (max-width: $break-small) {
 	@import "break-small";

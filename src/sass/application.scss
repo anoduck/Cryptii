@@ -1,0 +1,78 @@
+
+#application {
+	height: 100%;
+
+	// prevent horizontal scrolling
+	//  when side view is visible
+	overflow-x: hidden;
+
+	#side {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: $side-width;
+		padding: $body-margin 0;
+		background: $side-background-color;
+		@include transformTransition(translate((- $side-width * 0.5), 0), 0.4s);
+		color: $side-color;
+	}
+
+	#main {
+		background: $background-color;
+		position: relative;
+		z-index: 100;
+		min-height: 100%;
+		@include transformTransition(translate(0, 0), 0.4s);
+
+		.hamburger {
+			display: block;
+			position: absolute;
+			top: $body-margin;
+			left: $body-margin;
+			width: $body-margin;
+			height: $main-hamburger-height;
+			border: none;
+			color: transparent;
+			background: transparent;
+			cursor: pointer;
+			padding: 0;
+
+			&:before {
+				content: '';
+				display: block;
+				width: $main-hamburger-width;
+				height: $main-hamburger-height;
+				margin: 3px (($body-margin - $main-hamburger-width) / 2);
+				@include icon(0, 1, $main-hamburger-width);
+			}
+		}
+		
+		@import "deck";
+
+		.overlay {
+			display: none;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 100;
+		}
+	}
+
+	&.side-visible {
+
+		#side {
+			@include transform(translate(0, 0));
+		}
+
+		#main {
+			@include transform(translate($side-width, 0));
+
+			.overlay {
+				display: block;
+			}
+		}
+	}
+}

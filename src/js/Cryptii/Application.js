@@ -14,8 +14,8 @@ var Cryptii = Cryptii || {};
 
 	Application.prototype._init = function()
 	{
-		this._deckView = new Cryptii.DeckView();
-		this._conversation = new Cryptii.Conversation(this._deckView);
+		this._applicationView = new Cryptii.ApplicationView();
+		this._conversation = new Cryptii.Conversation(this._applicationView);
 
 		// register formats
 		this._conversation.registerFormat([
@@ -43,7 +43,7 @@ var Cryptii = Cryptii || {};
 
 		// finalize initialization
 		this._conversation.updateLocation();
-		this._deckView.focus();
+		this._applicationView.focus();
 	};
 
 })(Cryptii, jQuery);

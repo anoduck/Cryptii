@@ -2,30 +2,42 @@
 // colors
 $color-white: #fcfcfc;
 $color-blue: #249db3;
+$color-red: #b22626;
 
 // breakpoints
 $break-small: 500px;
 
+// icons file
+$icons-svg-width: 50px;
+$icons-svg-icon-width: 20px;
+$icons-svg-margin: 10px;
+
 // background
 $background-color: #f7f7f7;
 
-// header
-$header-main-height: 60px;
-$header-main-background-color: $color-white;
-$header-main-color: $color-blue;
-$header-main-border-color: #dddddd;
+// application
+$main-hamburger-width: 30px;
+$main-hamburger-height: 25px;
+$body-margin: 40px;
+$card-margin: 30px;
+
+// side
+$side-width: 300px;
+$side-background-color: #191918;
+$side-color: #aeaeae;
+$side-hover-color: #ffffff;
 
 // card
 $card-background-color: $color-white;
 $card-border-color: #dddddd;
 $card-content-border-color: #eeeeee;
 $card-format-color: $color-blue;
-$card-format-header-height: 24px;
+$card-format-header-height: 28px;
 $card-content-padding-horizontal: 25px;
 $card-content-padding-vertical: 20px;
 
 // format card options
-$options-height: 34px;
+$options-height: $card-format-header-height;
 $options-color: #1f1f1f;
 $options-label-width: 100px;
 $options-label-color: $color-blue;
@@ -33,5 +45,5 @@ $options-padding-horizontal: 10px;
 
 // card composer
 $composer-color: #1f1f1f;
-$composer-block-color: #eeeeee;
-$composer-block-error-color: #ffbfbf;
+$composer-block-color: #dddddd;
+$composer-block-error-color: ($color-red + #202020);

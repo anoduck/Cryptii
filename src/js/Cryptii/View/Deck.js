@@ -21,7 +21,7 @@
 
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
-		this._MARGIN = 30;
+		this._CARD_MARGIN = 30;
 		this._TICK_INTERVAL = 1000;
 
 		// attributes
@@ -42,7 +42,10 @@
 
 	DeckView.prototype._build = function()
 	{
-		this._$element = $('#deck');
+		// call parent
+		this._$element =
+			View.prototype._build.apply(this)
+				.attr('id', 'deck');
 
 		// bind events
 		$(window).resize(function(e) {
@@ -55,11 +58,11 @@
 
 	DeckView.prototype.layout = function()
 	{
-		var width = $(window).width();
+		var deckWidth = this._$element.width();
 		var columnCount =
 			Math.max(parseInt(
-				(width - this._MARGIN) /
-				(this._MIN_COLUMN_WIDTH + this._MARGIN)
+				(deckWidth + this._CARD_MARGIN) /
+				(this._MIN_COLUMN_WIDTH + this._CARD_MARGIN)
 			), 1);
 		
 		// handle changes in column count
@@ -109,9 +112,9 @@
 		if (this._columnCount > 1)
 		{
 			// set a fixed column width
-			var columnWidth = parseInt((width - this._MARGIN) / columnCount);
+			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / columnCount);
 			$columns
-				.width(columnWidth - this._MARGIN)
+				.width(columnWidth - this._CARD_MARGIN)
 				.addClass('fixed-width');
 		}
 
@@ -136,15 +139,19 @@
 				for (var j = 0; j < $cards.length; j ++)
 				{
 					// add up margin card height and border width
-					height += this._MARGIN + $($cards.get(j)).height() + 2;
+					height += this._CARD_MARGIN + $($cards.get(j)).height() + 2;
 				}
 
 				maxColumnHeight = Math.max(maxColumnHeight, height);
 			}
 
 			// set a fixed height for all columns
-			// to improve the sortable interaction
+			//  to improve the sortable interaction
 			$columns.height(maxColumnHeight);
+
+			// also set a fixed height for the deck
+			//  element because the columns float
+			this._$element.height(maxColumnHeight);
 		}
 	};
 
@@ -217,6 +224,9 @@
 
 			// redistribute cards
 			this._redistributeCardViews();
+
+			// layout
+			this.layout();
 		}
 	};
 
