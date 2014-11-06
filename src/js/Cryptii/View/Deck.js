@@ -20,7 +20,7 @@
 		View.prototype._init.apply(this, arguments);
 
 		// constants
-		this._MIN_COLUMN_WIDTH = 375;
+		this._MIN_COLUMN_WIDTH = 350;
 		this._CARD_MARGIN = 30;
 
 		// attributes
@@ -232,7 +232,7 @@
 		{
 			var i = 0;
 			while (
-				i < this._cardViews.length
+				i < this._cardViews.length - 1
 				&& !this._cardViews[i].canFocus()
 			) {
 				i ++;

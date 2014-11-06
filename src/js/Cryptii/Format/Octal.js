@@ -14,7 +14,7 @@
 	Cryptii.OctalFormat = OctalFormat;
 
 
-	OctalFormat.prototype.getTitle = function()
+	OctalFormat.prototype.getName = function()
 	{
 		return 'Octal';
 	};

@@ -33,7 +33,8 @@
 			.addClass('card')
 			.append(
 				this._buildHeader(),
-				this._buildContent()
+				this._buildContent(),
+				this._buildFooter()
 			);
 
 		return $element;
@@ -68,6 +69,12 @@
 	{
 		return $('<div></div>')
 			.addClass('content');
+	};
+
+	CardView.prototype._buildFooter = function()
+	{
+		return $('<div></div>')
+			.addClass('footer');
 	};
 
 	CardView.prototype.setDeckView = function(deckView)

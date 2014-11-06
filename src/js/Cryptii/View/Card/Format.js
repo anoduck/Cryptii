@@ -39,7 +39,7 @@
 			.append(
 				$('<h3></h3>')
 					.addClass('format')
-					.text(this._format.getTitle())
+					.text(this._format.getName())
 			);
 	};
 
@@ -64,6 +64,11 @@
 		}
 
 		return $content;
+	};
+
+	FormatCardView.prototype._buildFooter = function()
+	{
+		return null;
 	};
 
 	FormatCardView.prototype.layout = function()

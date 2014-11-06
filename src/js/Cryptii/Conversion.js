@@ -17,7 +17,7 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._applicationView = applicationView;
 
-		this._registeredFormat = [];
+		this._registeredFormats = [];
 		this._formats = [];
 
 		this._blocks = [];
@@ -50,13 +50,21 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype.registerFormat = function(Format)
+	Conversation.prototype.registerFormat = function(Format, updateView)
 	{
+		if (updateView === undefined) {
+			updateView = true;
+		}
+
 		if (Object.prototype.toString.call(Format) !== "[object Array]")
 		{
 			// retrieve the slug by a format instance
-			var slug = new Format().getSlug();
-			this._registeredFormat[slug] = Format;
+			var instance = new Format();
+			var slug = instance.getSlug();
+			this._registeredFormats[slug] = {
+				Format: Format,
+				name: instance.getName()
+			};
 		}
 		else
 		{
@@ -64,8 +72,14 @@ var Cryptii = Cryptii || {};
 			var Formats = Format;
 			for (var i = 0; i < Formats.length; i ++)
 			{
-				this.registerFormat(Formats[i]);
+				this.registerFormat(Formats[i], false);
 			}
+		}
+
+		// update registered formats in side view
+		if (updateView) {
+			var sideView = this._applicationView.getSideView();
+			sideView.updateRegisteredFormats(this._registeredFormats);
 		}
 	};
 

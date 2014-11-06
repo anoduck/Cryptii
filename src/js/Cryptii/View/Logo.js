@@ -35,7 +35,7 @@
 		this._pixelSize = 5;
 
 		// glitch probability per second
-		this._glitchProbability = 0.2;
+		this._glitchProbability = 0.1;
 	};
 
 

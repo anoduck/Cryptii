@@ -29,7 +29,7 @@ var Cryptii = Cryptii || {};
 	};
 	
 
-	Format.prototype.getTitle = function()
+	Format.prototype.getName = function()
 	{
 		// override this method
 		return 'Untitled';
@@ -38,7 +38,7 @@ var Cryptii = Cryptii || {};
 	Format.prototype.getSlug = function()
 	{
 		// creates a slug version of the title
-		var slug = this.getTitle();
+		var slug = this.getName();
 		slug = slug.toLowerCase();
 		slug = slug.replace(/ /g,'-');
 

@@ -30,7 +30,7 @@
 	};
 
 
-	TextFormat.prototype.getTitle = function()
+	TextFormat.prototype.getName = function()
 	{
 		return 'Text';
 	};

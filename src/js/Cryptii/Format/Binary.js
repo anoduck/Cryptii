@@ -14,7 +14,7 @@
 	Cryptii.BinaryFormat = BinaryFormat;
 
 
-	BinaryFormat.prototype.getTitle = function()
+	BinaryFormat.prototype.getName = function()
 	{
 		return 'Binary';
 	};

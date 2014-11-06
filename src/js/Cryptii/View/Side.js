@@ -22,6 +22,10 @@
 		// attributes
 		this._logoView = null;
 		this._hidden = true;
+
+		this._$registeredFormats = null;
+
+		this._delegate = null;
 	};
 
 
@@ -30,16 +34,65 @@
 		// call parent
 		var $element = View.prototype._build.apply(this);
 
+		// registered formats
+		this._$registeredFormats =
+			$('<ul></ul>');
+
 		// populate element
 		$element
 			.attr('id', 'side')
-			.append(this.getLogoView().getElement());
+			.append(
+				this.getLogoView().getElement(),
+				this._$registeredFormats
+			);
 
 		if (this._hidden) {
 			$element.css('display', 'none');
 		}
 
 		return $element;
+	};
+
+	SideView.prototype.updateRegisteredFormats = function(registeredFormats)
+	{
+		// ensure that this element
+		//  has been built
+		this.getElement();
+
+		// clear registered formats
+		this._$registeredFormats.empty();
+
+		for (var slug in registeredFormats)
+		{
+			var registeredFormat = registeredFormats[slug];
+
+			// create format element
+			var $format =
+				$('<li></li>')
+					.append(
+						$('<a></a>')
+							.attr('href', 'javascript:void(0);')
+							.text(registeredFormat.name)
+							.click(function() {
+								this.sideView.onFormatSelect(this.Format);
+							}.bind({
+								sideView: this,
+								Format: registeredFormat.Format
+							}))
+					);
+
+			this._$registeredFormats.append($format);
+		}
+	};
+
+	SideView.prototype.onFormatSelect = function(Format)
+	{
+		if (
+			this._delegate !== null
+			&& this._delegate.onSideFormatSelect !== undefined
+		) {
+			this._delegate.onSideFormatSelect(Format);
+		}
 	};
 
 	SideView.prototype.tick = function()
@@ -80,6 +133,11 @@
 		}
 
 		return this._logoView;
+	};
+
+	SideView.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);

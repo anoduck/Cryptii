@@ -14,7 +14,7 @@
 	Cryptii.HexadecimalFormat = HexadecimalFormat;
 
 
-	HexadecimalFormat.prototype.getTitle = function()
+	HexadecimalFormat.prototype.getName = function()
 	{
 		return 'Hexadecimal';
 	};

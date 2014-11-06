@@ -24,7 +24,7 @@
 	};
 
 
-	DecimalFormat.prototype.getTitle = function()
+	DecimalFormat.prototype.getName = function()
 	{
 		return 'Decimal';
 	};

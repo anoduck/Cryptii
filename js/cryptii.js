@@ -26,7 +26,11 @@ var Cryptii = Cryptii || {};
 
 	Application.prototype._init = function()
 	{
+		// application view
 		this._applicationView = new Cryptii.ApplicationView();
+		this._applicationView.setDelegate(this);
+
+		// conversation view
 		this._conversation = new Cryptii.Conversation(this._applicationView);
 
 		// register formats
@@ -48,6 +52,10 @@ var Cryptii = Cryptii || {};
 
 		// attributes
 		this._tickTimer = null;
+
+		// add introduction card
+		this._applicationView.getDeckView().addCardView(
+			new Cryptii.IntroductionCardView());
 
 		// finalize initialization
 		this._conversation.updateLocation();
@@ -104,6 +112,12 @@ var Cryptii = Cryptii || {};
 		this._setTickTimerEnabled(!document.hidden);
 	};
 
+	Application.prototype.onApplicationSideFormatSelect = function(Format)
+	{
+		this._conversation.addFormat(new Format());
+		this._applicationView.toggleSide();
+	};
+
 })(Cryptii, jQuery);
 
 ;
@@ -127,7 +141,7 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._applicationView = applicationView;
 
-		this._registeredFormat = [];
+		this._registeredFormats = [];
 		this._formats = [];
 
 		this._blocks = [];
@@ -160,13 +174,21 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype.registerFormat = function(Format)
+	Conversation.prototype.registerFormat = function(Format, updateView)
 	{
+		if (updateView === undefined) {
+			updateView = true;
+		}
+
 		if (Object.prototype.toString.call(Format) !== "[object Array]")
 		{
 			// retrieve the slug by a format instance
-			var slug = new Format().getSlug();
-			this._registeredFormat[slug] = Format;
+			var instance = new Format();
+			var slug = instance.getSlug();
+			this._registeredFormats[slug] = {
+				Format: Format,
+				name: instance.getName()
+			};
 		}
 		else
 		{
@@ -174,8 +196,14 @@ var Cryptii = Cryptii || {};
 			var Formats = Format;
 			for (var i = 0; i < Formats.length; i ++)
 			{
-				this.registerFormat(Formats[i]);
+				this.registerFormat(Formats[i], false);
 			}
+		}
+
+		// update registered formats in side view
+		if (updateView) {
+			var sideView = this._applicationView.getSideView();
+			sideView.updateRegisteredFormats(this._registeredFormats);
 		}
 	};
 
@@ -400,7 +428,7 @@ var Cryptii = Cryptii || {};
 	};
 	
 
-	Format.prototype.getTitle = function()
+	Format.prototype.getName = function()
 	{
 		// override this method
 		return 'Untitled';
@@ -409,7 +437,7 @@ var Cryptii = Cryptii || {};
 	Format.prototype.getSlug = function()
 	{
 		// creates a slug version of the title
-		var slug = this.getTitle();
+		var slug = this.getName();
 		slug = slug.toLowerCase();
 		slug = slug.replace(/ /g,'-');
 
@@ -830,7 +858,7 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	TextFormat.prototype.getTitle = function()
+	TextFormat.prototype.getName = function()
 	{
 		return 'Text';
 	};
@@ -1094,7 +1122,7 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	DecimalFormat.prototype.getTitle = function()
+	DecimalFormat.prototype.getName = function()
 	{
 		return 'Decimal';
 	};
@@ -1139,7 +1167,7 @@ var Cryptii = Cryptii || {};
 	Cryptii.BinaryFormat = BinaryFormat;
 
 
-	BinaryFormat.prototype.getTitle = function()
+	BinaryFormat.prototype.getName = function()
 	{
 		return 'Binary';
 	};
@@ -1181,7 +1209,7 @@ var Cryptii = Cryptii || {};
 	Cryptii.HexadecimalFormat = HexadecimalFormat;
 
 
-	HexadecimalFormat.prototype.getTitle = function()
+	HexadecimalFormat.prototype.getName = function()
 	{
 		return 'Hexadecimal';
 	};
@@ -1223,7 +1251,7 @@ var Cryptii = Cryptii || {};
 	Cryptii.OctalFormat = OctalFormat;
 
 
-	OctalFormat.prototype.getTitle = function()
+	OctalFormat.prototype.getName = function()
 	{
 		return 'Octal';
 	};
@@ -1277,6 +1305,8 @@ var Cryptii = Cryptii || {};
 		this._deckView = null;
 
 		this._sideVisible = false;
+
+		this._delegate = null;
 
 		// the curtain drops
 		// lets bring this beautiful app to the screen
@@ -1363,10 +1393,23 @@ var Cryptii = Cryptii || {};
 		this.getDeckView().focus();
 	};
 
+
+	ApplicationView.prototype.onSideFormatSelect = function(Format)
+	{
+		if (
+			this._delegate !== null
+			&& this._delegate.onApplicationSideFormatSelect !== undefined
+		) {
+			this._delegate.onApplicationSideFormatSelect(Format);
+		}
+	};
+
+
 	ApplicationView.prototype.getSideView = function()
 	{
 		if (this._sideView === null) {
 			this._sideView = new Cryptii.SideView();
+			this._sideView.setDelegate(this);
 		}
 
 		return this._sideView;
@@ -1379,6 +1422,11 @@ var Cryptii = Cryptii || {};
 		}
 
 		return this._deckView;
+	};
+
+	ApplicationView.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
@@ -1420,7 +1468,8 @@ var Cryptii = Cryptii || {};
 			.addClass('card')
 			.append(
 				this._buildHeader(),
-				this._buildContent()
+				this._buildContent(),
+				this._buildFooter()
 			);
 
 		return $element;
@@ -1455,6 +1504,12 @@ var Cryptii = Cryptii || {};
 	{
 		return $('<div></div>')
 			.addClass('content');
+	};
+
+	CardView.prototype._buildFooter = function()
+	{
+		return $('<div></div>')
+			.addClass('footer');
 	};
 
 	CardView.prototype.setDeckView = function(deckView)
@@ -1730,7 +1785,7 @@ var Cryptii = Cryptii || {};
 		View.prototype._init.apply(this, arguments);
 
 		// constants
-		this._MIN_COLUMN_WIDTH = 375;
+		this._MIN_COLUMN_WIDTH = 350;
 		this._CARD_MARGIN = 30;
 
 		// attributes
@@ -1942,7 +1997,7 @@ var Cryptii = Cryptii || {};
 		{
 			var i = 0;
 			while (
-				i < this._cardViews.length
+				i < this._cardViews.length - 1
 				&& !this._cardViews[i].canFocus()
 			) {
 				i ++;
@@ -1995,7 +2050,7 @@ var Cryptii = Cryptii || {};
 		this._pixelSize = 5;
 
 		// glitch probability per second
-		this._glitchProbability = 0.2;
+		this._glitchProbability = 0.1;
 	};
 
 
@@ -2205,6 +2260,10 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._logoView = null;
 		this._hidden = true;
+
+		this._$registeredFormats = null;
+
+		this._delegate = null;
 	};
 
 
@@ -2213,16 +2272,65 @@ var Cryptii = Cryptii || {};
 		// call parent
 		var $element = View.prototype._build.apply(this);
 
+		// registered formats
+		this._$registeredFormats =
+			$('<ul></ul>');
+
 		// populate element
 		$element
 			.attr('id', 'side')
-			.append(this.getLogoView().getElement());
+			.append(
+				this.getLogoView().getElement(),
+				this._$registeredFormats
+			);
 
 		if (this._hidden) {
 			$element.css('display', 'none');
 		}
 
 		return $element;
+	};
+
+	SideView.prototype.updateRegisteredFormats = function(registeredFormats)
+	{
+		// ensure that this element
+		//  has been built
+		this.getElement();
+
+		// clear registered formats
+		this._$registeredFormats.empty();
+
+		for (var slug in registeredFormats)
+		{
+			var registeredFormat = registeredFormats[slug];
+
+			// create format element
+			var $format =
+				$('<li></li>')
+					.append(
+						$('<a></a>')
+							.attr('href', 'javascript:void(0);')
+							.text(registeredFormat.name)
+							.click(function() {
+								this.sideView.onFormatSelect(this.Format);
+							}.bind({
+								sideView: this,
+								Format: registeredFormat.Format
+							}))
+					);
+
+			this._$registeredFormats.append($format);
+		}
+	};
+
+	SideView.prototype.onFormatSelect = function(Format)
+	{
+		if (
+			this._delegate !== null
+			&& this._delegate.onSideFormatSelect !== undefined
+		) {
+			this._delegate.onSideFormatSelect(Format);
+		}
 	};
 
 	SideView.prototype.tick = function()
@@ -2263,6 +2371,11 @@ var Cryptii = Cryptii || {};
 		}
 
 		return this._logoView;
+	};
+
+	SideView.prototype.setDelegate = function(delegate)
+	{
+		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
@@ -2310,7 +2423,7 @@ var Cryptii = Cryptii || {};
 			.append(
 				$('<h3></h3>')
 					.addClass('format')
-					.text(this._format.getTitle())
+					.text(this._format.getName())
 			);
 	};
 
@@ -2337,6 +2450,11 @@ var Cryptii = Cryptii || {};
 		return $content;
 	};
 
+	FormatCardView.prototype._buildFooter = function()
+	{
+		return null;
+	};
+
 	FormatCardView.prototype.layout = function()
 	{
 
@@ -2359,6 +2477,56 @@ var Cryptii = Cryptii || {};
 	{
 		// forward to format
 		this._format.onCardViewClose(this);
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+// requires Cryptii.CardView
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var CardView = Cryptii.CardView;
+	var IntroductionCardView = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	IntroductionCardView.prototype = Object.create(CardView.prototype);
+	Cryptii.IntroductionCardView = IntroductionCardView;
+
+
+	IntroductionCardView.prototype._build = function()
+	{
+		return CardView.prototype._build.apply(this)
+			.addClass('card-transparent');
+	};
+
+	IntroductionCardView.prototype._buildHeader = function()
+	{
+		return null;
+	};
+
+	IntroductionCardView.prototype._buildContent = function()
+	{
+		var $content = CardView.prototype._buildContent.apply(this);
+
+		$content
+			.addClass('content-padding')
+			.append(
+				$('<p></p>')
+					.text('Welcome to Cryptii, an OpenSource web app where you can encrypt and decrypt content between different codes and formats with no server connection involved. Find additional formats and information by clicking on the hamburger icon on the left.')
+			);
+
+		return $content;
+	};
+
+	IntroductionCardView.prototype._buildFooter = function()
+	{
+		return null;
 	};
 
 })(Cryptii, jQuery);

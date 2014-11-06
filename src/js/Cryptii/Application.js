@@ -14,7 +14,11 @@ var Cryptii = Cryptii || {};
 
 	Application.prototype._init = function()
 	{
+		// application view
 		this._applicationView = new Cryptii.ApplicationView();
+		this._applicationView.setDelegate(this);
+
+		// conversation view
 		this._conversation = new Cryptii.Conversation(this._applicationView);
 
 		// register formats
@@ -36,6 +40,10 @@ var Cryptii = Cryptii || {};
 
 		// attributes
 		this._tickTimer = null;
+
+		// add introduction card
+		this._applicationView.getDeckView().addCardView(
+			new Cryptii.IntroductionCardView());
 
 		// finalize initialization
 		this._conversation.updateLocation();
@@ -90,6 +98,12 @@ var Cryptii = Cryptii || {};
 		// disable tick timer based on document visibility
 		//  for performance reasons
 		this._setTickTimerEnabled(!document.hidden);
+	};
+
+	Application.prototype.onApplicationSideFormatSelect = function(Format)
+	{
+		this._conversation.addFormat(new Format());
+		this._applicationView.toggleSide();
 	};
 
 })(Cryptii, jQuery);

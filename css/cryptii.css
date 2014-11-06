@@ -1,7 +1,7 @@
-//
-// Cryptii
-// 2014-11-04
-//
+/*
+Cryptii
+2014-11-06
+*/
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
 @import url(http://fonts.googleapis.com/css?family=Source+Code+Pro:400);
@@ -87,7 +87,16 @@ body {
     color: #aeaeae; }
     #application #side h1 {
       line-height: 0;
-      padding: 0 40px; }
+      padding: 0 40px 40px; }
+    #application #side ul li a {
+      display: block;
+      padding: 5px 40px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 300;
+      color: #aeaeae; }
+      #application #side ul li a:hover {
+        color: #ffffff; }
   #application #main {
     background: #f7f7f7;
     position: relative;
@@ -137,6 +146,8 @@ body {
         border-radius: 3px; }
         #application #main #deck .card:last-child {
           margin-bottom: 0; }
+        #application #main #deck .card.card-transparent {
+          background: transparent; }
         #application #main #deck .card .header {
           position: relative;
           height: 28px;
@@ -196,6 +207,18 @@ body {
                 background-repeat: no-repeat;
                 background-position: -24px 0px;
                 background-size: 40px auto; }
+        #application #main #deck .card .content {
+          color: #1f1f1f;
+          line-height: 1.6; }
+          #application #main #deck .card .content.content-padding {
+            padding: 25px 20px; }
+          #application #main #deck .card .content p {
+            margin: 20px 0 0 0; }
+            #application #main #deck .card .content p:first-child {
+              margin: 0; }
+        #application #main #deck .card .footer {
+          height: 28px;
+          border-top: 1px solid #eeeeee; }
         #application #main #deck .card.ui-sortable-helper {
           box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); }
         #application #main #deck .card.ghost {

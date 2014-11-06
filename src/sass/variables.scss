@@ -3,6 +3,8 @@
 $color-white: #fcfcfc;
 $color-blue: #249db3;
 $color-red: #b22626;
+$color-black: #191918;
+$color-text-black: #1f1f1f;
 
 // breakpoints
 $break-small: 500px;
@@ -23,7 +25,7 @@ $card-margin: 30px;
 
 // side
 $side-width: 280px;
-$side-background-color: #191918;
+$side-background-color: $color-black;
 $side-color: #aeaeae;
 $side-hover-color: #ffffff;
 
@@ -32,18 +34,19 @@ $card-background-color: $color-white;
 $card-border-color: #dddddd;
 $card-content-border-color: #eeeeee;
 $card-format-color: $color-blue;
-$card-format-header-height: 28px;
+$card-header-height: 28px;
+$card-footer-height: $card-header-height;
 $card-content-padding-horizontal: 25px;
 $card-content-padding-vertical: 20px;
 
 // format card options
-$options-height: $card-format-header-height;
-$options-color: #1f1f1f;
+$options-height: $card-header-height;
+$options-color: $color-text-black;
 $options-label-width: 100px;
 $options-label-color: $color-blue;
 $options-padding-horizontal: 10px;
 
 // card composer
-$composer-color: #1f1f1f;
+$composer-color: $color-text-black;
 $composer-block-color: #dddddd;
 $composer-block-error-color: ($color-red + #202020);
