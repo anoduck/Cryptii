@@ -27,7 +27,7 @@ $card-margin: 30px;
 $side-width: 280px;
 $side-background-color: $color-black;
 $side-color: #aeaeae;
-$side-hover-color: #ffffff;
+$side-hover-color: $color-white;
 
 // card
 $card-background-color: $color-white;
@@ -39,7 +39,8 @@ $card-footer-height: $card-header-height;
 $card-content-padding-horizontal: 25px;
 $card-content-padding-vertical: 20px;
 
-// format card options
+// format card
+$format-arrow-height: $card-header-height + 2px;
 $options-height: $card-header-height;
 $options-color: $color-text-black;
 $options-label-width: 100px;

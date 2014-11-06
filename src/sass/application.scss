@@ -25,17 +25,42 @@
 		ul {
 
 			li {
+				display: block;
+				padding: 2px $body-margin;
 
 				a {
-					display: block;
-					padding: 5px $body-margin;
+					display: table;
+					position: relative;
+					height: $format-arrow-height;
+					line-height: $format-arrow-height;
+					padding: 0 10px;
 					text-decoration: none;
-					font-size: 16px;
-					font-weight: 300;
-					color: $side-color;
+					text-transform: uppercase;
+					color: $side-background-color;
+					background: $side-color;
+
+					&:after {
+						content: '';
+						display: block;
+						position: absolute;
+						top: 0;
+						bottom: 0;
+						right: (- $format-arrow-height * 0.5);
+						width: 0;
+						height: 0;
+						border-style: solid;
+						border-width: ($format-arrow-height * 0.5);
+						border-right-width: 0;
+						border-color: transparent;
+						border-left-color: $side-color;
+					}
 
 					&:hover {
-						color: $side-hover-color;
+						background: $side-hover-color;
+
+						&:after {
+							border-left-color: $side-hover-color;
+						}
 					}
 				}
 			}

@@ -1851,9 +1851,7 @@ var Cryptii = Cryptii || {};
 							placeholder: 'card ghost',
 							distance: 10,
 							items: '> .card',
-							update: function(event, ui) {
-								this.layout();
-							}.bind(this)
+							update: this.onSortableUpdate.bind(this)
 						});
 
 				this.getElement().append($column);
@@ -1982,12 +1980,73 @@ var Cryptii = Cryptii || {};
 
 			this._cardViews.splice(index, 1);
 
-			// redistribute cards
-			this._redistributeCardViews();
+			// reorder
+			this._mirrorCardViewOrder();
 
 			// layout
 			this.layout();
 		}
+	};
+
+	DeckView.prototype._mirrorCardViewOrder = function()
+	{
+		// reorders card views based on the elements in dom
+		var orderedCardViews = [];
+
+		// go through children of this element
+		var $columns = this._$element.children();
+		var indexInColumn = 0;
+		var completedColumnCount = 0;
+
+		// go through each card row
+		while (completedColumnCount < $columns.length)
+		{
+			// reset
+			completedColumnCount = 0;
+
+			for (var i = 0; i < $columns.length; i ++)
+			{
+				var $cardViews = $($columns[i]).children();
+
+				// get card view at index in column
+				if (indexInColumn < $cardViews.length)
+				{
+					var cardView = this._findCardViewByElement(
+						$($cardViews[indexInColumn]));
+					orderedCardViews.push(cardView);
+				}
+				else
+				{
+					completedColumnCount ++;
+				}
+			}
+			
+			indexInColumn ++;
+		}
+
+		// replace card view array
+		this._cardViews = orderedCardViews;
+	};
+
+	DeckView.prototype._findCardViewByElement = function($cardView)
+	{
+		var cardView = null;
+		var i = 0;
+
+		// search for a card view holding this element
+		while (
+			cardView === null
+			&& i < this._cardViews.length
+		) {
+			if (this._cardViews[i].getElement().get(0) == $cardView[0])
+			{
+				cardView = this._cardViews[i];
+			}
+
+			i ++;
+		}
+
+		return cardView;
 	};
 
 	DeckView.prototype.focus = function()
@@ -2007,6 +2066,12 @@ var Cryptii = Cryptii || {};
 				this._cardViews[i].focus();
 			}
 		}
+	};
+
+	DeckView.prototype.onSortableUpdate = function(event, ui)
+	{
+		this._mirrorCardViewOrder();
+		this.layout();
 	};
 
 })(Cryptii, jQuery);

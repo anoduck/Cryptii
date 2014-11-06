@@ -36,8 +36,8 @@
 			&.format {
 				top: -1px;
 				left: -1px;
-				height: ($card-header-height + 2px);
-				line-height: ($card-header-height + 2px);
+				height: $format-arrow-height;
+				line-height: $format-arrow-height;
 				padding: 0 10px 0 ($card-content-padding-horizontal + 2px);
 				background: $card-format-color;
 				color: $card-background-color;
@@ -48,11 +48,11 @@
 					position: absolute;
 					top: 0;
 					bottom: 0;
-					right: (- ($card-header-height + 2px) * 0.5);
+					right: (- $format-arrow-height * 0.5);
 					width: 0;
 					height: 0;
 					border-style: solid;
-					border-width: (($card-header-height + 2px) * 0.5);
+					border-width: ($format-arrow-height * 0.5);
 					border-right-width: 0;
 					border-color: transparent;
 					border-left-color: $card-format-color;

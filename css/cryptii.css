@@ -88,15 +88,37 @@ body {
     #application #side h1 {
       line-height: 0;
       padding: 0 40px 40px; }
-    #application #side ul li a {
+    #application #side ul li {
       display: block;
-      padding: 5px 40px;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 300;
-      color: #aeaeae; }
-      #application #side ul li a:hover {
-        color: #ffffff; }
+      padding: 2px 40px; }
+      #application #side ul li a {
+        display: table;
+        position: relative;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #191918;
+        background: #aeaeae; }
+        #application #side ul li a:after {
+          content: '';
+          display: block;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: -15px;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 15px;
+          border-right-width: 0;
+          border-color: transparent;
+          border-left-color: #aeaeae; }
+        #application #side ul li a:hover {
+          background: #fcfcfc; }
+          #application #side ul li a:hover:after {
+            border-left-color: #fcfcfc; }
   #application #main {
     background: #f7f7f7;
     position: relative;
