@@ -1,10 +1,11 @@
 
-@import "reset";
-
+@import "mixins";
 @import "variables";
+
+@import "reset";
 @import "font";
 
-@import "mixins";
+@import "animations";
 
 html, body {
 	height: 100%;

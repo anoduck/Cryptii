@@ -77,6 +77,29 @@
 			.addClass('footer');
 	};
 
+	CardView.prototype.clearAnimations = function()
+	{
+		this.getElement()
+			.removeClass('animation-intro')
+			.removeClass('animation-outro');
+	};
+
+	CardView.prototype.triggerIntroAnimation = function()
+	{
+		this.getElement().addClass('animation-intro');
+
+		// clear animation after it has been completed
+		//  to prevent animations caused by dom update
+		setTimeout(function() {
+			this.clearAnimations();
+		}.bind(this), 500);
+	};
+
+	CardView.prototype.triggerOutroAnimation = function()
+	{
+		this.getElement().addClass('animation-outro');
+	};
+
 	CardView.prototype.setDeckView = function(deckView)
 	{
 		if (this._deckView !== deckView)
@@ -95,7 +118,14 @@
 	{
 		if (this._deckView !== null)
 		{
-			this._deckView.removeCardView(this);
+			// outro animation
+			this.triggerOutroAnimation();
+
+			// wait until completed
+			setTimeout(function() {
+				this.clearAnimations();
+				this._deckView.removeCardView(this);
+			}.bind(this), 500);
 		}
 	};
 
@@ -123,12 +153,12 @@
 	};
 
 	//
-	// event handling
+	// delegates
 	//
 
 	CardView.prototype.onClose = function()
 	{
-		
+		this.delegate('onCardViewClose');
 	};
 
 })(Cryptii, jQuery);

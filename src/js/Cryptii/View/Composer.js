@@ -20,8 +20,6 @@
 		View.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._delegate = null;
-
 		this._$highlighter = null;
 		this._$textarea = null;
 
@@ -86,13 +84,8 @@
 		{
 			this._lastKnownContent = content;
 
-			// fire event
-			if (
-				this._delegate !== null
-				&& this._delegate.onComposerViewChange !== undefined
-			) {
-				this._delegate.onComposerViewChange(this, content);
-			}
+			// delegate
+			this.delegate('onComposerViewChange', content);
 
 			// the content size depends on the actual content
 			this.layout();
@@ -105,31 +98,10 @@
 		) {
 			this._lastKnownSelection = selection;
 
-			// fire event
-			if (
-				this._delegate !== null
-				&& this._delegate.onComposerViewSelect !== undefined
-			) {
-				this._delegate.onComposerViewSelect(this, selection);
-			}
+			// delegate
+			this.delegate('onComposerViewSelect', selection);
 		}
 	}
-
-	ComposerView.prototype.getHighlighterElement = function()
-	{
-		// builds the element if necessary
-		this.getElement();
-
-		return this._$highlighter;
-	};
-
-	ComposerView.prototype.getContent = function()
-	{
-		// builds the element if necessary
-		this.getElement();
-
-		return this._$textarea.val();
-	};
 
 	ComposerView.prototype.setContent = function(content)
 	{
@@ -182,9 +154,24 @@
 		this._$textarea.focus();
 	};
 
-	ComposerView.prototype.setDelegate = function(delegate)
+	//
+	// accessors
+	//
+
+	ComposerView.prototype.getHighlighterElement = function()
 	{
-		this._delegate = delegate;
+		// builds the element if necessary
+		this.getElement();
+
+		return this._$highlighter;
+	};
+
+	ComposerView.prototype.getContent = function()
+	{
+		// builds the element if necessary
+		this.getElement();
+
+		return this._$textarea.val();
 	};
 
 })(Cryptii, jQuery);

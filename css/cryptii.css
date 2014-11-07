@@ -1,6 +1,6 @@
 /*
 Cryptii
-2014-11-06
+2014-11-07
 */
 
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700);
@@ -59,6 +59,36 @@ body {
   font-size: 14px;
   line-height: 1.3; }
 
+@-webkit-keyframes card-intro {
+  0% {
+    opacity: 0.0;
+    -ms-transform: scale(0.8, 0.8);
+    -webkit-transform: scale(0.8, 0.8);
+    transform: scale(0.8, 0.8); }
+  60% {
+    opacity: 1.0;
+    -ms-transform: scale(1.025, 1.025);
+    -webkit-transform: scale(1.025, 1.025);
+    transform: scale(1.025, 1.025); }
+  100% {
+    -ms-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1); } }
+@keyframes card-intro {
+  0% {
+    opacity: 0.0;
+    -ms-transform: scale(0.8, 0.8);
+    -webkit-transform: scale(0.8, 0.8);
+    transform: scale(0.8, 0.8); }
+  60% {
+    opacity: 1.0;
+    -ms-transform: scale(1.025, 1.025);
+    -webkit-transform: scale(1.025, 1.025);
+    transform: scale(1.025, 1.025); }
+  100% {
+    -ms-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1); } }
 html, body {
   height: 100%; }
 
@@ -170,6 +200,16 @@ body {
           margin-bottom: 0; }
         #application #main #deck .card.card-transparent {
           background: transparent; }
+        #application #main #deck .card.animation-intro, #application #main #deck .card.animation-outro {
+          -webkit-animation-name: card-intro;
+          animation-name: card-intro;
+          -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+          -webkit-animation-duration: 0.25s;
+          animation-duration: 0.25s; }
+          #application #main #deck .card.animation-intro.animation-outro, #application #main #deck .card.animation-outro.animation-outro {
+            -webkit-animation-direction: reverse;
+            animation-direction: reverse; }
         #application #main #deck .card .header {
           position: relative;
           height: 28px;

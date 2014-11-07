@@ -60,30 +60,13 @@
 	};
 
 	//
-	// event handling
-	//
-
-	TextFormatCardView.prototype.onComposerViewChange = function(composerView, content)
-	{
-		// forward to format
-		this._format.onComposerViewChange(composerView, content);
-	};
-
-	TextFormatCardView.prototype.onComposerViewSelect = function(composerView, range)
-	{
-		// forward to format
-		this._format.onComposerViewSelect(composerView, range);
-	};
-
-	//
-	// getters and setters
+	// accessors
 	//
 
 	TextFormatCardView.prototype.getComposerView = function()
 	{
 		if (this._composerView === null) {
 			this._composerView = new Cryptii.ComposerView();
-			this._composerView.setDelegate(this);
 		}
 
 		return this._composerView;

@@ -85,14 +85,4 @@
 		}
 	};
 
-	//
-	// event handling
-	//
-
-	FormatCardView.prototype.onClose = function()
-	{
-		// forward to format
-		this._format.onCardViewClose(this);
-	};
-
 })(Cryptii, jQuery);

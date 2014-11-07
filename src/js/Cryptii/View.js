@@ -5,15 +5,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var View = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	View.prototype = Object.create(Adam.prototype);
 	Cryptii.View = View;
 	
 
 	View.prototype._init = function()
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// attributes
 		this._$element = null;
 	};

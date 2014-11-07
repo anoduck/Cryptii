@@ -5,18 +5,13 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Location = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Location.prototype = Object.create(Adam.prototype);
 	Cryptii.Location = Location;
-	
-
-	Location.prototype._init = function()
-	{
-		// attributes
-		this._delegate = null;
-	};
 
 
 	Location.prototype._useHashFallback = function()
@@ -48,11 +43,6 @@ var Cryptii = Cryptii || {};
 		{
 			
 		}
-	};
-
-	Location.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);

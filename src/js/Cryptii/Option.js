@@ -5,18 +5,21 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Option = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Option.prototype = Object.create(Adam.prototype);
 	Cryptii.Option = Option;
 	
 
 	Option.prototype._init = function(label, defaultValue)
 	{
-		// attributes
-		this._delegate = null;
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
 
+		// attributes
 		this._optionView = null;
 
 		this._label = label;
@@ -31,20 +34,10 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	Option.prototype.getLabel = function()
-	{
-		return this._label;
-	};
-
 	Option.prototype.isValueValid = function(value)
 	{
 		// in the base option, every value is valid
 		return true;
-	};
-
-	Option.prototype.getValue = function()
-	{
-		return this._value;
 	};
 
 	Option.prototype.getEscapedValue = function()
@@ -79,25 +72,28 @@ var Cryptii = Cryptii || {};
 		return this._optionView;
 	};
 
-	Option.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
-	};
-
 	//
-	// event handling
+	// delegates
 	//
 
 	Option.prototype.onOptionViewChange = function(optionView, value)
 	{
 		this._value = value;
+		this.delegate('onOptionChange', value);
+	};
 
-		if (
-			this._delegate !== null
-			&& this._delegate.onOptionChange !== undefined
-		) {
-			this._delegate.onOptionChange(this, value);
-		}
+	//
+	// accessors
+	//
+
+	Option.prototype.getValue = function()
+	{
+		return this._value;
+	};
+	
+	Option.prototype.getLabel = function()
+	{
+		return this._label;
 	};
 
 })(Cryptii, jQuery);

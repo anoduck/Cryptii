@@ -13,6 +13,21 @@
 		background: transparent;
 	}
 
+	&.animation-intro,
+	&.animation-outro {
+		-webkit-animation-name: card-intro;
+		animation-name: card-intro;
+		-webkit-animation-fill-mode: forwards;
+		animation-fill-mode: forwards;
+		-webkit-animation-duration: 0.25s;
+		animation-duration: 0.25s;
+
+		&.animation-outro {
+			-webkit-animation-direction: reverse;
+			animation-direction: reverse;
+		}
+	}
+
 	.header {
 		position: relative;
 		height: $card-header-height;

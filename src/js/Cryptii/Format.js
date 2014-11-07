@@ -5,15 +5,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Format = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Format.prototype = Object.create(Adam.prototype);
 	Cryptii.Format = Format;
 	
 
 	Format.prototype._init = function(options)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+
 		// attributes
 		this._cardView = null;
 		this._conversation = null;
@@ -69,28 +74,15 @@ var Cryptii = Cryptii || {};
 		// override this method
 	};
 
-	//
-	// event handling
-	//
-
-	Format.prototype.onComposerViewChange = function(composerView, content)
+	Format.prototype.registerOption = function(name, option)
 	{
-		var time = new Date().getTime();
-
-		// interpret content
-		var blocks = this.interpret(content);
-
-		// fire event
-		this._conversion.onFormatContentChange(this, blocks);
-		
-		var delta = new Date().getTime() - time;
-		console.log('Time: ' + delta + 'ms');
+		this._options[name] = option;
+		option.addDelegate(this);
 	};
 
-	Format.prototype.onComposerViewSelect = function(composerView, range)
-	{
-
-	};
+	//
+	// delegates
+	//
 
 	Format.prototype.onOptionChange = function(option, value)
 	{
@@ -110,7 +102,7 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// getters and setters
+	// accessors
 	//
 
 	Format.prototype.setConversation = function(conversion)
@@ -123,19 +115,10 @@ var Cryptii = Cryptii || {};
 		if (this._cardView === null)
 		{
 			this._cardView = this._createCardView();
+			this._cardView.addDelegate(this);
 		}
 
 		return this._cardView;
-	};
-
-	Format.prototype.getComposerView = function()
-	{
-		return this.getCardView().getComposerView();
-	};
-
-	Format.prototype.getHighlighterElement = function()
-	{
-		return this.getCardView().getComposerView().getHighlighterElement();
 	};
 
 	Format.prototype.getOptionValue = function(name)
@@ -146,12 +129,6 @@ var Cryptii = Cryptii || {};
 	Format.prototype.getOptions = function()
 	{
 		return this._options;
-	};
-
-	Format.prototype.registerOption = function(name, option)
-	{
-		this._options[name] = option;
-		option.setDelegate(this);
 	};
 
 })(Cryptii, jQuery);

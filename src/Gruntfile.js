@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 			dist: {
 				src: [
 					'js/Cryptii.js',
+					'js/Cryptii/Adam.js',
 					'js/Cryptii/*.js',
 					'js/Cryptii/Format/Text.js',
 					'js/Cryptii/Format/Decimal.js',

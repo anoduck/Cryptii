@@ -5,21 +5,28 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Application = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Application.prototype = Object.create(Adam.prototype);
 	Cryptii.Application = Application;
 
 
 	Application.prototype._init = function()
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// application view
 		this._applicationView = new Cryptii.ApplicationView();
-		this._applicationView.setDelegate(this);
 
 		// conversation view
 		this._conversation = new Cryptii.Conversation(this._applicationView);
+
+		// connect to delegates
+		this._applicationView.getSideView().addDelegate(this);
 
 		// register formats
 		this._conversation.registerFormat([
@@ -67,12 +74,6 @@ var Cryptii = Cryptii || {};
 		this._conversation.addFormat(new Cryptii.OctalFormat());
 	};
 
-
-	Application.prototype.tick = function()
-	{
-		// forward tick to application view
-		this._applicationView.tick();
-	};
 	
 	Application.prototype._setTickTimerEnabled = function(enabled)
 	{
@@ -93,6 +94,16 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	Application.prototype.tick = function()
+	{
+		// forward tick to application view
+		this._applicationView.tick();
+	};
+
+	//
+	// delegates
+	//
+
 	Application.prototype.onVisibilityChange = function()
 	{
 		// disable tick timer based on document visibility
@@ -100,10 +111,9 @@ var Cryptii = Cryptii || {};
 		this._setTickTimerEnabled(!document.hidden);
 	};
 
-	Application.prototype.onApplicationSideFormatSelect = function(Format)
+	Application.prototype.onSideViewFormatSelect = function(sideView, Format)
 	{
 		this._conversation.addFormat(new Format());
-		this._applicationView.toggleSide();
 	};
 
 })(Cryptii, jQuery);

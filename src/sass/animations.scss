@@ -1,0 +1,32 @@
+
+@-webkit-keyframes card-intro {
+	0% {
+		opacity: 0.0;
+		@include transform(scale(0.8, 0.8));
+	}
+
+	60% {
+		opacity: 1.0;
+		@include transform(scale(1.025, 1.025));
+	}
+
+	100% {
+		@include transform(scale(1.0, 1.0));
+	}
+}
+
+@keyframes card-intro {
+	0% {
+		opacity: 0.0;
+		@include transform(scale(0.8, 0.8));
+	}
+
+	60% {
+		opacity: 1.0;
+		@include transform(scale(1.025, 1.025));
+	}
+
+	100% {
+		@include transform(scale(1.0, 1.0));
+	}
+}

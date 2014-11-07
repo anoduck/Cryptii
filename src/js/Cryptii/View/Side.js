@@ -24,8 +24,6 @@
 		this._hidden = true;
 
 		this._$registeredFormats = null;
-
-		this._delegate = null;
 	};
 
 
@@ -85,16 +83,6 @@
 		}
 	};
 
-	SideView.prototype.onFormatSelect = function(Format)
-	{
-		if (
-			this._delegate !== null
-			&& this._delegate.onSideFormatSelect !== undefined
-		) {
-			this._delegate.onSideFormatSelect(Format);
-		}
-	};
-
 	SideView.prototype.tick = function()
 	{
 		// only handle ticks when visible
@@ -126,6 +114,25 @@
 		}
 	};
 
+	//
+	// delegates
+	//
+
+	SideView.prototype.onFormatSelect = function(Format)
+	{
+		this.delegate('onSideViewClose');
+
+		// wait until side is toggled
+		//  before propagating the event
+		setTimeout(function() {
+			this.delegate('onSideViewFormatSelect', Format);
+		}.bind(this), 500);
+	};
+
+	//
+	// accessors
+	//
+
 	SideView.prototype.getLogoView = function()
 	{
 		if (this._logoView === null) {
@@ -133,11 +140,6 @@
 		}
 
 		return this._logoView;
-	};
-
-	SideView.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);

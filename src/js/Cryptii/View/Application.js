@@ -27,8 +27,6 @@
 
 		this._sideVisible = false;
 
-		this._delegate = null;
-
 		// the curtain drops
 		// lets bring this beautiful app to the screen
 		$('body').append(this.getElement());
@@ -114,23 +112,24 @@
 		this.getDeckView().focus();
 	};
 
+	//
+	// delegates
+	//
 
-	ApplicationView.prototype.onSideFormatSelect = function(Format)
+	ApplicationView.prototype.onSideViewClose = function(Format)
 	{
-		if (
-			this._delegate !== null
-			&& this._delegate.onApplicationSideFormatSelect !== undefined
-		) {
-			this._delegate.onApplicationSideFormatSelect(Format);
-		}
+		this.toggleSide();
 	};
 
+	//
+	// accessors
+	//
 
 	ApplicationView.prototype.getSideView = function()
 	{
 		if (this._sideView === null) {
 			this._sideView = new Cryptii.SideView();
-			this._sideView.setDelegate(this);
+			this._sideView.addDelegate(this);
 		}
 
 		return this._sideView;
@@ -143,11 +142,6 @@
 		}
 
 		return this._deckView;
-	};
-
-	ApplicationView.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);

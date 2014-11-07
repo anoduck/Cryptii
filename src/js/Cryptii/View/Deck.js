@@ -25,15 +25,18 @@
 
 		// attributes
 		this._cardViews = [];
+		this._$columns = null;
 
-		this._columnCount = 0;
-		this._columnCardDistributeIndex = 0;
+		this._animated = false;
 
 		// turn on animation after the initial state has been built
 		setTimeout(function() {
+			this.layout();
+			this._animated = true;
 			this._$element.addClass('animated');
-		}.bind(this), 500);
+		}.bind(this), 250);
 	};
+
 
 	DeckView.prototype._build = function()
 	{
@@ -61,12 +64,11 @@
 			), 1);
 		
 		// handle changes in column count
-		if (this._columnCount != columnCount)
-		{
-			this._columnCount = columnCount;
-
+		if (
+			this._$columns === null
+			|| this._$columns.length != columnCount
+		) {
 			// detach all cards
-			this._columnCardDistributeIndex = 0;
 			for (var i = 0; i < this._cardViews.length; i ++)
 				this._cardViews[i].getElement().detach();
 
@@ -92,21 +94,21 @@
 				this.getElement().append($column);
 			}
 
-			// distribute cards to columns
-			this._distributeCardView(this._cardViews);
-		}
+			// bind columns
+			this._$columns = this.getElement().children();
 
-		// get visible columns
-		var $columns = this.getElement().children();
+			// distribute cards to columns
+			this._distributeCardView(this._cardViews, false);
+		}
 
 		// layout column width
 		// when only one column is visible
 		//  it takes the full width available
-		if (this._columnCount > 1)
+		if (this._$columns.length > 1)
 		{
 			// set a fixed column width
-			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / columnCount);
-			$columns
+			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / this._$columns.length);
+			this._$columns
 				.width(columnWidth - this._CARD_MARGIN)
 				.addClass('fixed-width');
 		}
@@ -118,29 +120,20 @@
 		}
 
 		// layout column height
-		if (this._columnCount > 1)
+		if (this._$columns.length > 1)
 		{
 			// retrieve the height of the largest column
 			var maxColumnHeight = 0;
-			for (var i = 0; i < $columns.length; i ++)
+			for (var i = 0; i < this._$columns.length; i ++)
 			{
-				var $column = $($columns.get(i));
-				var $cards = $column.children();
-
-				// mesure the height of this column
-				var height = 0;
-				for (var j = 0; j < $cards.length; j ++)
-				{
-					// add up margin card height and border width
-					height += this._CARD_MARGIN + $($cards.get(j)).height() + 2;
-				}
-
-				maxColumnHeight = Math.max(maxColumnHeight, height);
+				maxColumnHeight = Math.max(
+					maxColumnHeight,
+					this._calculateColumnHeight(i));
 			}
 
 			// set a fixed height for all columns
 			//  to improve the sortable interaction
-			$columns.height(maxColumnHeight);
+			this._$columns.height(maxColumnHeight);
 
 			// also set a fixed height for the deck
 			//  element because the columns float
@@ -148,16 +141,55 @@
 		}
 	};
 
-	DeckView.prototype._distributeCardView = function(cardView)
+	DeckView.prototype._calculateColumnHeight = function(columnIndex)
 	{
+		var $cardViews = $(this._$columns[columnIndex]).children();
+		var height = 0;
+
+		for (var i = 0; i < $cardViews.length; i ++)
+		{
+			// add up margin, card height and border width
+			height += this._CARD_MARGIN + $($cardViews.get(i)).height() + 2;
+		}
+
+		return height;
+	};
+
+	DeckView.prototype._distributeCardView = function(cardView, animated, propagate)
+	{
+		// handle optional internal propagate parameter
+		if (propagate === undefined) {
+			propagate = true;
+		}
+
 		if (cardView instanceof Cryptii.CardView)
 		{
-			// calculate the column index where the card should appear
-			var columnIndex = (this._columnCardDistributeIndex ++) % this._columnCount;
+			// get the smallest column element
+			var $smallestColumn = null;
+			var smallestColumnHeight = null;
 
-			// append card to column
-			var $column = $(this.getElement().children().get(columnIndex));
-			$column.append(cardView.getElement());
+			for (var i = 0; i < this._$columns.length; i ++)
+			{
+				var height = this._calculateColumnHeight(i);
+				if (
+					smallestColumnHeight === null
+					|| height < smallestColumnHeight
+				) {
+					$smallestColumn = $(this._$columns[i]);
+					smallestColumnHeight = height;
+				}
+			}
+
+			// clear animations
+			cardView.clearAnimations();
+
+			// set animated
+			if (this._animated && animated) {
+				cardView.triggerIntroAnimation();
+			}
+
+			// append card to smallest column
+			$smallestColumn.append(cardView.getElement());
 
 			this.layout();
 		}
@@ -168,28 +200,22 @@
 
 			// distribute each card
 			for (var i = 0; i < cardViews.length; i ++)
-				this._distributeCardView(cardViews[i]);
+				this._distributeCardView(cardViews[i], animated, false);
+		}
+
+		if (propagate) {
+			this.onChange();
 		}
 	};
 
 	DeckView.prototype._redistributeCardViews = function()
 	{
 		// detach all cards
-		this._columnCardDistributeIndex = 0;
 		for (var i = 0; i < this._cardViews.length; i ++)
 			this._cardViews[i].getElement().detach();
 
 		// distribute cards in column system
-		this._distributeCardView(this._cardViews);
-	};
-
-	DeckView.prototype.tick = function()
-	{
-		// distribute tick to cards
-		for (var i = 0; i < this._cardViews.length; i ++)
-		{
-			this._cardViews[i].tick();
-		}
+		this._distributeCardView(this._cardViews, false);
 	};
 
 	DeckView.prototype.addCardView = function(cardViews)
@@ -200,7 +226,7 @@
 			cardViews.setDeckView(this);
 
 			this._cardViews.push(cardViews);
-			this._distributeCardView(cardViews);
+			this._distributeCardView(cardViews, true);
 		}
 	};
 
@@ -216,7 +242,7 @@
 			this._cardViews.splice(index, 1);
 
 			// reorder
-			this._mirrorCardViewOrder();
+			this.onChange();
 
 			// layout
 			this.layout();
@@ -284,6 +310,15 @@
 		return cardView;
 	};
 
+	DeckView.prototype.tick = function()
+	{
+		// distribute tick to cards
+		for (var i = 0; i < this._cardViews.length; i ++)
+		{
+			this._cardViews[i].tick();
+		}
+	};
+
 	DeckView.prototype.focus = function()
 	{
 			// focus first card view that can be focused
@@ -303,10 +338,31 @@
 		}
 	};
 
+	//
+	// delegates
+	//
+
 	DeckView.prototype.onSortableUpdate = function(event, ui)
 	{
-		this._mirrorCardViewOrder();
 		this.layout();
+		this.onChange();
+	};
+
+	DeckView.prototype.onChange = function()
+	{
+		// reorder card views
+		this._mirrorCardViewOrder();
+
+		this.delegate('onDeckViewChange', this._cardViews);
+	};
+
+	//
+	// accessors
+	//
+
+	DeckView.prototype.getCardViews = function()
+	{
+		return this._cardViews;
 	};
 
 })(Cryptii, jQuery);

@@ -17,21 +17,100 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = (function() {
+		this._init.apply(this, arguments);
+	});
+
+	Cryptii.Adam = Adam;
+	
+
+	Adam.prototype._init = function()
+	{
+		// attributes
+		this._delegates = [];
+	};
+
+
+	Adam.prototype.addDelegate = function(delegate)
+	{
+		if (this._delegates.indexOf(delegate) === -1)
+		{
+			this._delegates.push(delegate);
+		}
+	};
+
+	Adam.prototype.removeDelegate = function(delegate)
+	{
+		var index = this._delegates.indexOf(delegate);
+		if (index !== -1)
+		{
+			this._delegates.splice(index, 1);
+		}
+	};
+
+	Adam.prototype.delegate = function(method)
+	{
+		if (
+			method !== undefined
+			&& this._delegates.length > 0
+		) {
+			// add sender as first argument
+			var args = [this];
+
+			// collect arguments
+			for (var i = 1; i < arguments.length; i ++)
+			{
+				args.push(arguments[i]);
+			}
+
+			// go through delegates
+			for (var i = 0; i < this._delegates.length; i ++)
+			{
+				var delegate = this._delegates[i];
+
+				// check if this delegate supports this method
+				if (delegate[method] !== undefined)
+				{
+					// call delegate method
+					delegate[method].apply(delegate, args);
+				}
+			}
+		}
+	};
+
+})(Cryptii, jQuery);
+
+;
+
+
+var Cryptii = Cryptii || {};
+
+(function(Cryptii, $) {
+	'use strict';
+
+	// define class
+	var Adam = Cryptii.Adam;
 	var Application = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Application.prototype = Object.create(Adam.prototype);
 	Cryptii.Application = Application;
 
 
 	Application.prototype._init = function()
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// application view
 		this._applicationView = new Cryptii.ApplicationView();
-		this._applicationView.setDelegate(this);
 
 		// conversation view
 		this._conversation = new Cryptii.Conversation(this._applicationView);
+
+		// connect to delegates
+		this._applicationView.getSideView().addDelegate(this);
 
 		// register formats
 		this._conversation.registerFormat([
@@ -79,12 +158,6 @@ var Cryptii = Cryptii || {};
 		this._conversation.addFormat(new Cryptii.OctalFormat());
 	};
 
-
-	Application.prototype.tick = function()
-	{
-		// forward tick to application view
-		this._applicationView.tick();
-	};
 	
 	Application.prototype._setTickTimerEnabled = function(enabled)
 	{
@@ -105,6 +178,16 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	Application.prototype.tick = function()
+	{
+		// forward tick to application view
+		this._applicationView.tick();
+	};
+
+	//
+	// delegates
+	//
+
 	Application.prototype.onVisibilityChange = function()
 	{
 		// disable tick timer based on document visibility
@@ -112,10 +195,9 @@ var Cryptii = Cryptii || {};
 		this._setTickTimerEnabled(!document.hidden);
 	};
 
-	Application.prototype.onApplicationSideFormatSelect = function(Format)
+	Application.prototype.onSideViewFormatSelect = function(sideView, Format)
 	{
 		this._conversation.addFormat(new Format());
-		this._applicationView.toggleSide();
 	};
 
 })(Cryptii, jQuery);
@@ -129,15 +211,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Conversation = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Conversation.prototype = Object.create(Adam.prototype);
 	Cryptii.Conversation = Conversation;
 	
 
 	Conversation.prototype._init = function(applicationView)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// attributes
 		this._applicationView = applicationView;
 
@@ -148,7 +235,10 @@ var Cryptii = Cryptii || {};
 		this._difference = [];
 
 		this._location = new Cryptii.Location();
-		this._location.setDelegate(this);
+		this._location.addDelegate(this);
+
+		// delegates
+		this._applicationView.getDeckView().addDelegate(this);
 	};
 
 	Conversation.prototype.addFormat = function(format)
@@ -329,7 +419,7 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// event handling
+	// format delegates
 	//
 
 	Conversation.prototype.onFormatContentChange = function(format, blocks)
@@ -363,15 +453,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Difference = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Difference.prototype = Object.create(Adam.prototype);
 	Cryptii.Difference = Difference;
 	
 
 	Difference.prototype._init = function(startOffset, endOffset, blocks)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+
 		// attributes
 		this._startOffset = startOffset;
 		this._endOffset = endOffset;
@@ -404,15 +499,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Format = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Format.prototype = Object.create(Adam.prototype);
 	Cryptii.Format = Format;
 	
 
 	Format.prototype._init = function(options)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+
 		// attributes
 		this._cardView = null;
 		this._conversation = null;
@@ -468,28 +568,15 @@ var Cryptii = Cryptii || {};
 		// override this method
 	};
 
-	//
-	// event handling
-	//
-
-	Format.prototype.onComposerViewChange = function(composerView, content)
+	Format.prototype.registerOption = function(name, option)
 	{
-		var time = new Date().getTime();
-
-		// interpret content
-		var blocks = this.interpret(content);
-
-		// fire event
-		this._conversion.onFormatContentChange(this, blocks);
-		
-		var delta = new Date().getTime() - time;
-		console.log('Time: ' + delta + 'ms');
+		this._options[name] = option;
+		option.addDelegate(this);
 	};
 
-	Format.prototype.onComposerViewSelect = function(composerView, range)
-	{
-
-	};
+	//
+	// delegates
+	//
 
 	Format.prototype.onOptionChange = function(option, value)
 	{
@@ -509,7 +596,7 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// getters and setters
+	// accessors
 	//
 
 	Format.prototype.setConversation = function(conversion)
@@ -522,19 +609,10 @@ var Cryptii = Cryptii || {};
 		if (this._cardView === null)
 		{
 			this._cardView = this._createCardView();
+			this._cardView.addDelegate(this);
 		}
 
 		return this._cardView;
-	};
-
-	Format.prototype.getComposerView = function()
-	{
-		return this.getCardView().getComposerView();
-	};
-
-	Format.prototype.getHighlighterElement = function()
-	{
-		return this.getCardView().getComposerView().getHighlighterElement();
 	};
 
 	Format.prototype.getOptionValue = function(name)
@@ -545,12 +623,6 @@ var Cryptii = Cryptii || {};
 	Format.prototype.getOptions = function()
 	{
 		return this._options;
-	};
-
-	Format.prototype.registerOption = function(name, option)
-	{
-		this._options[name] = option;
-		option.setDelegate(this);
 	};
 
 })(Cryptii, jQuery);
@@ -564,18 +636,13 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Location = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Location.prototype = Object.create(Adam.prototype);
 	Cryptii.Location = Location;
-	
-
-	Location.prototype._init = function()
-	{
-		// attributes
-		this._delegate = null;
-	};
 
 
 	Location.prototype._useHashFallback = function()
@@ -609,11 +676,6 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Location.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
-	};
-
 })(Cryptii, jQuery);
 
 ;
@@ -625,18 +687,21 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Option = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Option.prototype = Object.create(Adam.prototype);
 	Cryptii.Option = Option;
 	
 
 	Option.prototype._init = function(label, defaultValue)
 	{
-		// attributes
-		this._delegate = null;
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
 
+		// attributes
 		this._optionView = null;
 
 		this._label = label;
@@ -651,20 +716,10 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	Option.prototype.getLabel = function()
-	{
-		return this._label;
-	};
-
 	Option.prototype.isValueValid = function(value)
 	{
 		// in the base option, every value is valid
 		return true;
-	};
-
-	Option.prototype.getValue = function()
-	{
-		return this._value;
 	};
 
 	Option.prototype.getEscapedValue = function()
@@ -699,25 +754,28 @@ var Cryptii = Cryptii || {};
 		return this._optionView;
 	};
 
-	Option.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
-	};
-
 	//
-	// event handling
+	// delegates
 	//
 
 	Option.prototype.onOptionViewChange = function(optionView, value)
 	{
 		this._value = value;
+		this.delegate('onOptionChange', value);
+	};
 
-		if (
-			this._delegate !== null
-			&& this._delegate.onOptionChange !== undefined
-		) {
-			this._delegate.onOptionChange(this, value);
-		}
+	//
+	// accessors
+	//
+
+	Option.prototype.getValue = function()
+	{
+		return this._value;
+	};
+	
+	Option.prototype.getLabel = function()
+	{
+		return this._label;
 	};
 
 })(Cryptii, jQuery);
@@ -731,19 +789,38 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Range = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Range.prototype = Object.create(Adam.prototype);
 	Cryptii.Range = Range;
 	
 
 	Range.prototype._init = function(start, end)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// attributes
 		this._start = start;
 		this._end = end;
 	};
+
+
+	Range.prototype.isEqualTo = function(range)
+	{
+		return (
+			range != null
+			&& range.getStart() == this.getStart()
+			&& range.getEnd() == this.getEnd()
+		);
+	};
+
+	//
+	// accessors
+	//
 
 	Range.prototype.getStart = function()
 	{
@@ -760,15 +837,6 @@ var Cryptii = Cryptii || {};
 		return this._end;
 	};
 
-	Range.prototype.isEqualTo = function(range)
-	{
-		return (
-			range != null
-			&& range.getStart() == this.getStart()
-			&& range.getEnd() == this.getEnd()
-		);
-	};
-
 })(Cryptii, jQuery);
 
 ;
@@ -780,15 +848,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var View = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	View.prototype = Object.create(Adam.prototype);
 	Cryptii.View = View;
 	
 
 	View.prototype._init = function()
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// attributes
 		this._$element = null;
 	};
@@ -854,7 +927,12 @@ var Cryptii = Cryptii || {};
 	TextFormat.prototype._createCardView = function()
 	{
 		// choose card view for this format
-		return new Cryptii.TextFormatCardView(this);
+		var textFormatCardView = new Cryptii.TextFormatCardView(this);
+
+		// add delegate
+		textFormatCardView.getComposerView().addDelegate(this);
+
+		return textFormatCardView;
 	};
 
 
@@ -1092,6 +1170,35 @@ var Cryptii = Cryptii || {};
 		composerView.setContent(content);
 	};
 
+	TextFormat.prototype.getComposerView = function()
+	{
+		return this.getCardView().getComposerView();
+	};
+
+	TextFormat.prototype.getHighlighterElement = function()
+	{
+		return this.getCardView().getComposerView().getHighlighterElement();
+	};
+
+	TextFormat.prototype.onComposerViewChange = function(composerView, content)
+	{
+		var time = new Date().getTime();
+
+		// interpret content
+		var blocks = this.interpret(content);
+
+		// fire event
+		this._conversion.onFormatContentChange(this, blocks);
+		
+		var delta = new Date().getTime() - time;
+		console.log('Time: ' + delta + 'ms');
+	};
+
+	TextFormat.prototype.onComposerViewSelect = function(composerView, range)
+	{
+
+	};
+
 })(Cryptii, jQuery);
 
 ;
@@ -1306,8 +1413,6 @@ var Cryptii = Cryptii || {};
 
 		this._sideVisible = false;
 
-		this._delegate = null;
-
 		// the curtain drops
 		// lets bring this beautiful app to the screen
 		$('body').append(this.getElement());
@@ -1393,23 +1498,24 @@ var Cryptii = Cryptii || {};
 		this.getDeckView().focus();
 	};
 
+	//
+	// delegates
+	//
 
-	ApplicationView.prototype.onSideFormatSelect = function(Format)
+	ApplicationView.prototype.onSideViewClose = function(Format)
 	{
-		if (
-			this._delegate !== null
-			&& this._delegate.onApplicationSideFormatSelect !== undefined
-		) {
-			this._delegate.onApplicationSideFormatSelect(Format);
-		}
+		this.toggleSide();
 	};
 
+	//
+	// accessors
+	//
 
 	ApplicationView.prototype.getSideView = function()
 	{
 		if (this._sideView === null) {
 			this._sideView = new Cryptii.SideView();
-			this._sideView.setDelegate(this);
+			this._sideView.addDelegate(this);
 		}
 
 		return this._sideView;
@@ -1422,11 +1528,6 @@ var Cryptii = Cryptii || {};
 		}
 
 		return this._deckView;
-	};
-
-	ApplicationView.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
@@ -1512,6 +1613,29 @@ var Cryptii = Cryptii || {};
 			.addClass('footer');
 	};
 
+	CardView.prototype.clearAnimations = function()
+	{
+		this.getElement()
+			.removeClass('animation-intro')
+			.removeClass('animation-outro');
+	};
+
+	CardView.prototype.triggerIntroAnimation = function()
+	{
+		this.getElement().addClass('animation-intro');
+
+		// clear animation after it has been completed
+		//  to prevent animations caused by dom update
+		setTimeout(function() {
+			this.clearAnimations();
+		}.bind(this), 500);
+	};
+
+	CardView.prototype.triggerOutroAnimation = function()
+	{
+		this.getElement().addClass('animation-outro');
+	};
+
 	CardView.prototype.setDeckView = function(deckView)
 	{
 		if (this._deckView !== deckView)
@@ -1530,7 +1654,14 @@ var Cryptii = Cryptii || {};
 	{
 		if (this._deckView !== null)
 		{
-			this._deckView.removeCardView(this);
+			// outro animation
+			this.triggerOutroAnimation();
+
+			// wait until completed
+			setTimeout(function() {
+				this.clearAnimations();
+				this._deckView.removeCardView(this);
+			}.bind(this), 500);
 		}
 	};
 
@@ -1558,12 +1689,12 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// event handling
+	// delegates
 	//
 
 	CardView.prototype.onClose = function()
 	{
-		
+		this.delegate('onCardViewClose');
 	};
 
 })(Cryptii, jQuery);
@@ -1592,8 +1723,6 @@ var Cryptii = Cryptii || {};
 		View.prototype._init.apply(this, arguments);
 
 		// attributes
-		this._delegate = null;
-
 		this._$highlighter = null;
 		this._$textarea = null;
 
@@ -1658,13 +1787,8 @@ var Cryptii = Cryptii || {};
 		{
 			this._lastKnownContent = content;
 
-			// fire event
-			if (
-				this._delegate !== null
-				&& this._delegate.onComposerViewChange !== undefined
-			) {
-				this._delegate.onComposerViewChange(this, content);
-			}
+			// delegate
+			this.delegate('onComposerViewChange', content);
 
 			// the content size depends on the actual content
 			this.layout();
@@ -1677,31 +1801,10 @@ var Cryptii = Cryptii || {};
 		) {
 			this._lastKnownSelection = selection;
 
-			// fire event
-			if (
-				this._delegate !== null
-				&& this._delegate.onComposerViewSelect !== undefined
-			) {
-				this._delegate.onComposerViewSelect(this, selection);
-			}
+			// delegate
+			this.delegate('onComposerViewSelect', selection);
 		}
 	}
-
-	ComposerView.prototype.getHighlighterElement = function()
-	{
-		// builds the element if necessary
-		this.getElement();
-
-		return this._$highlighter;
-	};
-
-	ComposerView.prototype.getContent = function()
-	{
-		// builds the element if necessary
-		this.getElement();
-
-		return this._$textarea.val();
-	};
 
 	ComposerView.prototype.setContent = function(content)
 	{
@@ -1754,9 +1857,24 @@ var Cryptii = Cryptii || {};
 		this._$textarea.focus();
 	};
 
-	ComposerView.prototype.setDelegate = function(delegate)
+	//
+	// accessors
+	//
+
+	ComposerView.prototype.getHighlighterElement = function()
 	{
-		this._delegate = delegate;
+		// builds the element if necessary
+		this.getElement();
+
+		return this._$highlighter;
+	};
+
+	ComposerView.prototype.getContent = function()
+	{
+		// builds the element if necessary
+		this.getElement();
+
+		return this._$textarea.val();
 	};
 
 })(Cryptii, jQuery);
@@ -1790,15 +1908,18 @@ var Cryptii = Cryptii || {};
 
 		// attributes
 		this._cardViews = [];
+		this._$columns = null;
 
-		this._columnCount = 0;
-		this._columnCardDistributeIndex = 0;
+		this._animated = false;
 
 		// turn on animation after the initial state has been built
 		setTimeout(function() {
+			this.layout();
+			this._animated = true;
 			this._$element.addClass('animated');
-		}.bind(this), 500);
+		}.bind(this), 250);
 	};
+
 
 	DeckView.prototype._build = function()
 	{
@@ -1826,12 +1947,11 @@ var Cryptii = Cryptii || {};
 			), 1);
 		
 		// handle changes in column count
-		if (this._columnCount != columnCount)
-		{
-			this._columnCount = columnCount;
-
+		if (
+			this._$columns === null
+			|| this._$columns.length != columnCount
+		) {
 			// detach all cards
-			this._columnCardDistributeIndex = 0;
 			for (var i = 0; i < this._cardViews.length; i ++)
 				this._cardViews[i].getElement().detach();
 
@@ -1857,21 +1977,21 @@ var Cryptii = Cryptii || {};
 				this.getElement().append($column);
 			}
 
-			// distribute cards to columns
-			this._distributeCardView(this._cardViews);
-		}
+			// bind columns
+			this._$columns = this.getElement().children();
 
-		// get visible columns
-		var $columns = this.getElement().children();
+			// distribute cards to columns
+			this._distributeCardView(this._cardViews, false);
+		}
 
 		// layout column width
 		// when only one column is visible
 		//  it takes the full width available
-		if (this._columnCount > 1)
+		if (this._$columns.length > 1)
 		{
 			// set a fixed column width
-			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / columnCount);
-			$columns
+			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / this._$columns.length);
+			this._$columns
 				.width(columnWidth - this._CARD_MARGIN)
 				.addClass('fixed-width');
 		}
@@ -1883,29 +2003,20 @@ var Cryptii = Cryptii || {};
 		}
 
 		// layout column height
-		if (this._columnCount > 1)
+		if (this._$columns.length > 1)
 		{
 			// retrieve the height of the largest column
 			var maxColumnHeight = 0;
-			for (var i = 0; i < $columns.length; i ++)
+			for (var i = 0; i < this._$columns.length; i ++)
 			{
-				var $column = $($columns.get(i));
-				var $cards = $column.children();
-
-				// mesure the height of this column
-				var height = 0;
-				for (var j = 0; j < $cards.length; j ++)
-				{
-					// add up margin card height and border width
-					height += this._CARD_MARGIN + $($cards.get(j)).height() + 2;
-				}
-
-				maxColumnHeight = Math.max(maxColumnHeight, height);
+				maxColumnHeight = Math.max(
+					maxColumnHeight,
+					this._calculateColumnHeight(i));
 			}
 
 			// set a fixed height for all columns
 			//  to improve the sortable interaction
-			$columns.height(maxColumnHeight);
+			this._$columns.height(maxColumnHeight);
 
 			// also set a fixed height for the deck
 			//  element because the columns float
@@ -1913,16 +2024,55 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	DeckView.prototype._distributeCardView = function(cardView)
+	DeckView.prototype._calculateColumnHeight = function(columnIndex)
 	{
+		var $cardViews = $(this._$columns[columnIndex]).children();
+		var height = 0;
+
+		for (var i = 0; i < $cardViews.length; i ++)
+		{
+			// add up margin, card height and border width
+			height += this._CARD_MARGIN + $($cardViews.get(i)).height() + 2;
+		}
+
+		return height;
+	};
+
+	DeckView.prototype._distributeCardView = function(cardView, animated, propagate)
+	{
+		// handle optional internal propagate parameter
+		if (propagate === undefined) {
+			propagate = true;
+		}
+
 		if (cardView instanceof Cryptii.CardView)
 		{
-			// calculate the column index where the card should appear
-			var columnIndex = (this._columnCardDistributeIndex ++) % this._columnCount;
+			// get the smallest column element
+			var $smallestColumn = null;
+			var smallestColumnHeight = null;
 
-			// append card to column
-			var $column = $(this.getElement().children().get(columnIndex));
-			$column.append(cardView.getElement());
+			for (var i = 0; i < this._$columns.length; i ++)
+			{
+				var height = this._calculateColumnHeight(i);
+				if (
+					smallestColumnHeight === null
+					|| height < smallestColumnHeight
+				) {
+					$smallestColumn = $(this._$columns[i]);
+					smallestColumnHeight = height;
+				}
+			}
+
+			// clear animations
+			cardView.clearAnimations();
+
+			// set animated
+			if (this._animated && animated) {
+				cardView.triggerIntroAnimation();
+			}
+
+			// append card to smallest column
+			$smallestColumn.append(cardView.getElement());
 
 			this.layout();
 		}
@@ -1933,28 +2083,22 @@ var Cryptii = Cryptii || {};
 
 			// distribute each card
 			for (var i = 0; i < cardViews.length; i ++)
-				this._distributeCardView(cardViews[i]);
+				this._distributeCardView(cardViews[i], animated, false);
+		}
+
+		if (propagate) {
+			this.onChange();
 		}
 	};
 
 	DeckView.prototype._redistributeCardViews = function()
 	{
 		// detach all cards
-		this._columnCardDistributeIndex = 0;
 		for (var i = 0; i < this._cardViews.length; i ++)
 			this._cardViews[i].getElement().detach();
 
 		// distribute cards in column system
-		this._distributeCardView(this._cardViews);
-	};
-
-	DeckView.prototype.tick = function()
-	{
-		// distribute tick to cards
-		for (var i = 0; i < this._cardViews.length; i ++)
-		{
-			this._cardViews[i].tick();
-		}
+		this._distributeCardView(this._cardViews, false);
 	};
 
 	DeckView.prototype.addCardView = function(cardViews)
@@ -1965,7 +2109,7 @@ var Cryptii = Cryptii || {};
 			cardViews.setDeckView(this);
 
 			this._cardViews.push(cardViews);
-			this._distributeCardView(cardViews);
+			this._distributeCardView(cardViews, true);
 		}
 	};
 
@@ -1981,7 +2125,7 @@ var Cryptii = Cryptii || {};
 			this._cardViews.splice(index, 1);
 
 			// reorder
-			this._mirrorCardViewOrder();
+			this.onChange();
 
 			// layout
 			this.layout();
@@ -2049,6 +2193,15 @@ var Cryptii = Cryptii || {};
 		return cardView;
 	};
 
+	DeckView.prototype.tick = function()
+	{
+		// distribute tick to cards
+		for (var i = 0; i < this._cardViews.length; i ++)
+		{
+			this._cardViews[i].tick();
+		}
+	};
+
 	DeckView.prototype.focus = function()
 	{
 			// focus first card view that can be focused
@@ -2068,10 +2221,31 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	//
+	// delegates
+	//
+
 	DeckView.prototype.onSortableUpdate = function(event, ui)
 	{
-		this._mirrorCardViewOrder();
 		this.layout();
+		this.onChange();
+	};
+
+	DeckView.prototype.onChange = function()
+	{
+		// reorder card views
+		this._mirrorCardViewOrder();
+
+		this.delegate('onDeckViewChange', this._cardViews);
+	};
+
+	//
+	// accessors
+	//
+
+	DeckView.prototype.getCardViews = function()
+	{
+		return this._cardViews;
 	};
 
 })(Cryptii, jQuery);
@@ -2327,8 +2501,6 @@ var Cryptii = Cryptii || {};
 		this._hidden = true;
 
 		this._$registeredFormats = null;
-
-		this._delegate = null;
 	};
 
 
@@ -2388,16 +2560,6 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	SideView.prototype.onFormatSelect = function(Format)
-	{
-		if (
-			this._delegate !== null
-			&& this._delegate.onSideFormatSelect !== undefined
-		) {
-			this._delegate.onSideFormatSelect(Format);
-		}
-	};
-
 	SideView.prototype.tick = function()
 	{
 		// only handle ticks when visible
@@ -2429,6 +2591,25 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
+	//
+	// delegates
+	//
+
+	SideView.prototype.onFormatSelect = function(Format)
+	{
+		this.delegate('onSideViewClose');
+
+		// wait until side is toggled
+		//  before propagating the event
+		setTimeout(function() {
+			this.delegate('onSideViewFormatSelect', Format);
+		}.bind(this), 500);
+	};
+
+	//
+	// accessors
+	//
+
 	SideView.prototype.getLogoView = function()
 	{
 		if (this._logoView === null) {
@@ -2436,11 +2617,6 @@ var Cryptii = Cryptii || {};
 		}
 
 		return this._logoView;
-	};
-
-	SideView.prototype.setDelegate = function(delegate)
-	{
-		this._delegate = delegate;
 	};
 
 })(Cryptii, jQuery);
@@ -2532,16 +2708,6 @@ var Cryptii = Cryptii || {};
 		{
 			this._optionViews[i].tick();
 		}
-	};
-
-	//
-	// event handling
-	//
-
-	FormatCardView.prototype.onClose = function()
-	{
-		// forward to format
-		this._format.onCardViewClose(this);
 	};
 
 })(Cryptii, jQuery);
@@ -2717,30 +2883,13 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// event handling
-	//
-
-	TextFormatCardView.prototype.onComposerViewChange = function(composerView, content)
-	{
-		// forward to format
-		this._format.onComposerViewChange(composerView, content);
-	};
-
-	TextFormatCardView.prototype.onComposerViewSelect = function(composerView, range)
-	{
-		// forward to format
-		this._format.onComposerViewSelect(composerView, range);
-	};
-
-	//
-	// getters and setters
+	// accessors
 	//
 
 	TextFormatCardView.prototype.getComposerView = function()
 	{
 		if (this._composerView === null) {
 			this._composerView = new Cryptii.ComposerView();
-			this._composerView.setDelegate(this);
 		}
 
 		return this._composerView;

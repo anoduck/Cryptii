@@ -5,15 +5,20 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
+	var Adam = Cryptii.Adam;
 	var Conversation = (function() {
 		this._init.apply(this, arguments);
 	});
 
+	Conversation.prototype = Object.create(Adam.prototype);
 	Cryptii.Conversation = Conversation;
 	
 
 	Conversation.prototype._init = function(applicationView)
 	{
+		// call parent init
+		Adam.prototype._init.apply(this, arguments);
+		
 		// attributes
 		this._applicationView = applicationView;
 
@@ -24,7 +29,10 @@ var Cryptii = Cryptii || {};
 		this._difference = [];
 
 		this._location = new Cryptii.Location();
-		this._location.setDelegate(this);
+		this._location.addDelegate(this);
+
+		// delegates
+		this._applicationView.getDeckView().addDelegate(this);
 	};
 
 	Conversation.prototype.addFormat = function(format)
@@ -205,7 +213,7 @@ var Cryptii = Cryptii || {};
 	};
 
 	//
-	// event handling
+	// format delegates
 	//
 
 	Conversation.prototype.onFormatContentChange = function(format, blocks)

@@ -26,7 +26,12 @@
 	TextFormat.prototype._createCardView = function()
 	{
 		// choose card view for this format
-		return new Cryptii.TextFormatCardView(this);
+		var textFormatCardView = new Cryptii.TextFormatCardView(this);
+
+		// add delegate
+		textFormatCardView.getComposerView().addDelegate(this);
+
+		return textFormatCardView;
 	};
 
 
@@ -262,6 +267,35 @@
 
 		// update content
 		composerView.setContent(content);
+	};
+
+	TextFormat.prototype.getComposerView = function()
+	{
+		return this.getCardView().getComposerView();
+	};
+
+	TextFormat.prototype.getHighlighterElement = function()
+	{
+		return this.getCardView().getComposerView().getHighlighterElement();
+	};
+
+	TextFormat.prototype.onComposerViewChange = function(composerView, content)
+	{
+		var time = new Date().getTime();
+
+		// interpret content
+		var blocks = this.interpret(content);
+
+		// fire event
+		this._conversion.onFormatContentChange(this, blocks);
+		
+		var delta = new Date().getTime() - time;
+		console.log('Time: ' + delta + 'ms');
+	};
+
+	TextFormat.prototype.onComposerViewSelect = function(composerView, range)
+	{
+
 	};
 
 })(Cryptii, jQuery);
