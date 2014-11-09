@@ -9,17 +9,15 @@
 	background-repeat: no-repeat;
 	background-position: $left $top;
 	background-size: ($icons-svg-width * $scale) auto;
-};
+}
 
 @mixin transform($transforms) {
-	-ms-transform: $transforms;
-	-webkit-transform: $transforms;
 	transform: $transforms;
-};
+}
 
 @mixin transformTransition($transforms, $duration) {
 	@include transform($transforms);
-	transition-property: -ms-transform -webkit-transform transform;
+	transition-property: transform;
 	transition-duration: $duration;
 	transition-timing-function: ease-in-out;
-};
+}

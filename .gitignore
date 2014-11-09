@@ -1,3 +1,4 @@
-src/.sass-cache
-src/node_modules
+build
+node_modules
+.sass-cache
 *.DS_Store
