@@ -41,8 +41,9 @@ var source = {
 		'js/*/*/*.js',
 		'js/*/*/*/*.js',
 	],
+	sassMain: 'sass/main.scss',
 	sass: [
-		'sass/base.scss'
+		'sass/*.scss'
 	],
 	images: [
 		'images/*'
@@ -107,7 +108,7 @@ gulp.task('js', function() {
 
 gulp.task('sass', function() {
 	// compile sass, autoprefix and minify it
-	return gulp.src(source.sass)
+	return gulp.src(source.sassMain)
 		.pipe(sass())
 		.pipe(autoprefixer({
 			browsers: ['> 1%', 'last 2 versions']

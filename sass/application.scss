@@ -14,8 +14,11 @@
 		width: $side-width;
 		padding: $body-margin 0;
 		background: $side-background-color;
-		@include transformTransition(translate((- $side-width * 0.5), 0), 0.4s);
 		color: $side-color;
+		transform: translate(- $side-width * 0.5, 0);
+		transition-property: transform;
+		transition-duration: 0.4s;
+		transition-timing-function: ease-in-out;
 
 		h1 {
 			line-height: 0;
@@ -72,7 +75,10 @@
 		position: relative;
 		z-index: 100;
 		min-height: 100%;
-		@include transformTransition(translate(0, 0), 0.4s);
+		transform: translate(0, 0);
+		transition-property: transform;
+		transition-duration: 0.4s;
+		transition-timing-function: ease-in-out;
 
 		.hamburger {
 			display: block;
@@ -114,11 +120,11 @@
 	&.side-visible {
 
 		#side {
-			@include transform(translate(0, 0));
+			transform: translate(0, 0);
 		}
 
 		#main {
-			@include transform(translate($side-width, 0));
+			transform: translate($side-width, 0);
 
 			.overlay {
 				display: block;
