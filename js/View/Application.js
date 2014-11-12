@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var ApplicationView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.ApplicationView = (function() { this.init.apply(this, arguments); });
+	Cryptii.ApplicationView.prototype = Object.create(Cryptii.View.prototype);
 
-	ApplicationView.prototype = Object.create(View.prototype);
-	Cryptii.ApplicationView = ApplicationView;
+	var View = Cryptii.View.prototype;
+	var ApplicationView = Cryptii.ApplicationView.prototype;
 
 
-	ApplicationView.prototype._init = function()
+	ApplicationView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._$main = null;
@@ -33,11 +31,11 @@
 	};
 
 
-	ApplicationView.prototype._build = function()
+	ApplicationView._build = function()
 	{
 		// call parent
 		var $element =
-			View.prototype._build.apply(this)
+			View._build.apply(this)
 				.attr('id', 'application');
 
 		// build and populate main
@@ -67,7 +65,7 @@
 		return $element;
 	};
 
-	ApplicationView.prototype.toggleSide = function()
+	ApplicationView.toggleSide = function()
 	{
 		this._sideVisible = !this._sideVisible;
 
@@ -93,7 +91,7 @@
 		}
 	};
 
-	ApplicationView.prototype.tick = function()
+	ApplicationView.tick = function()
 	{
 		// forward to deck view
 		if (this._deckView !== null) {
@@ -106,7 +104,7 @@
 		}
 	};
 
-	ApplicationView.prototype.focus = function()
+	ApplicationView.focus = function()
 	{
 		// focus deck view
 		this.getDeckView().focus();
@@ -116,7 +114,7 @@
 	// delegates
 	//
 
-	ApplicationView.prototype.onSideViewClose = function(Format)
+	ApplicationView.onSideViewClose = function(Format)
 	{
 		this.toggleSide();
 	};
@@ -125,7 +123,7 @@
 	// accessors
 	//
 
-	ApplicationView.prototype.getSideView = function()
+	ApplicationView.getSideView = function()
 	{
 		if (this._sideView === null) {
 			this._sideView = new Cryptii.SideView();
@@ -135,7 +133,7 @@
 		return this._sideView;
 	};
 
-	ApplicationView.prototype.getDeckView = function()
+	ApplicationView.getDeckView = function()
 	{
 		if (this._deckView === null) {
 			this._deckView = new Cryptii.DeckView();

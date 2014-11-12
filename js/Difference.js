@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Difference = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Difference = (function() { this.init.apply(this, arguments); });
+	Cryptii.Difference.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Difference.prototype = Object.create(Adam.prototype);
-	Cryptii.Difference = Difference;
+	var Adam = Cryptii.Adam.prototype;
+	var Difference = Cryptii.Difference.prototype;
 	
 
-	Difference.prototype._init = function(startOffset, endOffset, blocks)
+	Difference.init = function(startOffset, endOffset, blocks)
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 
 		// attributes
 		this._startOffset = startOffset;
@@ -25,17 +23,17 @@ var Cryptii = Cryptii || {};
 		this._blocks = blocks;
 	};
 
-	Difference.prototype.getStartOffset = function()
+	Difference.getStartOffset = function()
 	{
 		return this._startOffset;
 	};
 
-	Difference.prototype.getEndOffset = function()
+	Difference.getEndOffset = function()
 	{
 		return this._endOffset;
 	};
 
-	Difference.prototype.getBlocks = function()
+	Difference.getBlocks = function()
 	{
 		return this._blocks;
 	};

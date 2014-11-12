@@ -5,25 +5,23 @@
 	'use strict';
 
 	// define class
-	var Format = Cryptii.Format;
-	var TextFormat = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.TextFormat = (function() { this.init.apply(this, arguments); });
+	Cryptii.TextFormat.prototype = Object.create(Cryptii.Format.prototype);
 
-	TextFormat.prototype = Object.create(Format.prototype);
-	Cryptii.TextFormat = TextFormat;
+	var Format = Cryptii.Format.prototype;
+	var TextFormat = Cryptii.TextFormat.prototype;
 
 
-	TextFormat.prototype._init = function(options)
+	TextFormat.init = function(options)
 	{
 		// call parent init
-		Format.prototype._init.apply(this, arguments);
+		Format.init.apply(this, arguments);
 
 		// attributes
 		this._blockMeta = [];
 	};
 
-	TextFormat.prototype._createCardView = function()
+	TextFormat._createCardView = function()
 	{
 		// choose card view for this format
 		var textFormatCardView = new Cryptii.TextFormatCardView(this);
@@ -35,27 +33,27 @@
 	};
 
 
-	TextFormat.prototype.getName = function()
+	TextFormat.getName = function()
 	{
 		return 'Text';
 	};
 
-	TextFormat.prototype._getSeparator = function()
+	TextFormat._getSeparator = function()
 	{
 		return null;
 	};
 
-	TextFormat.prototype._getSeparatorLength = function()
+	TextFormat._getSeparatorLength = function()
 	{
 		return (this._getSeparator() !== null ? this._getSeparator().length : 0);
 	};
 
-	TextFormat.prototype.createBlockElement = function(decimal, contentBlock)
+	TextFormat.createBlockElement = function(decimal, contentBlock)
 	{
 		return $(decimal !== null ? '<b></b>' : '<i></i>').text(contentBlock);
 	};
 
-	TextFormat.prototype.createSeparatorElement = function()
+	TextFormat.createSeparatorElement = function()
 	{
 		var separator = this._getSeparator();
 
@@ -67,17 +65,17 @@
 		return $('<u>' + separator + '</u>');
 	};
 
-	TextFormat.prototype.interpretBlock = function(contentBlock)
+	TextFormat.interpretBlock = function(contentBlock)
 	{
 		return contentBlock.charCodeAt(0);
 	};
 
-	TextFormat.prototype.convertBlock = function(decimal)
+	TextFormat.convertBlock = function(decimal)
 	{
 		return String.fromCharCode(decimal);
 	};
 
-	TextFormat.prototype.blockRangeByContentRange = function(contentRange)
+	TextFormat.blockRangeByContentRange = function(contentRange)
 	{
 		var separatorLength = this._getSeparatorLength();
 
@@ -103,7 +101,7 @@
 		return new Cryptii.Range(start, index);
 	};
 
-	TextFormat.prototype.contentRangeByBlockRange = function(blockRange)
+	TextFormat.contentRangeByBlockRange = function(blockRange)
 	{
 		var separatorLength = this._getSeparatorLength();
 
@@ -122,7 +120,7 @@
 		return new Cryptii.Range(start, contentIndex);
 	};
 
-	TextFormat.prototype.interpret = function(content)
+	TextFormat.interpret = function(content)
 	{
 		var separator = this._getSeparator();
 
@@ -161,7 +159,7 @@
 		return blocks;
 	};
 
-	TextFormat.prototype.convert = function(blocks, difference)
+	TextFormat.convert = function(blocks, difference)
 	{
 		var separator = this._getSeparator();
 		var separatorLength = this._getSeparatorLength();
@@ -269,17 +267,17 @@
 		composerView.setContent(content);
 	};
 
-	TextFormat.prototype.getComposerView = function()
+	TextFormat.getComposerView = function()
 	{
 		return this.getCardView().getComposerView();
 	};
 
-	TextFormat.prototype.getHighlighterElement = function()
+	TextFormat.getHighlighterElement = function()
 	{
 		return this.getCardView().getComposerView().getHighlighterElement();
 	};
 
-	TextFormat.prototype.onComposerViewChange = function(composerView, content)
+	TextFormat.onComposerViewChange = function(composerView, content)
 	{
 		var time = new Date().getTime();
 
@@ -293,7 +291,7 @@
 		console.log('Time: ' + delta + 'ms');
 	};
 
-	TextFormat.prototype.onComposerViewSelect = function(composerView, range)
+	TextFormat.onComposerViewSelect = function(composerView, range)
 	{
 
 	};

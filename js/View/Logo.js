@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var LogoView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.LogoView = (function() { this.init.apply(this, arguments); });
+	Cryptii.LogoView.prototype = Object.create(Cryptii.View.prototype);
 
-	LogoView.prototype = Object.create(View.prototype);
-	Cryptii.LogoView = LogoView;
+	var View = Cryptii.View.prototype;
+	var LogoView = Cryptii.LogoView.prototype;
 
 
-	LogoView.prototype._init = function()
+	LogoView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._$canvas = null;
@@ -39,7 +37,7 @@
 	};
 
 
-	LogoView.prototype._build = function()
+	LogoView._build = function()
 	{
 		// call parent
 		var $element =
@@ -60,7 +58,7 @@
 		return $element;
 	};
 
-	LogoView.prototype.draw = function(glitched)
+	LogoView.draw = function(glitched)
 	{
 		var context = this._$canvas.get(0).getContext("2d");
 		var noiseDensity = (glitched ? 0.1 + Math.random() * 0.3 : 0);
@@ -91,7 +89,7 @@
 		}
 	};
 
-	LogoView.prototype.animateGlitch = function()
+	LogoView.animateGlitch = function()
 	{
 		// draw glitched matrix
 		this.draw(true);
@@ -113,7 +111,7 @@
 		}.bind(this), 100);
 	};
 
-	LogoView.prototype.tick = function()
+	LogoView.tick = function()
 	{
 		if (Math.random() < this._glitchProbability) {
 			this.animateGlitch();

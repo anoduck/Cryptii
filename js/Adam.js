@@ -5,21 +5,18 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = (function() {
-		this._init.apply(this, arguments);
-	});
-
-	Cryptii.Adam = Adam;
+	Cryptii.Adam = (function() { this.init.apply(this, arguments); });
+	var Adam = Cryptii.Adam.prototype;
 	
 
-	Adam.prototype._init = function()
+	Adam.init = function()
 	{
 		// attributes
 		this._delegates = [];
 	};
 
 
-	Adam.prototype.addDelegate = function(delegate)
+	Adam.addDelegate = function(delegate)
 	{
 		if (this._delegates.indexOf(delegate) === -1)
 		{
@@ -27,7 +24,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Adam.prototype.removeDelegate = function(delegate)
+	Adam.removeDelegate = function(delegate)
 	{
 		var index = this._delegates.indexOf(delegate);
 		if (index !== -1)
@@ -36,7 +33,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Adam.prototype.delegate = function(method)
+	Adam.delegate = function(method)
 	{
 		if (
 			method !== undefined

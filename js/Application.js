@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Application = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Application = (function() { this.init.apply(this, arguments); });
+	Cryptii.Application.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Application.prototype = Object.create(Adam.prototype);
-	Cryptii.Application = Application;
+	var Adam = Cryptii.Adam.prototype;
+	var Application = Cryptii.Application.prototype;
 
 
-	Application.prototype._init = function()
+	Application.init = function()
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 		
 		// application view
 		this._applicationView = new Cryptii.ApplicationView();
@@ -75,7 +73,7 @@ var Cryptii = Cryptii || {};
 	};
 
 	
-	Application.prototype._setTickTimerEnabled = function(enabled)
+	Application._setTickTimerEnabled = function(enabled)
 	{
 		if ((this._tickTimer !== null) !== enabled)
 		{
@@ -94,7 +92,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Application.prototype.tick = function()
+	Application.tick = function()
 	{
 		// forward tick to application view
 		this._applicationView.tick();
@@ -104,14 +102,14 @@ var Cryptii = Cryptii || {};
 	// delegates
 	//
 
-	Application.prototype.onVisibilityChange = function()
+	Application.onVisibilityChange = function()
 	{
 		// disable tick timer based on document visibility
 		//  for performance reasons
 		this._setTickTimerEnabled(!document.hidden);
 	};
 
-	Application.prototype.onSideViewFormatSelect = function(sideView, Format)
+	Application.onSideViewFormatSelect = function(sideView, Format)
 	{
 		this._conversation.addFormat(new Format());
 	};

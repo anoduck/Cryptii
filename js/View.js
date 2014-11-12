@@ -5,25 +5,24 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var View = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.View = (function() { this.init.apply(this, arguments); });
+	Cryptii.View.prototype = Object.create(Cryptii.Adam.prototype);
 
-	View.prototype = Object.create(Adam.prototype);
-	Cryptii.View = View;
+	var Adam = Cryptii.Adam.prototype;
+	var View = Cryptii.View.prototype;
 	
 
-	View.prototype._init = function()
+	View.init = function()
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 		
 		// attributes
 		this._$element = null;
 	};
 
-	View.prototype._build = function()
+
+	View._build = function()
 	{
 		// create element
 		var $element = $('<div></div>');
@@ -32,7 +31,7 @@ var Cryptii = Cryptii || {};
 
 	};
 
-	View.prototype.getElement = function()
+	View.getElement = function()
 	{
 		if (this._$element === null)
 		{
@@ -42,7 +41,7 @@ var Cryptii = Cryptii || {};
 		return this._$element;
 	};
 
-	View.prototype.forceRepaint = function()
+	View.forceRepaint = function()
 	{
 		// using many dom elements can cause missing repaint events
 		// http://stackoverflow.com/questions/3485365

@@ -5,29 +5,27 @@
 	'use strict';
 
 	// define class
-	var CardView = Cryptii.CardView;
-	var IntroductionCardView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.IntroductionCardView = (function() { this.init.apply(this, arguments); });
+	Cryptii.IntroductionCardView.prototype = Object.create(Cryptii.CardView.prototype);
 
-	IntroductionCardView.prototype = Object.create(CardView.prototype);
-	Cryptii.IntroductionCardView = IntroductionCardView;
+	var CardView = Cryptii.CardView.prototype;
+	var IntroductionCardView = Cryptii.IntroductionCardView.prototype;
 
 
-	IntroductionCardView.prototype._build = function()
+	IntroductionCardView._build = function()
 	{
-		return CardView.prototype._build.apply(this)
+		return CardView._build.apply(this)
 			.addClass('card-transparent');
 	};
 
-	IntroductionCardView.prototype._buildHeader = function()
+	IntroductionCardView._buildHeader = function()
 	{
 		return null;
 	};
 
-	IntroductionCardView.prototype._buildContent = function()
+	IntroductionCardView._buildContent = function()
 	{
-		var $content = CardView.prototype._buildContent.apply(this);
+		var $content = CardView._buildContent.apply(this);
 
 		$content
 			.addClass('content-padding')
@@ -39,7 +37,7 @@
 		return $content;
 	};
 
-	IntroductionCardView.prototype._buildFooter = function()
+	IntroductionCardView._buildFooter = function()
 	{
 		return null;
 	};

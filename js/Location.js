@@ -5,23 +5,21 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Location = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Location = (function() { this.init.apply(this, arguments); });
+	Cryptii.Location.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Location.prototype = Object.create(Adam.prototype);
-	Cryptii.Location = Location;
+	var Adam = Cryptii.Adam.prototype;
+	var Location = Cryptii.Location.prototype;
 
 
-	Location.prototype._useHashFallback = function()
+	Location._useHashFallback = function()
 	{
 		// use hash fallback if history is not available
 		//  or if this app gets used locally
 		return location.hostname == '' || window.history === undefined;
 	};
 
-	Location.prototype.setUrl = function(url)
+	Location.setUrl = function(url)
 	{
 		if (!this._useHashFallback())
 		{
@@ -33,7 +31,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Location.prototype.getUrl = function(url)
+	Location.getUrl = function(url)
 	{
 		if (!this._useHashFallback())
 		{

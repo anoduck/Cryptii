@@ -5,35 +5,33 @@
 	'use strict';
 
 	// define class
-	var OptionView = Cryptii.OptionView;
-	var MultipleChoiceOptionView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.MultipleChoiceOptionView = (function() { this.init.apply(this, arguments); });
+	Cryptii.MultipleChoiceOptionView.prototype = Object.create(Cryptii.OptionView.prototype);
 
-	MultipleChoiceOptionView.prototype = Object.create(OptionView.prototype);
-	Cryptii.MultipleChoiceOptionView = MultipleChoiceOptionView;
+	var OptionView = Cryptii.OptionView.prototype;
+	var MultipleChoiceOptionView = Cryptii.MultipleChoiceOptionView.prototype;
 
 
-	MultipleChoiceOptionView.prototype._init = function(option)
+	MultipleChoiceOptionView.init = function(option)
 	{
 		// call parent init
-		OptionView.prototype._init.apply(this, arguments);
+		OptionView.init.apply(this, arguments);
 
 		// attributes
 		this._$choice = null;
 	};
 
 
-	MultipleChoiceOptionView.prototype._build = function()
+	MultipleChoiceOptionView._build = function()
 	{
-		return OptionView.prototype._build.apply(this)
+		return OptionView._build.apply(this)
 			.addClass('multiple-choice');
 	};
 
-	MultipleChoiceOptionView.prototype._buildField = function()
+	MultipleChoiceOptionView._buildField = function()
 	{
 		// call parent
-		var $element = OptionView.prototype._buildField.apply(this);
+		var $element = OptionView._buildField.apply(this);
 		
 		// choice element
 		this._$choice =
@@ -61,21 +59,21 @@
 		return $element;
 	};
 
-	MultipleChoiceOptionView.prototype.getValue = function()
+	MultipleChoiceOptionView.getValue = function()
 	{
 		// this disables value change tracking
 		//  value changes will be propagated by click event
 		return this._lastKnownValue;
 	};
 
-	MultipleChoiceOptionView.prototype._applyValue = function(value)
+	MultipleChoiceOptionView._applyValue = function(value)
 	{
 		var index = this._option.getIndexForChoice(value);
 		var label = this._option.getLabelAtIndex(index);
 		this._$choice.text(label);
 	};
 
-	MultipleChoiceOptionView.prototype.onNextButtonClick = function()
+	MultipleChoiceOptionView.onNextButtonClick = function()
 	{
 		var index = this._option.getSelectedIndex();
 		var count = this._option.getChoiceCount();
@@ -88,7 +86,7 @@
 		this.onValueChange(value);
 	};
 
-	MultipleChoiceOptionView.prototype.onPreviousButtonClick = function()
+	MultipleChoiceOptionView.onPreviousButtonClick = function()
 	{
 		var index = this._option.getSelectedIndex();
 		var count = this._option.getChoiceCount();

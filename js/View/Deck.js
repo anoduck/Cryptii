@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var DeckView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.DeckView = (function() { this.init.apply(this, arguments); });
+	Cryptii.DeckView.prototype = Object.create(Cryptii.View.prototype);
 
-	DeckView.prototype = Object.create(View.prototype);
-	Cryptii.DeckView = DeckView;
+	var View = Cryptii.View.prototype;
+	var DeckView = Cryptii.DeckView.prototype;
 
 
-	DeckView.prototype._init = function()
+	DeckView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
@@ -38,11 +36,11 @@
 	};
 
 
-	DeckView.prototype._build = function()
+	DeckView._build = function()
 	{
 		// call parent
 		this._$element =
-			View.prototype._build.apply(this)
+			View._build.apply(this)
 				.attr('id', 'deck');
 
 		// bind events
@@ -54,7 +52,7 @@
 		return this._$element;
 	};
 
-	DeckView.prototype.layout = function()
+	DeckView.layout = function()
 	{
 		var deckWidth = this._$element.width();
 		var columnCount =
@@ -141,7 +139,7 @@
 		}
 	};
 
-	DeckView.prototype._calculateColumnHeight = function(columnIndex)
+	DeckView._calculateColumnHeight = function(columnIndex)
 	{
 		var $cardViews = $(this._$columns[columnIndex]).children();
 		var height = 0;
@@ -155,7 +153,7 @@
 		return height;
 	};
 
-	DeckView.prototype._distributeCardView = function(cardView, animated, propagate)
+	DeckView._distributeCardView = function(cardView, animated, propagate)
 	{
 		// handle optional internal propagate parameter
 		if (propagate === undefined) {
@@ -208,7 +206,7 @@
 		}
 	};
 
-	DeckView.prototype._redistributeCardViews = function()
+	DeckView._redistributeCardViews = function()
 	{
 		// detach all cards
 		for (var i = 0; i < this._cardViews.length; i ++)
@@ -218,7 +216,7 @@
 		this._distributeCardView(this._cardViews, false);
 	};
 
-	DeckView.prototype.addCardView = function(cardViews)
+	DeckView.addCardView = function(cardViews)
 	{
 		if (cardViews instanceof Cryptii.CardView)
 		{
@@ -230,7 +228,7 @@
 		}
 	};
 
-	DeckView.prototype.removeCardView = function(cardViews)
+	DeckView.removeCardView = function(cardViews)
 	{
 		var index = this._cardViews.indexOf(cardViews);
 		if (index !== -1)
@@ -249,7 +247,7 @@
 		}
 	};
 
-	DeckView.prototype._mirrorCardViewOrder = function()
+	DeckView._mirrorCardViewOrder = function()
 	{
 		// reorders card views based on the elements in dom
 		var orderedCardViews = [];
@@ -289,7 +287,7 @@
 		this._cardViews = orderedCardViews;
 	};
 
-	DeckView.prototype._findCardViewByElement = function($cardView)
+	DeckView._findCardViewByElement = function($cardView)
 	{
 		var cardView = null;
 		var i = 0;
@@ -310,7 +308,7 @@
 		return cardView;
 	};
 
-	DeckView.prototype.tick = function()
+	DeckView.tick = function()
 	{
 		// distribute tick to cards
 		for (var i = 0; i < this._cardViews.length; i ++)
@@ -319,7 +317,7 @@
 		}
 	};
 
-	DeckView.prototype.focus = function()
+	DeckView.focus = function()
 	{
 			// focus first card view that can be focused
 		if (this._cardViews.length > 0)
@@ -342,13 +340,13 @@
 	// delegates
 	//
 
-	DeckView.prototype.onSortableUpdate = function(event, ui)
+	DeckView.onSortableUpdate = function(event, ui)
 	{
 		this.layout();
 		this.onChange();
 	};
 
-	DeckView.prototype.onChange = function()
+	DeckView.onChange = function()
 	{
 		// reorder card views
 		this._mirrorCardViewOrder();
@@ -360,7 +358,7 @@
 	// accessors
 	//
 
-	DeckView.prototype.getCardViews = function()
+	DeckView.getCardViews = function()
 	{
 		return this._cardViews;
 	};

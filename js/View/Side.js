@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var SideView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.SideView = (function() { this.init.apply(this, arguments); });
+	Cryptii.SideView.prototype = Object.create(Cryptii.View.prototype);
 
-	SideView.prototype = Object.create(View.prototype);
-	Cryptii.SideView = SideView;
+	var View = Cryptii.View.prototype;
+	var SideView = Cryptii.SideView.prototype;
 
 
-	SideView.prototype._init = function()
+	SideView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._logoView = null;
@@ -27,10 +25,10 @@
 	};
 
 
-	SideView.prototype._build = function()
+	SideView._build = function()
 	{
 		// call parent
-		var $element = View.prototype._build.apply(this);
+		var $element = View._build.apply(this);
 
 		// registered formats
 		this._$registeredFormats =
@@ -51,7 +49,7 @@
 		return $element;
 	};
 
-	SideView.prototype.updateRegisteredFormats = function(registeredFormats)
+	SideView.updateRegisteredFormats = function(registeredFormats)
 	{
 		// ensure that this element
 		//  has been built
@@ -83,7 +81,7 @@
 		}
 	};
 
-	SideView.prototype.tick = function()
+	SideView.tick = function()
 	{
 		// only handle ticks when visible
 		if (!this._hidden)
@@ -95,7 +93,7 @@
 		}
 	};
 
-	SideView.prototype.setHidden = function(hidden)
+	SideView.setHidden = function(hidden)
 	{
 		if (this._hidden != hidden)
 		{
@@ -118,7 +116,7 @@
 	// delegates
 	//
 
-	SideView.prototype.onFormatSelect = function(Format)
+	SideView.onFormatSelect = function(Format)
 	{
 		this.delegate('onSideViewClose');
 
@@ -133,7 +131,7 @@
 	// accessors
 	//
 
-	SideView.prototype.getLogoView = function()
+	SideView.getLogoView = function()
 	{
 		if (this._logoView === null) {
 			this._logoView = new Cryptii.LogoView();

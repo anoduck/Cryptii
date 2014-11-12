@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var TextFormat = Cryptii.TextFormat;
-	var DecimalFormat = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.DecimalFormat = (function() { this.init.apply(this, arguments); });
+	Cryptii.DecimalFormat.prototype = Object.create(Cryptii.TextFormat.prototype);
 
-	DecimalFormat.prototype = Object.create(TextFormat.prototype);
-	Cryptii.DecimalFormat = DecimalFormat;
+	var TextFormat = Cryptii.TextFormat.prototype;
+	var DecimalFormat = Cryptii.DecimalFormat.prototype;
 
 
-	DecimalFormat.prototype._init = function(options)
+	DecimalFormat.init = function(options)
 	{
 		// call parent init
-		TextFormat.prototype._init.apply(this, arguments);
+		TextFormat.init.apply(this, arguments);
 
 		// options
 		this.registerOption('separator', new Cryptii.MultipleChoiceOption('Separator', ' ', {
@@ -28,17 +26,17 @@
 	};
 
 
-	DecimalFormat.prototype.getName = function()
+	DecimalFormat.getName = function()
 	{
 		return 'Decimal';
 	};
 
-	DecimalFormat.prototype._getSeparator = function()
+	DecimalFormat._getSeparator = function()
 	{
 		return this.getOptionValue('separator');
 	};
 
-	DecimalFormat.prototype.interpretBlock = function(contentBlock)
+	DecimalFormat.interpretBlock = function(contentBlock)
 	{
 		if (!isNaN(contentBlock))
 		{
@@ -48,7 +46,7 @@
 		return null;
 	};
 
-	DecimalFormat.prototype.convertBlock = function(decimal)
+	DecimalFormat.convertBlock = function(decimal)
 	{
 		return decimal;
 	};

@@ -5,21 +5,19 @@
 	'use strict';
 
 	// define class
-	var DecimalFormat = Cryptii.DecimalFormat;
-	var OctalFormat = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.OctalFormat = (function() { this.init.apply(this, arguments); });
+	Cryptii.OctalFormat.prototype = Object.create(Cryptii.DecimalFormat.prototype);
 
-	OctalFormat.prototype = Object.create(DecimalFormat.prototype);
-	Cryptii.OctalFormat = OctalFormat;
+	var DecimalFormat = Cryptii.DecimalFormat.prototype;
+	var OctalFormat = Cryptii.OctalFormat.prototype;
 
 
-	OctalFormat.prototype.getName = function()
+	OctalFormat.getName = function()
 	{
 		return 'Octal';
 	};
 
-	OctalFormat.prototype.interpretBlock = function(contentBlock)
+	OctalFormat.interpretBlock = function(contentBlock)
 	{
 		var decimal = parseInt(contentBlock, 8);
 
@@ -31,7 +29,7 @@
 		return null;
 	};
 
-	OctalFormat.prototype.convertBlock = function(decimal)
+	OctalFormat.convertBlock = function(decimal)
 	{
 		return decimal.toString(8);
 	};

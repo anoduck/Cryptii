@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var CardView = Cryptii.CardView;
-	var FormatCardView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.FormatCardView = (function() { this.init.apply(this, arguments); });
+	Cryptii.FormatCardView.prototype = Object.create(Cryptii.CardView.prototype);
 
-	FormatCardView.prototype = Object.create(CardView.prototype);
-	Cryptii.FormatCardView = FormatCardView;
+	var CardView = Cryptii.CardView.prototype;
+	var FormatCardView = Cryptii.FormatCardView.prototype;
 
 
-	FormatCardView.prototype._init = function(format)
+	FormatCardView.init = function(format)
 	{
 		// call parent init
-		CardView.prototype._init.apply(this, arguments);
+		CardView.init.apply(this, arguments);
 		
 		// attributes
 		this._format = format;
@@ -33,9 +31,9 @@
 	};
 
 
-	FormatCardView.prototype._buildHeader = function()
+	FormatCardView._buildHeader = function()
 	{
-		return CardView.prototype._buildHeader.apply(this)
+		return CardView._buildHeader.apply(this)
 			.append(
 				$('<h3></h3>')
 					.addClass('format')
@@ -43,9 +41,9 @@
 			);
 	};
 
-	FormatCardView.prototype._buildContent = function()
+	FormatCardView._buildContent = function()
 	{
-		var $content = CardView.prototype._buildContent.apply(this);
+		var $content = CardView._buildContent.apply(this);
 
 		// handle format options
 		if (this._optionViews.length > 0)
@@ -66,17 +64,17 @@
 		return $content;
 	};
 
-	FormatCardView.prototype._buildFooter = function()
+	FormatCardView._buildFooter = function()
 	{
 		return null;
 	};
 
-	FormatCardView.prototype.layout = function()
+	FormatCardView.layout = function()
 	{
 
 	};
 
-	FormatCardView.prototype.tick = function()
+	FormatCardView.tick = function()
 	{
 		// forward tick to embedded option views
 		for (var i = 0; i < this._optionViews.length; i ++)

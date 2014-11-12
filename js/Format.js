@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Format = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Format = (function() { this.init.apply(this, arguments); });
+	Cryptii.Format.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Format.prototype = Object.create(Adam.prototype);
-	Cryptii.Format = Format;
+	var Adam = Cryptii.Adam.prototype;
+	var Format = Cryptii.Format.prototype;
 	
 
-	Format.prototype._init = function(options)
+	Format.init = function(options)
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 
 		// attributes
 		this._cardView = null;
@@ -27,20 +25,20 @@ var Cryptii = Cryptii || {};
 		this._options = {};
 	};
 
-	Format.prototype._createCardView = function()
+	Format._createCardView = function()
 	{
 		// override this method
 		return null;
 	};
 	
 
-	Format.prototype.getName = function()
+	Format.getName = function()
 	{
 		// override this method
 		return 'Untitled';
 	};
 
-	Format.prototype.getSlug = function()
+	Format.getSlug = function()
 	{
 		// creates a slug version of the title
 		var slug = this.getName();
@@ -63,18 +61,18 @@ var Cryptii = Cryptii || {};
 		return slug;
 	};
 
-	Format.prototype.interpret = function(content)
+	Format.interpret = function(content)
 	{
 		// override this method
 		return [];
 	};
 
-	Format.prototype.convert = function(blocks, difference)
+	Format.convert = function(blocks, difference)
 	{
 		// override this method
 	};
 
-	Format.prototype.registerOption = function(name, option)
+	Format.registerOption = function(name, option)
 	{
 		this._options[name] = option;
 		option.addDelegate(this);
@@ -84,7 +82,7 @@ var Cryptii = Cryptii || {};
 	// delegates
 	//
 
-	Format.prototype.onOptionChange = function(option, value)
+	Format.onOptionChange = function(option, value)
 	{
 		// convert every block
 		this.convert(
@@ -95,7 +93,7 @@ var Cryptii = Cryptii || {};
 		this._conversion.onFormatOptionChange(this);
 	};
 
-	Format.prototype.onCardViewClose = function()
+	Format.onCardViewClose = function()
 	{
 		// forward event to conversation
 		this._conversion.onFormatRemove(this);
@@ -105,12 +103,12 @@ var Cryptii = Cryptii || {};
 	// accessors
 	//
 
-	Format.prototype.setConversation = function(conversion)
+	Format.setConversation = function(conversion)
 	{
 		this._conversion = conversion;
 	};
 
-	Format.prototype.getCardView = function()
+	Format.getCardView = function()
 	{
 		if (this._cardView === null)
 		{
@@ -121,12 +119,12 @@ var Cryptii = Cryptii || {};
 		return this._cardView;
 	};
 
-	Format.prototype.getOptionValue = function(name)
+	Format.getOptionValue = function(name)
 	{
 		return this._options[name].getValue();
 	};
 
-	Format.prototype.getOptions = function()
+	Format.getOptions = function()
 	{
 		return this._options;
 	};

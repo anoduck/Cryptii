@@ -5,21 +5,19 @@
 	'use strict';
 
 	// define class
-	var DecimalFormat = Cryptii.DecimalFormat;
-	var BinaryFormat = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.BinaryFormat = (function() { this.init.apply(this, arguments); });
+	Cryptii.BinaryFormat.prototype = Object.create(Cryptii.DecimalFormat.prototype);
 
-	BinaryFormat.prototype = Object.create(DecimalFormat.prototype);
-	Cryptii.BinaryFormat = BinaryFormat;
+	var DecimalFormat = Cryptii.DecimalFormat.prototype;
+	var BinaryFormat = Cryptii.BinaryFormat.prototype;
 
 
-	BinaryFormat.prototype.getName = function()
+	BinaryFormat.getName = function()
 	{
 		return 'Binary';
 	};
 
-	BinaryFormat.prototype.interpretBlock = function(contentBlock)
+	BinaryFormat.interpretBlock = function(contentBlock)
 	{
 		var decimal = parseInt(contentBlock, 2);
 
@@ -31,7 +29,7 @@
 		return null;
 	};
 
-	BinaryFormat.prototype.convertBlock = function(decimal)
+	BinaryFormat.convertBlock = function(decimal)
 	{
 		return decimal.toString(2);
 	};

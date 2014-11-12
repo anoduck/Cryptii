@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Conversation = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Conversation = (function() { this.init.apply(this, arguments); });
+	Cryptii.Conversation.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Conversation.prototype = Object.create(Adam.prototype);
-	Cryptii.Conversation = Conversation;
+	var Adam = Cryptii.Adam.prototype;
+	var Conversation = Cryptii.Conversation.prototype;
 	
 
-	Conversation.prototype._init = function(applicationView)
+	Conversation.init = function(applicationView)
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 		
 		// attributes
 		this._applicationView = applicationView;
@@ -35,7 +33,7 @@ var Cryptii = Cryptii || {};
 		this._applicationView.getDeckView().addDelegate(this);
 	};
 
-	Conversation.prototype.addFormat = function(format)
+	Conversation.addFormat = function(format)
 	{
 		if (
 			// check if this is a valid format
@@ -58,7 +56,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype.registerFormat = function(Format, updateView)
+	Conversation.registerFormat = function(Format, updateView)
 	{
 		if (updateView === undefined) {
 			updateView = true;
@@ -91,12 +89,12 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype.getBlocks = function()
+	Conversation.getBlocks = function()
 	{
 		return this._blocks;
 	}
 
-	Conversation.prototype.setBlocks = function(blocks, triggeredByFormat)
+	Conversation.setBlocks = function(blocks, triggeredByFormat)
 	{
 		// determin difference range
 		var difference = this.calculateDifference(blocks, this._blocks);
@@ -121,7 +119,7 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	Conversation.prototype.calculateDifference = function(blocks, previousBlocks)
+	Conversation.calculateDifference = function(blocks, previousBlocks)
 	{
 		// discussed here:
 		// http://stackoverflow.com/questions/26208569
@@ -181,7 +179,7 @@ var Cryptii = Cryptii || {};
 		return new Cryptii.Difference(start, end, rangeBlocks);
 	};
 
-	Conversation.prototype.updateLocation = function()
+	Conversation.updateLocation = function()
 	{
 		// compose url
 		var url = '/';
@@ -216,17 +214,17 @@ var Cryptii = Cryptii || {};
 	// format delegates
 	//
 
-	Conversation.prototype.onFormatContentChange = function(format, blocks)
+	Conversation.onFormatContentChange = function(format, blocks)
 	{
 		this.setBlocks(blocks, format);
 	};
 
-	Conversation.prototype.onFormatOptionChange = function(format)
+	Conversation.onFormatOptionChange = function(format)
 	{
 		this.updateLocation();
 	};
 
-	Conversation.prototype.onFormatRemove = function(format)
+	Conversation.onFormatRemove = function(format)
 	{
 		// remove format
 		var index = this._formats.indexOf(format);

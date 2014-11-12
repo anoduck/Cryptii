@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var ComposerView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.ComposerView = (function() { this.init.apply(this, arguments); });
+	Cryptii.ComposerView.prototype = Object.create(Cryptii.View.prototype);
 
-	ComposerView.prototype = Object.create(View.prototype);
-	Cryptii.ComposerView = ComposerView;
+	var View = Cryptii.View.prototype;
+	var ComposerView = Cryptii.ComposerView.prototype;
 
 
-	ComposerView.prototype._init = function()
+	ComposerView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._$highlighter = null;
@@ -28,10 +26,10 @@
 	};
 
 
-	ComposerView.prototype._build = function()
+	ComposerView._build = function()
 	{
 		// call parent
-		var $element = View.prototype._build.apply(this);
+		var $element = View._build.apply(this);
 
 		// textarea element
 		this._$textarea =
@@ -62,19 +60,19 @@
 		return $element;
 	};
 
-	ComposerView.prototype.layout = function()
+	ComposerView.layout = function()
 	{
 		// set the height of the textarea
 		var height = this._$highlighter.height() + 50;
 		this._$textarea.height(height);
 	};
 
-	ComposerView.prototype.tick = function()
+	ComposerView.tick = function()
 	{
 		this._trackChanges();
 	};
 
-	ComposerView.prototype._trackChanges = function()
+	ComposerView._trackChanges = function()
 	{
 		var content = this.getContent();
 		var selection = this.getSelection();
@@ -103,7 +101,7 @@
 		}
 	}
 
-	ComposerView.prototype.setContent = function(content)
+	ComposerView.setContent = function(content)
 	{
 		// builds the element if necessary
 		this.getElement();
@@ -118,7 +116,7 @@
 		}.bind(this), 1);
 	};
 
-	ComposerView.prototype.getSelection = function()
+	ComposerView.getSelection = function()
 	{
 		// get native textarea element
 		var textarea = this._$textarea[0];
@@ -148,7 +146,7 @@
 		return null;
 	};
 
-	ComposerView.prototype.focus = function()
+	ComposerView.focus = function()
 	{
 		this.getElement();
 		this._$textarea.focus();
@@ -158,7 +156,7 @@
 	// accessors
 	//
 
-	ComposerView.prototype.getHighlighterElement = function()
+	ComposerView.getHighlighterElement = function()
 	{
 		// builds the element if necessary
 		this.getElement();
@@ -166,7 +164,7 @@
 		return this._$highlighter;
 	};
 
-	ComposerView.prototype.getContent = function()
+	ComposerView.getContent = function()
 	{
 		// builds the element if necessary
 		this.getElement();

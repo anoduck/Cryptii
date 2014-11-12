@@ -5,55 +5,53 @@
 	'use strict';
 
 	// define class
-	var FormatCardView = Cryptii.FormatCardView;
-	var TextFormatCardView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.TextFormatCardView = (function() { this.init.apply(this, arguments); });
+	Cryptii.TextFormatCardView.prototype = Object.create(Cryptii.FormatCardView.prototype);
 
-	TextFormatCardView.prototype = Object.create(FormatCardView.prototype);
-	Cryptii.TextFormatCardView = TextFormatCardView;
+	var FormatCardView = Cryptii.FormatCardView.prototype;
+	var TextFormatCardView = Cryptii.TextFormatCardView.prototype;
 
 
-	TextFormatCardView.prototype._init = function(format)
+	TextFormatCardView.init = function(format)
 	{
 		// call parent init
-		FormatCardView.prototype._init.apply(this, arguments);
+		FormatCardView.init.apply(this, arguments);
 
 		// attributes
 		this._composerView = null;
 	};
 
 
-	TextFormatCardView.prototype._buildContent = function()
+	TextFormatCardView._buildContent = function()
 	{
-		return FormatCardView.prototype._buildContent.apply(this)
+		return FormatCardView._buildContent.apply(this)
 			.append(this.getComposerView().getElement());
 	};
 
-	TextFormatCardView.prototype.layout = function()
+	TextFormatCardView.layout = function()
 	{
 		// call parent
-		FormatCardView.prototype.layout.apply(this, arguments);
+		FormatCardView.layout.apply(this, arguments);
 
 		// layout composer view
 		this.getComposerView().layout();
 	};
 
-	TextFormatCardView.prototype.canFocus = function()
+	TextFormatCardView.canFocus = function()
 	{
 		return true;
 	};
 
-	TextFormatCardView.prototype.focus = function()
+	TextFormatCardView.focus = function()
 	{
 		// focus composer view
 		this.getComposerView().focus();
 	};
 
-	TextFormatCardView.prototype.tick = function()
+	TextFormatCardView.tick = function()
 	{
 		// call parent
-		FormatCardView.prototype.tick.apply(this, arguments);
+		FormatCardView.tick.apply(this, arguments);
 
 		// forward to composer view
 		this.getComposerView().tick();
@@ -63,7 +61,7 @@
 	// accessors
 	//
 
-	TextFormatCardView.prototype.getComposerView = function()
+	TextFormatCardView.getComposerView = function()
 	{
 		if (this._composerView === null) {
 			this._composerView = new Cryptii.ComposerView();

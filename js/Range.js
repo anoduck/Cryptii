@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Range = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Range = (function() { this.init.apply(this, arguments); });
+	Cryptii.Range.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Range.prototype = Object.create(Adam.prototype);
-	Cryptii.Range = Range;
+	var Adam = Cryptii.Adam.prototype;
+	var Range = Cryptii.Range.prototype;
 	
 
-	Range.prototype._init = function(start, end)
+	Range.init = function(start, end)
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 		
 		// attributes
 		this._start = start;
@@ -25,7 +23,7 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	Range.prototype.isEqualTo = function(range)
+	Range.isEqualTo = function(range)
 	{
 		return (
 			range != null
@@ -38,17 +36,17 @@ var Cryptii = Cryptii || {};
 	// accessors
 	//
 
-	Range.prototype.getStart = function()
+	Range.getStart = function()
 	{
 		return this._start;
 	};
 
-	Range.prototype.getLength = function()
+	Range.getLength = function()
 	{
 		return this._end - this._start;
 	};
 
-	Range.prototype.getEnd = function()
+	Range.getEnd = function()
 	{
 		return this._end;
 	};

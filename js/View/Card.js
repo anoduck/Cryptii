@@ -5,28 +5,26 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var CardView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.CardView = (function() { this.init.apply(this, arguments); });
+	Cryptii.CardView.prototype = Object.create(Cryptii.View.prototype);
 
-	CardView.prototype = Object.create(View.prototype);
-	Cryptii.CardView = CardView;
+	var View = Cryptii.View.prototype;
+	var CardView = Cryptii.CardView.prototype;
 
 
-	CardView.prototype._init = function()
+	CardView.init = function()
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._deckView = null;
 	};
 
-	CardView.prototype._build = function()
+	CardView._build = function()
 	{
 		// call parent
-		var $element = View.prototype._build.apply(this);
+		var $element = View._build.apply(this);
 
 		// populate element
 		$element
@@ -40,14 +38,14 @@
 		return $element;
 	};
 
-	CardView.prototype._buildHeader = function()
+	CardView._buildHeader = function()
 	{
 		return $('<div></div>')
 			.addClass('header')
 			.append(this._buildHeaderBar());
 	};
 
-	CardView.prototype._buildHeaderBar = function($header)
+	CardView._buildHeaderBar = function($header)
 	{
 		return $('<div></div>')
 			.addClass('bar')
@@ -62,26 +60,26 @@
 			);
 	};
 
-	CardView.prototype._buildContent = function()
+	CardView._buildContent = function()
 	{
 		return $('<div></div>')
 			.addClass('content');
 	};
 
-	CardView.prototype._buildFooter = function()
+	CardView._buildFooter = function()
 	{
 		return $('<div></div>')
 			.addClass('footer');
 	};
 
-	CardView.prototype.clearAnimations = function()
+	CardView.clearAnimations = function()
 	{
 		this.getElement()
 			.removeClass('animation-intro')
 			.removeClass('animation-outro');
 	};
 
-	CardView.prototype.triggerIntroAnimation = function()
+	CardView.triggerIntroAnimation = function()
 	{
 		this.getElement().addClass('animation-intro');
 
@@ -92,12 +90,12 @@
 		}.bind(this), 500);
 	};
 
-	CardView.prototype.triggerOutroAnimation = function()
+	CardView.triggerOutroAnimation = function()
 	{
 		this.getElement().addClass('animation-outro');
 	};
 
-	CardView.prototype.setDeckView = function(deckView)
+	CardView.setDeckView = function(deckView)
 	{
 		if (this._deckView !== deckView)
 		{
@@ -111,7 +109,7 @@
 		}
 	};
 
-	CardView.prototype.close = function()
+	CardView.close = function()
 	{
 		if (this._deckView !== null)
 		{
@@ -126,22 +124,22 @@
 		}
 	};
 
-	CardView.prototype.layout = function()
+	CardView.layout = function()
 	{
 		
 	};
 
-	CardView.prototype.canFocus = function()
+	CardView.canFocus = function()
 	{
 		return false;
 	};
 
-	CardView.prototype.focus = function()
+	CardView.focus = function()
 	{
 
 	};
 
-	CardView.prototype.tick = function()
+	CardView.tick = function()
 	{
 		// gets called regularly by a timer inside the deck
 		//  to check for changes inside the view (e.g. textarea)
@@ -153,12 +151,12 @@
 	// delegates
 	//
 
-	CardView.prototype.onCloseButtonClick = function()
+	CardView.onCloseButtonClick = function()
 	{
 		this.close();
 	};
 
-	CardView.prototype.onClose = function()
+	CardView.onClose = function()
 	{
 		this.delegate('onCardViewClose');
 	};

@@ -5,19 +5,17 @@
 	'use strict';
 
 	// define class
-	var View = Cryptii.View;
-	var OptionView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.OptionView = (function() { this.init.apply(this, arguments); });
+	Cryptii.OptionView.prototype = Object.create(Cryptii.View.prototype);
 
-	OptionView.prototype = Object.create(View.prototype);
-	Cryptii.OptionView = OptionView;
+	var View = Cryptii.View.prototype;
+	var OptionView = Cryptii.OptionView.prototype;
 
 
-	OptionView.prototype._init = function(option)
+	OptionView.init = function(option)
 	{
 		// call parent init
-		View.prototype._init.apply(this, arguments);
+		View.init.apply(this, arguments);
 
 		// attributes
 		this._option = option;
@@ -25,10 +23,10 @@
 	};
 
 
-	OptionView.prototype._build = function()
+	OptionView._build = function()
 	{
 		// call parent
-		var $element = View.prototype._build.apply(this);
+		var $element = View._build.apply(this);
 
 		// populate element
 		$element
@@ -41,41 +39,41 @@
 		return $element;
 	};
 
-	OptionView.prototype._buildLabel = function()
+	OptionView._buildLabel = function()
 	{
 		return $('<label></label>')
 			.text(this._option.getLabel());
 	};
 
-	OptionView.prototype._buildField = function()
+	OptionView._buildField = function()
 	{
 		return $('<div></div>')
 			.addClass('field');
 	};
 
-	OptionView.prototype.getValue = function()
+	OptionView.getValue = function()
 	{
 		// override this method
 		return null;
 	};
 
-	OptionView.prototype._applyValue = function(value)
+	OptionView._applyValue = function(value)
 	{
 		// override this method
 	};
 
-	OptionView.prototype.setValue = function(value)
+	OptionView.setValue = function(value)
 	{
 		this._lastKnownValue = value;
 		this._applyValue(value);
 	};
 
-	OptionView.prototype.tick = function()
+	OptionView.tick = function()
 	{
 		this._trackChanges();
 	};
 
-	OptionView.prototype._trackChanges = function()
+	OptionView._trackChanges = function()
 	{
 		var value = this.getValue();
 
@@ -85,7 +83,7 @@
 		}
 	};
 
-	OptionView.prototype.onValueChange = function(value)
+	OptionView.onValueChange = function(value)
 	{
 		this._lastKnownValue = value;
 		this._option.onOptionViewChange(this, value);

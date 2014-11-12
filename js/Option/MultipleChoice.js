@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Option = Cryptii.Option;
-	var MultipleChoiceOption = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.MultipleChoiceOption = (function() { this.init.apply(this, arguments); });
+	Cryptii.MultipleChoiceOption.prototype = Object.create(Cryptii.Option.prototype);
 
-	MultipleChoiceOption.prototype = Object.create(Option.prototype);
-	Cryptii.MultipleChoiceOption = MultipleChoiceOption;
+	var Option = Cryptii.Option.prototype;
+	var MultipleChoiceOption = Cryptii.MultipleChoiceOption.prototype;
 	
 
-	MultipleChoiceOption.prototype._init = function(label, defaultValue, choices)
+	MultipleChoiceOption.init = function(label, defaultValue, choices)
 	{
 		// call parent init
-		Option.prototype._init.apply(this, arguments);
+		Option.init.apply(this, arguments);
 
 		// attributes
 		this._choices = [];
@@ -30,13 +28,13 @@ var Cryptii = Cryptii || {};
 		}
 	};
 
-	MultipleChoiceOption.prototype._createOptionView = function()
+	MultipleChoiceOption._createOptionView = function()
 	{
 		return new Cryptii.MultipleChoiceOptionView(this);
 	};
 
 
-	MultipleChoiceOption.prototype.validateValue = function(value)
+	MultipleChoiceOption.validateValue = function(value)
 	{
 		// this value is valid if included in choices
 		if (this.getIndexForChoice(value) !== null)
@@ -47,7 +45,7 @@ var Cryptii = Cryptii || {};
 		return null;
 	};
 
-	MultipleChoiceOption.prototype.getIndexForChoice = function(choice)
+	MultipleChoiceOption.getIndexForChoice = function(choice)
 	{
 		var index = this._choices.indexOf(choice);
 
@@ -62,22 +60,22 @@ var Cryptii = Cryptii || {};
 	// accessors
 	//
 
-	MultipleChoiceOption.prototype.getChoiceCount = function()
+	MultipleChoiceOption.getChoiceCount = function()
 	{
 		return this._choices.length;
 	};
 
-	MultipleChoiceOption.prototype.getSelectedIndex = function()
+	MultipleChoiceOption.getSelectedIndex = function()
 	{
 		return this._choices.indexOf(this._value);
 	};
 
-	MultipleChoiceOption.prototype.getChoiceAtIndex = function(index)
+	MultipleChoiceOption.getChoiceAtIndex = function(index)
 	{
 		return this._choices[index];
 	};
 
-	MultipleChoiceOption.prototype.getLabelAtIndex = function(index)
+	MultipleChoiceOption.getLabelAtIndex = function(index)
 	{
 		return this._labels[index];
 	};

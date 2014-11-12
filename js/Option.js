@@ -5,19 +5,17 @@ var Cryptii = Cryptii || {};
 	'use strict';
 
 	// define class
-	var Adam = Cryptii.Adam;
-	var Option = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.Option = (function() { this.init.apply(this, arguments); });
+	Cryptii.Option.prototype = Object.create(Cryptii.Adam.prototype);
 
-	Option.prototype = Object.create(Adam.prototype);
-	Cryptii.Option = Option;
+	var Adam = Cryptii.Adam.prototype;
+	var Option = Cryptii.Option.prototype;
 	
 
-	Option.prototype._init = function(label, defaultValue)
+	Option.init = function(label, defaultValue)
 	{
 		// call parent init
-		Adam.prototype._init.apply(this, arguments);
+		Adam.init.apply(this, arguments);
 
 		// attributes
 		this._optionView = null;
@@ -28,13 +26,13 @@ var Cryptii = Cryptii || {};
 		this._value = defaultValue;
 	};
 
-	Option.prototype._createOptionView = function()
+	Option._createOptionView = function()
 	{
 		return new Cryptii.TextOptionView(this);
 	};
 
 
-	Option.prototype.validateValue = function(value)
+	Option.validateValue = function(value)
 	{
 		// in the base option, every value will validate
 		//  in addition convert possible integer values to strings
@@ -45,7 +43,7 @@ var Cryptii = Cryptii || {};
 	// delegates
 	//
 
-	Option.prototype.onOptionViewChange = function(optionView, value)
+	Option.onOptionViewChange = function(optionView, value)
 	{
 		// check if value validates
 		if (this.setValue(value))
@@ -58,23 +56,23 @@ var Cryptii = Cryptii || {};
 	// accessors
 	//
 
-	Option.prototype.getValue = function()
+	Option.getValue = function()
 	{
 		return this._value;
 	};
 
-	Option.prototype.getEscapedValue = function()
+	Option.getEscapedValue = function()
 	{
 		// escapes every special character except !*()'
 		return encodeURIComponent(this.getValue()).replace(/~/g, '%7e');
 	};
 
-	Option.prototype.isDefaultValue = function()
+	Option.isDefaultValue = function()
 	{
 		return (this._value == this._defaultValue);
 	};
 
-	Option.prototype.setValue = function(value)
+	Option.setValue = function(value)
 	{
 		if (value !== null)
 		{
@@ -90,12 +88,12 @@ var Cryptii = Cryptii || {};
 		return false;
 	};
 	
-	Option.prototype.getLabel = function()
+	Option.getLabel = function()
 	{
 		return this._label;
 	};
 
-	Option.prototype.getOptionView = function()
+	Option.getOptionView = function()
 	{
 		if (this._optionView === null)
 		{

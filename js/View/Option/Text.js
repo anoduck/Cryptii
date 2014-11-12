@@ -5,35 +5,33 @@
 	'use strict';
 
 	// define class
-	var OptionView = Cryptii.OptionView;
-	var TextOptionView = (function() {
-		this._init.apply(this, arguments);
-	});
+	Cryptii.TextOptionView = (function() { this.init.apply(this, arguments); });
+	Cryptii.TextOptionView.prototype = Object.create(Cryptii.OptionView.prototype);
 
-	TextOptionView.prototype = Object.create(OptionView.prototype);
-	Cryptii.TextOptionView = TextOptionView;
+	var OptionView = Cryptii.OptionView.prototype;
+	var TextOptionView = Cryptii.TextOptionView.prototype;
 
 
-	TextOptionView.prototype._init = function(option)
+	TextOptionView.init = function(option)
 	{
 		// call parent init
-		OptionView.prototype._init.apply(this, arguments);
+		OptionView.init.apply(this, arguments);
 
 		// attributes
 		this._$input = null;
 	};
 
 
-	TextOptionView.prototype._build = function()
+	TextOptionView._build = function()
 	{
-		return OptionView.prototype._build.apply(this)
+		return OptionView._build.apply(this)
 			.addClass('text');
 	};
 
-	TextOptionView.prototype._buildField = function()
+	TextOptionView._buildField = function()
 	{
 		// call parent
-		var $element = OptionView.prototype._buildField.apply(this);
+		var $element = OptionView._buildField.apply(this);
 		
 		// input element
 		this._$input =
@@ -48,12 +46,12 @@
 		return $element;
 	};
 
-	TextOptionView.prototype.getValue = function()
+	TextOptionView.getValue = function()
 	{
 		return this._$input.val();
 	};
 
-	TextOptionView.prototype._applyValue = function(value)
+	TextOptionView._applyValue = function(value)
 	{
 		this._$input.val(value);
 	};
