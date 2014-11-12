@@ -139,4 +139,5 @@ gulp.task('watch', function() {
 	gulp.watch(source.images, ['images']);
 });
 
-gulp.task('default', ['watch', 'js', 'sass', 'html', 'images', 'external']);
+gulp.task('build', ['js', 'sass', 'html', 'images', 'external']);
+gulp.task('default', ['watch', 'build']);

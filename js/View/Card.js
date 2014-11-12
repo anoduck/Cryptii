@@ -44,23 +44,20 @@
 	{
 		return $('<div></div>')
 			.addClass('header')
-			.append(this._buildRightToolbar());
+			.append(this._buildHeaderBar());
 	};
 
-	CardView.prototype._buildRightToolbar = function($header)
+	CardView.prototype._buildHeaderBar = function($header)
 	{
 		return $('<div></div>')
-			.addClass('toolbar')
-			.addClass('right')
+			.addClass('bar')
 			.append(
 				$('<a></a>')
 					.attr({
 						href: 'javascript:void(0);'
 					})
-					.on('click', $.proxy(function() {
-						this.close();
-					}, this))
-					.addClass('item')
+					.click(this.onCloseButtonClick.bind(this))
+					.addClass('bar-button')
 					.addClass('close')
 			);
 	};
@@ -155,6 +152,11 @@
 	//
 	// delegates
 	//
+
+	CardView.prototype.onCloseButtonClick = function()
+	{
+		this.close();
+	};
 
 	CardView.prototype.onClose = function()
 	{

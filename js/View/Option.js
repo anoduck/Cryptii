@@ -80,15 +80,15 @@
 		var value = this.getValue();
 
 		// check if the value has been changed
-		if (value != this._lastKnownValue)
-		{
-			this._lastKnownValue = value;
-
-			if (this._option.isValueValid(value))
-			{
-				this._option.onOptionViewChange(this, value);
-			}
+		if (value != this._lastKnownValue) {
+			this.onValueChange(value);
 		}
+	};
+
+	OptionView.prototype.onValueChange = function(value)
+	{
+		this._lastKnownValue = value;
+		this._option.onOptionViewChange(this, value);
 	};
 
 })(Cryptii, jQuery);

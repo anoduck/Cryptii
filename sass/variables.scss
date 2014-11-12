@@ -5,6 +5,7 @@ $color-blue: #249db3;
 $color-red: #b22626;
 $color-black: #191918;
 $color-text-black: #1f1f1f;
+$color-text-gray: #959595;
 
 // breakpoints
 $break-small: 500px;
@@ -42,9 +43,9 @@ $card-content-padding-vertical: 20px;
 // format card
 $format-arrow-height: $card-header-height + 2px;
 $options-height: $card-header-height;
-$options-color: $color-text-black;
-$options-label-width: 100px;
-$options-label-color: $color-blue;
+$options-color: $color-text-gray;
+$options-label-width: 120px;
+$options-label-color: $color-text-gray;
 $options-padding-horizontal: 10px;
 
 // card composer

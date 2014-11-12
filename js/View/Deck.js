@@ -20,7 +20,7 @@
 		View.prototype._init.apply(this, arguments);
 
 		// constants
-		this._MIN_COLUMN_WIDTH = 350;
+		this._MIN_COLUMN_WIDTH = 375;
 		this._CARD_MARGIN = 30;
 
 		// attributes

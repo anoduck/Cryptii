@@ -71,21 +71,18 @@
 			}
 		}
 
-		.toolbar {
+		.bar {
 			display: table;
 			position: absolute;
-			top: 7px;
-			right: 7px;
-			bottom: 7px;
+			top: 0;
+			right: 0;
+			bottom: 0;
 
-			.item {
-				display: table;
-				@include icon(0, 0, 16px);
-				width: 16px;
-				height: 16px;
+			.bar-button {
 
-				&:hover {
-					@include icon(1, 0, 16px);
+				&.close {
+					&:before { @include icon(0, 0, 16px); }
+					&:after { @include icon(1, 0, 16px); }
 				}
 			}
 		}
@@ -126,11 +123,56 @@
 	}
 }
 
+.bar-button {
+	display: block;
+	float: left;
+	position: relative;
+	width: $options-height;
+	height: $options-height;
+	overflow: hidden;
+	color: transparent;
+
+	&:before,
+	&:after {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		margin: (($options-height - 16px) * 0.5);
+		@include icon(0, 0, 16px);
+		width: 16px;
+		height: 16px;
+	}
+
+	&:after {
+		display: none;
+		@include icon(1, 0, 16px);
+	}
+
+	&:hover {
+
+		&:before { display: none; }
+		&:after { display: block; }
+	}
+
+	&.slim {
+		width: 16px;
+
+		&:before,
+		&:after {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+}
+
 .options {
 
 	.option {
 		border-bottom: 1px solid $card-content-border-color;
-		padding: 0 $card-content-padding-horizontal 0;
 
 		label,
 		.field {
@@ -140,6 +182,7 @@
 
 		label {
 			width: $options-label-width;
+			padding-left: $card-content-padding-horizontal;
 			border-right: 1px solid $card-content-border-color;
 			float: left;
 			font-size: 14px;
@@ -148,21 +191,45 @@
 		}
 
 		.field {
-			margin-left: ($options-label-width + 1px);
+			margin-left: ($card-content-padding-horizontal + $options-label-width + 1px);
 			padding-left: $options-padding-horizontal;
+			padding-right: $card-content-padding-horizontal;
 
-			input {
-				font-family: "Source Code Pro", monospace;
-				font-size: 14px;
-				line-height: 1;
-				color: $options-color;
-				background: $card-background-color;
-				width: 100%;
-				height: $options-height;
-				padding: 0;
-				margin: 0;
-				border: none;
+			.bar-button {
+
+				&.previous {
+					&:before { @include icon(0, 3, 16px); }
+					&:after { @include icon(1, 3, 16px); }
+				}
+
+				&.next {
+					&:before { @include icon(0, 2, 16px); }
+					&:after { @include icon(1, 2, 16px); }
+				}
 			}
+		}
+
+		&.text .field input.text,
+		&.multiple-choice .field .choice {
+			display: block;
+			float: left;
+			height: $options-height;
+			line-height: $options-height;
+			color: $options-color;
+			font-size: 14px;
+		}
+
+		&.text .field input.text {
+			font-family: "Source Code Pro", monospace;
+			background: $card-background-color;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+			border: none;
+		}
+
+		&.multiple-choice .field .choice {
+			padding: 0 ($options-padding-horizontal * 0.5);
 		}
 	}
 }

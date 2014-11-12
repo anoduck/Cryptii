@@ -34,10 +34,33 @@ var Cryptii = Cryptii || {};
 	};
 
 
-	Option.prototype.isValueValid = function(value)
+	Option.prototype.validateValue = function(value)
 	{
-		// in the base option, every value is valid
-		return true;
+		// in the base option, every value will validate
+		//  in addition convert possible integer values to strings
+		return value + '';
+	};
+
+	//
+	// delegates
+	//
+
+	Option.prototype.onOptionViewChange = function(optionView, value)
+	{
+		// check if value validates
+		if (this.setValue(value))
+		{
+			this.delegate('onOptionChange', value);
+		}
+	};
+
+	//
+	// accessors
+	//
+
+	Option.prototype.getValue = function()
+	{
+		return this._value;
 	};
 
 	Option.prototype.getEscapedValue = function()
@@ -53,13 +76,23 @@ var Cryptii = Cryptii || {};
 
 	Option.prototype.setValue = function(value)
 	{
-		if (this.isValueValid(value))
+		if (value !== null)
 		{
-			this._value = value;
-			return true;
+			// validate value
+			var validatedValue = this.validateValue(value);
+			if (validatedValue !== null)
+			{
+				this._value = validatedValue;
+				return true;
+			}
 		}
 
 		return false;
+	};
+	
+	Option.prototype.getLabel = function()
+	{
+		return this._label;
 	};
 
 	Option.prototype.getOptionView = function()
@@ -70,30 +103,6 @@ var Cryptii = Cryptii || {};
 		}
 
 		return this._optionView;
-	};
-
-	//
-	// delegates
-	//
-
-	Option.prototype.onOptionViewChange = function(optionView, value)
-	{
-		this._value = value;
-		this.delegate('onOptionChange', value);
-	};
-
-	//
-	// accessors
-	//
-
-	Option.prototype.getValue = function()
-	{
-		return this._value;
-	};
-	
-	Option.prototype.getLabel = function()
-	{
-		return this._label;
 	};
 
 })(Cryptii, jQuery);

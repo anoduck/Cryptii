@@ -24,14 +24,21 @@
 	};
 
 
+	TextOptionView.prototype._build = function()
+	{
+		return OptionView.prototype._build.apply(this)
+			.addClass('text');
+	};
+
 	TextOptionView.prototype._buildField = function()
 	{
 		// call parent
-		var $element = OptionView.prototype._buildField.apply(this)
+		var $element = OptionView.prototype._buildField.apply(this);
 		
 		// input element
 		this._$input =
 			$('<input>')
+				.addClass('text')
 				.keyup(this._trackChanges.bind(this));
 
 		this._applyValue(this._lastKnownValue);
