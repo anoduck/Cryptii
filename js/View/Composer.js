@@ -52,11 +52,6 @@
 				this._$highlighter
 			);
 
-		// events
-		$element.on('click', $.proxy(function() {
-			this.focus();
-		}, this));
-
 		return $element;
 	};
 

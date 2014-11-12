@@ -24,8 +24,7 @@
 
 	TextOptionView._build = function()
 	{
-		return OptionView._build.apply(this)
-			.addClass('text');
+		return OptionView._build.apply(this);
 	};
 
 	TextOptionView._buildField = function()
@@ -44,6 +43,11 @@
 		$element.append(this._$input);
 
 		return $element;
+	};
+
+	TextOptionView._buildBar = function()
+	{
+		return null;
 	};
 
 	TextOptionView.getValue = function()

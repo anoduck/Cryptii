@@ -33,6 +33,7 @@
 			.addClass('option')
 			.append(
 				this._buildLabel(),
+				this._buildBar(),
 				this._buildField()
 			);
 
@@ -49,6 +50,12 @@
 	{
 		return $('<div></div>')
 			.addClass('field');
+	};
+
+	OptionView._buildBar = function()
+	{
+		return $('<div></div>')
+			.addClass('bar');
 	};
 
 	OptionView.getValue = function()

@@ -25,7 +25,7 @@
 	MultipleChoiceOptionView._build = function()
 	{
 		return OptionView._build.apply(this)
-			.addClass('multiple-choice');
+			.addClass('bar-width-2');
 	};
 
 	MultipleChoiceOptionView._buildField = function()
@@ -35,28 +35,31 @@
 		
 		// choice element
 		this._$choice =
-			$('<span>')
-				.addClass('choice');
+			$('<div></div>')
+				.addClass('value');
 
 		this._applyValue(this._lastKnownValue);
 
-		$element.append(
-			$('<a></a>')
-				.addClass('bar-button slim')
-				.addClass('previous')
-				.text('Previous')
-				.attr('href', 'javascript:void(0);')
-				.click(this.onPreviousButtonClick.bind(this)),
-			this._$choice,
-			$('<a></a>')
-				.addClass('bar-button slim')
-				.addClass('next')
-				.text('Next')
-				.attr('href', 'javascript:void(0);')
-				.click(this.onNextButtonClick.bind(this))
-		);
+		$element.append(this._$choice);
 
 		return $element;
+	};
+
+	MultipleChoiceOptionView._buildBar = function()
+	{
+		return OptionView._buildBar.apply(this)
+			.append(
+				$('<a></a>')
+					.addClass('bar-button slim left')
+					.attr('href', 'javascript:void(0);')
+					.click(this.onPreviousButtonClick.bind(this))
+					.text('Previous'),
+				$('<a></a>')
+					.addClass('bar-button slim right')
+					.attr('href', 'javascript:void(0);')
+					.click(this.onNextButtonClick.bind(this))
+					.text('Next')
+			);
 	};
 
 	MultipleChoiceOptionView.getValue = function()
@@ -73,7 +76,7 @@
 		this._$choice.text(label);
 	};
 
-	MultipleChoiceOptionView.onNextButtonClick = function()
+	MultipleChoiceOptionView.onNextButtonClick = function(evt)
 	{
 		var index = this._option.getSelectedIndex();
 		var count = this._option.getChoiceCount();
@@ -86,7 +89,7 @@
 		this.onValueChange(value);
 	};
 
-	MultipleChoiceOptionView.onPreviousButtonClick = function()
+	MultipleChoiceOptionView.onPreviousButtonClick = function(evt)
 	{
 		var index = this._option.getSelectedIndex();
 		var count = this._option.getChoiceCount();

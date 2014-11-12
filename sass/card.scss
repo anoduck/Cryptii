@@ -24,92 +24,6 @@
 		}
 	}
 
-	.header {
-		position: relative;
-		height: $card-header-height;
-		border-bottom: 1px solid $card-content-border-color;
-		line-height: 0;
-		cursor: default;
-
-		h3 {
-			display: table;
-			position: absolute;
-			top: 0;
-			left: 0;
-			bottom: 0;
-			height: $card-header-height;
-			text-transform: uppercase;
-			font-size: 14px;
-			line-height: $card-header-height;
-			font-weight: normal;
-			border-radius: 2px 0 0 0;
-
-			&.format {
-				top: -1px;
-				left: -1px;
-				height: $format-arrow-height;
-				line-height: $format-arrow-height;
-				padding: 0 10px 0 ($card-content-padding-horizontal + 2px);
-				background: $card-format-color;
-				color: $card-background-color;
-
-				&:after {
-					content: '';
-					display: block;
-					position: absolute;
-					top: 0;
-					bottom: 0;
-					right: (- $format-arrow-height * 0.5);
-					width: 0;
-					height: 0;
-					border-style: solid;
-					border-width: ($format-arrow-height * 0.5);
-					border-right-width: 0;
-					border-color: transparent;
-					border-left-color: $card-format-color;
-				}
-			}
-		}
-
-		.bar {
-			display: table;
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-
-			.bar-button {
-
-				&.close {
-					&:before { @include icon(0, 0, 16px); }
-					&:after { @include icon(1, 0, 16px); }
-				}
-			}
-		}
-	}
-
-	.content {
-		color: $composer-color;
-		line-height: 1.6;
-
-		&.content-padding {
-			padding: $card-content-padding-horizontal $card-content-padding-vertical;
-		}
-
-		p {
-			margin: $card-content-padding-vertical 0 0 0;
-
-			&:first-child {
-				margin: 0;
-			}
-		}
-	}
-
-	.footer {
-		height: $card-footer-height;
-		border-top: 1px solid $card-content-border-color;
-	}
-
 	&.ui-sortable-helper {
 		// card styles when being dragged
 		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
@@ -120,6 +34,62 @@
 		height: 100px;
 		background: transparent;
 		border-style: dashed;
+	}
+}
+
+.card-header {
+	position: relative;
+	height: $card-header-height;
+	border-bottom: 1px solid $card-content-border-color;
+	line-height: 0;
+	cursor: default;
+
+	h3 {
+		display: table;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		height: $card-header-height;
+		text-transform: uppercase;
+		font-size: 14px;
+		line-height: $card-header-height;
+		font-weight: normal;
+		border-radius: 2px 0 0 0;
+
+		&.format {
+			top: -1px;
+			left: -1px;
+			height: $format-arrow-height;
+			line-height: $format-arrow-height;
+			padding: 0 10px 0 ($card-content-padding-horizontal + 2px);
+			background: $card-format-color;
+			color: $card-background-color;
+
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				right: (- $format-arrow-height * 0.5);
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: ($format-arrow-height * 0.5);
+				border-right-width: 0;
+				border-color: transparent;
+				border-left-color: $card-format-color;
+			}
+		}
+	}
+
+	.bar {
+		display: table;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
 	}
 }
 
@@ -167,80 +137,119 @@
 			margin-right: 0;
 		}
 	}
+
+	&.close {
+		&:before { @include icon(0, 0, 16px); }
+		&:after { @include icon(1, 0, 16px); }
+	}
+
+	&.left {
+		&:before { @include icon(0, 3, 16px); }
+		&:after { @include icon(1, 3, 16px); }
+	}
+
+	&.right {
+		&:before { @include icon(0, 2, 16px); }
+		&:after { @include icon(1, 2, 16px); }
+	}
+}
+
+.card-content {
+	color: $composer-color;
+	line-height: 1.6;
+
+	&.content-padding {
+		padding: $card-content-padding-vertical $card-content-padding-horizontal;
+	}
+
+	p {
+		margin: $card-content-padding-vertical 0 0 0;
+
+		&:first-child {
+			margin: 0;
+		}
+	}
 }
 
 .options {
+	margin: $card-content-padding-vertical $card-content-padding-horizontal 0;
+	border: 1px solid $card-content-border-color;
+	border-radius: 2px;
 
 	.option {
-		border-bottom: 1px solid $card-content-border-color;
+		border-top: 1px solid $card-content-border-color;
+
+		&:first-child {
+			border: none;
+		}
 
 		label,
-		.field {
+		.field,
+		.bar {
 			display: block;
 			height: $options-height;
 		}
 
 		label {
 			width: $options-label-width;
-			padding-left: $card-content-padding-horizontal;
+			padding: 0 $options-padding-horizontal;
 			border-right: 1px solid $card-content-border-color;
 			float: left;
 			font-size: 14px;
+			white-space: nowrap;
+			overflow: hidden;
 			line-height: $options-height;
 			color: $options-label-color;
 		}
 
 		.field {
-			margin-left: ($card-content-padding-horizontal + $options-label-width + 1px);
-			padding-left: $options-padding-horizontal;
-			padding-right: $card-content-padding-horizontal;
+			margin-left: $options-padding-horizontal * 2 + $options-label-width + 1px;
+			margin-right: 1 * 16px + $options-height - 16px;
 
-			.bar-button {
+			input.text,
+			.value {
+				display: block;
+				box-sizing: border-box;
+				padding: 0 $options-padding-horizontal;
+				margin: 0;
+				width: 100%;
+				height: $options-height;
+				border: none;
+				line-height: $options-height;
+				white-space: nowrap;
+				overflow: hidden;
+				background: transparent;
+				color: $options-color;
+				font-size: 14px;
+			}
 
-				&.previous {
-					&:before { @include icon(0, 3, 16px); }
-					&:after { @include icon(1, 3, 16px); }
-				}
-
-				&.next {
-					&:before { @include icon(0, 2, 16px); }
-					&:after { @include icon(1, 2, 16px); }
-				}
+			.value {
+				cursor: default;
 			}
 		}
 
-		&.text .field input.text,
-		&.multiple-choice .field .choice {
-			display: block;
-			float: left;
-			height: $options-height;
-			line-height: $options-height;
-			color: $options-color;
-			font-size: 14px;
+		.bar {
+			padding: 0 (($options-height - 16px) * 0.5);
+			display: table;
+			float: right;
 		}
 
-		&.text .field input.text {
-			font-family: "Source Code Pro", monospace;
-			background: $card-background-color;
-			width: 100%;
-			padding: 0;
-			margin: 0;
-			border: none;
-		}
-
-		&.multiple-choice .field .choice {
-			padding: 0 ($options-padding-horizontal * 0.5);
+		&.bar-width-2 .field {
+			margin-right: 2 * 16px + $options-height - 16px;
 		}
 	}
 }
 
 .composer {
 	position: relative;
-	padding: $card-content-padding-vertical $card-content-padding-horizontal 0;
 	cursor: text;
+	line-height: 0;
 
 	textarea,
 	.highlighter {
+		width: 100%;
+		box-sizing: border-box;
+		padding: $card-content-padding-vertical $card-content-padding-horizontal 0;
 
 		&, i, b, u {
 			font-family: "Source Code Pro", monospace;
@@ -256,9 +265,9 @@
 
 	.highlighter {
 		position: absolute;
-		top: 20px;
-		left: 25px;
-		right: 25px;
+		top: 0;
+		left: 0;
+		right: 0;
 		color: transparent;
 		min-height: 50px;
 
@@ -275,9 +284,7 @@
 		position: relative;
 		z-index: 1;
 		color: $composer-color;
-		width: 100%;
 		min-height: 100px;
-		padding: 0;
 		margin: 0;
 		background: transparent;
 		resize: none;
@@ -285,4 +292,9 @@
 		border: none;
 		overflow: hidden;
 	}
+}
+
+.card-footer {
+	height: $card-footer-height;
+	border-top: 1px solid $card-content-border-color;
 }

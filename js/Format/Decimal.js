@@ -20,8 +20,9 @@
 		// options
 		this.registerOption('separator', new Cryptii.MultipleChoiceOption('Separator', ' ', {
 			' ': 'Space',
-			', ': 'Comma and Space',
-			';': 'Semicolon'
+			', ': 'Comma with Space',
+			';': 'Semicolon',
+			'+': 'Plus'
 		}));
 	};
 

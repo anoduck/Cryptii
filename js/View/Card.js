@@ -41,7 +41,7 @@
 	CardView._buildHeader = function()
 	{
 		return $('<div></div>')
-			.addClass('header')
+			.addClass('card-header')
 			.append(this._buildHeaderBar());
 	};
 
@@ -63,13 +63,13 @@
 	CardView._buildContent = function()
 	{
 		return $('<div></div>')
-			.addClass('content');
+			.addClass('card-content');
 	};
 
 	CardView._buildFooter = function()
 	{
 		return $('<div></div>')
-			.addClass('footer');
+			.addClass('card-footer');
 	};
 
 	CardView.clearAnimations = function()

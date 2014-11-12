@@ -17,7 +17,9 @@ body {
 	padding: 0;
 }
 
-@import "application";
+@import "layout";
+@import "deck";
+@import "card";
 
 @media screen and (max-width: $break-small) {
 	@import "break-small";

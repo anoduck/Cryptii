@@ -81,7 +81,7 @@
 						.addClass('column')
 						.sortable({
 							connectWith: '.column',
-							handle: '.header',
+							handle: '.card-header',
 							cancel: 'a',
 							placeholder: 'card ghost',
 							distance: 10,
