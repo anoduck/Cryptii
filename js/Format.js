@@ -129,4 +129,31 @@ var Cryptii = Cryptii || {};
 		return this._options;
 	};
 
+	Format.getOptionCount = function()
+	{
+		var count = 0;
+		for (var name in this._options) {
+			count ++;
+		}
+
+		return count;
+	};
+
+	Format.getOptionalOptionCount = function()
+	{
+		var count = 0;
+		for (var name in this._options) {
+			if (this._options[name].isOptional()) {
+				count ++;
+			}
+		}
+
+		return count;
+	};
+
+	Format.hasOptions = function()
+	{
+		return (this.getOptionCount() > 0);
+	};
+
 })(Cryptii, jQuery);

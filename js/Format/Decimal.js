@@ -17,12 +17,18 @@
 		// call parent init
 		TextFormat.init.apply(this, arguments);
 
-		// options
-		this.registerOption('separator', new Cryptii.MultipleChoiceOption('Separator', ' ', {
-			' ': 'Space',
-			', ': 'Comma with Space',
-			';': 'Semicolon',
-			'+': 'Plus'
+		// separator option
+		this.registerOption('separator', new Cryptii.MultipleChoiceOption({
+			label: 'Separator',
+			value: ' ',
+			optional: true,
+			choices: {
+				' ': 'Space',
+				',': 'Comma',
+				', ': 'Comma with Space',
+				';': 'Semicolon',
+				'+': 'Plus'
+			}
 		}));
 	};
 

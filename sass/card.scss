@@ -138,17 +138,29 @@
 		}
 	}
 
-	&.close {
+	&.icon-close {
 		&:before { @include icon(0, 0, 16px); }
 		&:after { @include icon(1, 0, 16px); }
 	}
 
-	&.left {
+	&.icon-option {
+		transform: rotate(0);
+		transition: transform 0.2s ease-in-out;
+
+		&:before { @include icon(0, 4, 16px); }
+		&:after { @include icon(1, 4, 16px); }
+
+		&.selected {
+			transform: rotate(90deg);
+		}
+	}
+
+	&.icon-left {
 		&:before { @include icon(0, 3, 16px); }
 		&:after { @include icon(1, 3, 16px); }
 	}
 
-	&.right {
+	&.icon-right {
 		&:before { @include icon(0, 2, 16px); }
 		&:after { @include icon(1, 2, 16px); }
 	}
@@ -157,6 +169,7 @@
 .card-content {
 	color: $composer-color;
 	line-height: 1.6;
+	overflow: hidden;
 
 	&.content-padding {
 		padding: $card-content-padding-vertical $card-content-padding-horizontal;
@@ -172,16 +185,35 @@
 }
 
 .options {
-	margin: $card-content-padding-vertical $card-content-padding-horizontal 0;
-	border: 1px solid $card-content-border-color;
-	border-radius: 2px;
+	padding: 0 $card-content-padding-horizontal;
+	padding-top: $card-content-padding-vertical;
+	transition-property: margin-top padding-top opacity;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+	opacity: 1.0;
+	overflow: hidden;
+
+	> .inner {
+		border: 1px solid $card-content-border-color;
+		border-radius: 2px;
+	}
+
+	&.hidden {
+		padding-top: 0;
+		margin-top: -2px;
+		opacity: 0.0;
+
+		> .inner {
+
+		}
+	}
 
 	.option {
 		border-top: 1px solid $card-content-border-color;
-
-		&:first-child {
-			border: none;
-		}
+		height: $options-height;
+		transition: height 0.2s ease-in-out;
+		overflow: hidden;
+		margin-top: -1px;
 
 		label,
 		.field,
@@ -237,6 +269,16 @@
 		&.bar-width-2 .field {
 			margin-right: 2 * 16px + $options-height - 16px;
 		}
+	}
+
+	&.hide-optionals .option.optional,
+	&.hidden .option {
+		height: 0;
+		margin-bottom: -1px;
+	}
+
+	&.hidden {
+
 	}
 }
 

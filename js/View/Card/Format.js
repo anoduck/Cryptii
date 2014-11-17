@@ -20,16 +20,32 @@
 		// attributes
 		this._format = format;
 
-		// collect option views
-		this._optionViews = [];
-		var options = format.getOptions();
-		for (var name in options)
-		{
-			var optionView = options[name].getOptionView();
-			this._optionViews.push(optionView);
-		}
+		this._$options = null;
+		this._$optionBarButton = null;
+
+		this._optionalsHidden = true;
 	};
 
+
+	FormatCardView._buildHeaderBar = function($header)
+	{
+		if (this._format.getOptionalOptionCount() > 0)
+		{
+			this._$optionBarButton = $('<a></a>')
+				.click(this.onOptionBarButtonClick.bind(this))
+				.addClass('bar-button icon-option')
+				.attr({
+					href: 'javascript:void(0);'
+				});
+
+			if (!this._optionalsHidden) {
+				this._$optionBarButton.addClass('selected');
+			}
+		}
+
+		return CardView._buildHeaderBar.apply(this)
+			.prepend(this._$optionBarButton);
+	};
 
 	FormatCardView._buildHeader = function()
 	{
@@ -46,19 +62,39 @@
 		var $content = CardView._buildContent.apply(this);
 
 		// handle format options
-		if (this._optionViews.length > 0)
+		if (this._format.hasOptions())
 		{
-			var $options =
-				$('<div></div>')
-					.addClass('options');
+			var options = this._format.getOptions();
 
-			// append option views to container
-			for (var i = 0; i < this._optionViews.length; i ++) {
-				$options.append(this._optionViews[i].getElement());
+			// options inner element
+			var $optionsInner =
+				$('<div></div>')
+					.addClass('inner');
+
+			// append each option view to container
+			for (var name in options)
+			{
+				var optionView = options[name].getOptionView();
+				$optionsInner.append(optionView.getElement());
+			}
+
+			// options element
+			this._$options =
+				$('<div></div>')
+					.addClass('options')
+					.append($optionsInner);
+
+			if (this._optionalsHidden)
+			{
+				if (this._format.getOptionCount() == this._format.getOptionalOptionCount()) {
+					this._$options.addClass('hidden');
+				} else {
+					this._$options.addClass('hide-optionals');
+				}
 			}
 
 			// append options
-			$content.append($options);
+			$content.append(this._$options);
 		}
 
 		return $content;
@@ -77,10 +113,62 @@
 	FormatCardView.tick = function()
 	{
 		// forward tick to embedded option views
-		for (var i = 0; i < this._optionViews.length; i ++)
-		{
-			this._optionViews[i].tick();
+		for (var name in this._options) {
+			this._options[name].getOptionView().tick();
 		}
+	};
+
+	FormatCardView.setOptionalsHidden = function(optionalsHidden)
+	{
+		if (
+			this._optionalsHidden != optionalsHidden
+			&& this._$options !== null
+		) {
+			this._optionalsHidden = optionalsHidden;
+
+			if (optionalsHidden)
+			{
+				this._$optionBarButton.removeClass('selected');
+			}
+			else
+			{
+				this._$optionBarButton.addClass('selected');
+			}
+
+			if (this._format.getOptionCount() == this._format.getOptionalOptionCount())
+			{
+				if (optionalsHidden)
+				{
+					this._$options.addClass('hidden');
+				}
+				else
+				{
+					this._$options.removeClass('hidden');
+				}
+			}
+			else
+			{
+				if (optionalsHidden)
+				{
+					this._$options.addClass('hide-optionals');
+					
+				}
+				else
+				{
+					this._$options.removeClass('hide-optionals');
+				}
+			}
+		}
+	};
+
+	FormatCardView.toggleOptionalsHidden = function()
+	{
+		this.setOptionalsHidden(!this._optionalsHidden);
+	};
+
+	FormatCardView.onOptionBarButtonClick = function(evt)
+	{
+		this.toggleOptionalsHidden();
 	};
 
 })(Cryptii, jQuery);

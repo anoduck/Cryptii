@@ -37,6 +37,10 @@
 				this._buildField()
 			);
 
+		if (this._option.isOptional()) {
+			$element.addClass('optional');
+		}
+
 		return $element;
 	};
 

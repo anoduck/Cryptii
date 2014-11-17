@@ -51,12 +51,11 @@
 			.addClass('bar')
 			.append(
 				$('<a></a>')
+					.addClass('bar-button icon-close')
+					.click(this.onCloseButtonClick.bind(this))
 					.attr({
 						href: 'javascript:void(0);'
 					})
-					.click(this.onCloseButtonClick.bind(this))
-					.addClass('bar-button')
-					.addClass('close')
 			);
 	};
 

@@ -12,7 +12,7 @@ var Cryptii = Cryptii || {};
 	var Option = Cryptii.Option.prototype;
 	
 
-	Option.init = function(label, defaultValue)
+	Option.init = function(details)
 	{
 		// call parent init
 		Adam.init.apply(this, arguments);
@@ -20,10 +20,11 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._optionView = null;
 
-		this._label = label;
+		this._label = details['label'];
+		this._optional = (details['optional'] !== false);
 
-		this._defaultValue = defaultValue;
-		this._value = defaultValue;
+		this._defaultValue = details['value'];
+		this._value = details['value'];
 	};
 
 	Option._createOptionView = function()
@@ -91,6 +92,16 @@ var Cryptii = Cryptii || {};
 	Option.getLabel = function()
 	{
 		return this._label;
+	};
+
+	Option.isOptional = function()
+	{
+		return this._optional;
+	};
+
+	Option.setOptional = function(optional)
+	{
+		this._optional = optional;
 	};
 
 	Option.getOptionView = function()

@@ -12,7 +12,7 @@ var Cryptii = Cryptii || {};
 	var MultipleChoiceOption = Cryptii.MultipleChoiceOption.prototype;
 	
 
-	MultipleChoiceOption.init = function(label, defaultValue, choices)
+	MultipleChoiceOption.init = function(details)
 	{
 		// call parent init
 		Option.init.apply(this, arguments);
@@ -21,6 +21,7 @@ var Cryptii = Cryptii || {};
 		this._choices = [];
 		this._labels = [];
 
+		var choices = details['choices'];
 		for (var value in choices)
 		{
 			this._choices.push(value);
