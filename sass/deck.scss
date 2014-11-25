@@ -1,13 +1,14 @@
 
 #deck {
-	padding: $body-margin;
+	position: relative;
+	padding: $body-margin $body-margin ($body-margin - $card-margin);
 	padding-left: $body-margin * 3;
 
 	.column {
-		padding-right: $card-margin;
+		padding-left: $card-margin;
 
-		&:last-child {
-			padding-right: 0;
+		&:first-child {
+			padding-left: 0;
 		}
 
 		&.fixed-width {

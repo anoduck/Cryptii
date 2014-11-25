@@ -15,7 +15,7 @@
 	SideView.init = function()
 	{
 		// call parent init
-		View.init.apply(this, arguments);
+		View.init.call(this);
 
 		// attributes
 		this._logoView = null;

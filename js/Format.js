@@ -12,10 +12,10 @@ var Cryptii = Cryptii || {};
 	var Format = Cryptii.Format.prototype;
 	
 
-	Format.init = function(options)
+	Format.init = function()
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 
 		// attributes
 		this._cardView = null;

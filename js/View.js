@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	View.init = function()
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 		
 		// attributes
 		this._$element = null;

@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	Difference.init = function(startOffset, endOffset, blocks)
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 
 		// attributes
 		this._startOffset = startOffset;

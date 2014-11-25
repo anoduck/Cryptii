@@ -15,7 +15,7 @@
 	DeckView.init = function()
 	{
 		// call parent init
-		View.init.apply(this, arguments);
+		View.init.call(this);
 
 		// constants
 		this._MIN_COLUMN_WIDTH = 375;
@@ -92,8 +92,11 @@
 				this.getElement().append($column);
 			}
 
+			// append clearfix
+			this.getElement().append($('<div></div>').addClass('clear'));
+
 			// bind columns
-			this._$columns = this.getElement().children();
+			this._$columns = this.getElement().children('.column');
 
 			// distribute cards to columns
 			this._distributeCardView(this._cardViews, false);
@@ -131,11 +134,9 @@
 
 			// set a fixed height for all columns
 			//  to improve the sortable interaction
-			this._$columns.height(maxColumnHeight);
-
-			// also set a fixed height for the deck
-			//  element because the columns float
-			this._$element.height(maxColumnHeight);
+			this._$columns.css({
+				minHeight: maxColumnHeight
+			});
 		}
 	};
 
@@ -188,8 +189,6 @@
 
 			// append card to smallest column
 			$smallestColumn.append(cardView.getElement());
-
-			this.layout();
 		}
 		else if (Object.prototype.toString.call(cardView) === '[object Array]')
 		{
@@ -202,6 +201,7 @@
 		}
 
 		if (propagate) {
+			this.layout();
 			this.onChange();
 		}
 	};
@@ -216,26 +216,26 @@
 		this._distributeCardView(this._cardViews, false);
 	};
 
-	DeckView.addCardView = function(cardViews)
+	DeckView.addCardView = function(cardView)
 	{
-		if (cardViews instanceof Cryptii.CardView)
+		if (cardView instanceof Cryptii.CardView)
 		{
 			// set the card's deck
-			cardViews.setDeckView(this);
+			cardView.setDeckView(this);
 
-			this._cardViews.push(cardViews);
-			this._distributeCardView(cardViews, true);
+			this._cardViews.push(cardView);
+			this._distributeCardView(cardView, true);
 		}
 	};
 
-	DeckView.removeCardView = function(cardViews)
+	DeckView.removeCardView = function(cardView)
 	{
-		var index = this._cardViews.indexOf(cardViews);
+		var index = this._cardViews.indexOf(cardView);
 		if (index !== -1)
 		{
 			// set the card's deck to null
-			cardViews.setDeckView(null);
-			cardViews.getElement().detach();
+			cardView.setDeckView(null);
+			cardView.getElement().detach();
 
 			this._cardViews.splice(index, 1);
 

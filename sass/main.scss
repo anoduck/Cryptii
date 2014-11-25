@@ -17,6 +17,10 @@ body {
 	padding: 0;
 }
 
+.clear {
+	clear: both;
+}
+
 @import "layout";
 @import "deck";
 @import "card";

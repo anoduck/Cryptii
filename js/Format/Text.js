@@ -12,10 +12,10 @@
 	var TextFormat = Cryptii.TextFormat.prototype;
 
 
-	TextFormat.init = function(options)
+	TextFormat.init = function()
 	{
 		// call parent init
-		Format.init.apply(this, arguments);
+		Format.init.call(this);
 
 		// attributes
 		this._blockMeta = [];

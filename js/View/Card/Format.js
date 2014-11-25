@@ -15,7 +15,7 @@
 	FormatCardView.init = function(format)
 	{
 		// call parent init
-		CardView.init.apply(this, arguments);
+		CardView.init.call(this);
 		
 		// attributes
 		this._format = format;

@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	MultipleChoiceOption.init = function(details)
 	{
 		// call parent init
-		Option.init.apply(this, arguments);
+		Option.init.call(this, details);
 
 		// attributes
 		this._choices = [];

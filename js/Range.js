@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	Range.init = function(start, end)
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 		
 		// attributes
 		this._start = start;

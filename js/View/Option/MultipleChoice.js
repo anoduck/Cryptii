@@ -15,7 +15,7 @@
 	MultipleChoiceOptionView.init = function(option)
 	{
 		// call parent init
-		OptionView.init.apply(this, arguments);
+		OptionView.init.call(this, option);
 
 		// attributes
 		this._$choice = null;

@@ -12,10 +12,10 @@
 	var DecimalFormat = Cryptii.DecimalFormat.prototype;
 
 
-	DecimalFormat.init = function(options)
+	DecimalFormat.init = function()
 	{
 		// call parent init
-		TextFormat.init.apply(this, arguments);
+		TextFormat.init.apply(this);
 
 		// separator option
 		this.registerOption('separator', new Cryptii.MultipleChoiceOption({

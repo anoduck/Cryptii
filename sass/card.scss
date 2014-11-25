@@ -196,6 +196,7 @@
 	> .inner {
 		border: 1px solid $card-content-border-color;
 		border-radius: 2px;
+		max-width: 350px;
 	}
 
 	&.hidden {
@@ -298,7 +299,7 @@
 			font-size: 14px;
 			font-style: normal;
 			font-weight: normal;
-			line-height: 1.7;
+			line-height: 1.8;
 			text-decoration: none;
 			word-wrap: break-word;
 			white-space: pre-wrap;

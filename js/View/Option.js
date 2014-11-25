@@ -15,7 +15,7 @@
 	OptionView.init = function(option)
 	{
 		// call parent init
-		View.init.apply(this, arguments);
+		View.init.call(this);
 
 		// attributes
 		this._option = option;

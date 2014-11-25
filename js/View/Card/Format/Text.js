@@ -15,7 +15,7 @@
 	TextFormatCardView.init = function(format)
 	{
 		// call parent init
-		FormatCardView.init.apply(this, arguments);
+		FormatCardView.init.call(this, format);
 
 		// attributes
 		this._composerView = null;

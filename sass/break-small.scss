@@ -4,7 +4,7 @@ body {
 }
 
 #deck {
-	padding-left: 0;
+	padding: 0;
 
 	.column {
 		padding: 0;
@@ -15,6 +15,6 @@ body {
 		border-right: none;
 		border-top: none;
 		border-radius: 0;
-		margin-top: 0;
+		margin-bottom: 0;
 	}
 }

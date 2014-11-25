@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	Option.init = function(details)
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 
 		// attributes
 		this._optionView = null;

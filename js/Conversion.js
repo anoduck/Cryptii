@@ -15,7 +15,7 @@ var Cryptii = Cryptii || {};
 	Conversation.init = function(applicationView)
 	{
 		// call parent init
-		Adam.init.apply(this, arguments);
+		Adam.init.call(this);
 		
 		// attributes
 		this._applicationView = applicationView;
