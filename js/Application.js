@@ -20,20 +20,8 @@ var Cryptii = Cryptii || {};
 		// application view
 		this._applicationView = new Cryptii.ApplicationView();
 
-		// conversation view
+		// conversation
 		this._conversation = new Cryptii.Conversation(this._applicationView);
-
-		// connect to delegates
-		this._applicationView.getSideView().addDelegate(this);
-
-		// register formats
-		this._conversation.registerFormat([
-			Cryptii.TextFormat,
-			Cryptii.DecimalFormat,
-			Cryptii.BinaryFormat,
-			Cryptii.HexadecimalFormat,
-			Cryptii.OctalFormat
-		]);
 
 		// default blocks
 		this._conversation.setBlocks([
@@ -43,12 +31,25 @@ var Cryptii = Cryptii || {};
 			122, 121, 32, 100, 111, 103, 115, 46
 		]);
 
+		// directory
+		this._directory = new Cryptii.Directory();
+		this._directory.addDelegate(this);
+
+		// register formats
+		this._directory.registerFormat([
+			Cryptii.TextFormat,
+			Cryptii.DecimalFormat,
+			Cryptii.BinaryFormat,
+			Cryptii.HexadecimalFormat,
+			Cryptii.OctalFormat
+		]);
+
+		// add directory card
+		this._applicationView.getDeckView().addCardView(
+			this._directory.getCardView());
+
 		// attributes
 		this._tickTimer = null;
-
-		// add introduction card
-		this._applicationView.getDeckView().addCardView(
-			new Cryptii.IntroductionCardView());
 
 		// finalize initialization
 		this._conversation.updateLocation();
@@ -109,9 +110,11 @@ var Cryptii = Cryptii || {};
 		this._setTickTimerEnabled(!document.hidden);
 	};
 
-	Application.onSideViewFormatSelect = function(sideView, Format)
+	Application.onDirectoryFormatSelect = function(directory, Format)
 	{
-		this._conversation.addFormat(new Format());
+		// create new instance of format
+		var instance = new Format();
+		this._conversation.addFormat(instance);
 	};
 
 })(Cryptii, jQuery);

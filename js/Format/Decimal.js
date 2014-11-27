@@ -38,6 +38,11 @@
 		return 'Decimal';
 	};
 
+	DecimalFormat.getCategory = function()
+	{
+		return 'Numeric';
+	};
+
 	DecimalFormat._getSeparator = function()
 	{
 		return this.getOptionValue('separator');

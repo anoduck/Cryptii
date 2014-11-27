@@ -38,6 +38,12 @@ var Cryptii = Cryptii || {};
 		return 'Untitled';
 	};
 
+	Format.getCategory = function()
+	{
+		// override this method
+		return 'Uncategorized';
+	};
+
 	Format.getSlug = function()
 	{
 		// creates a slug version of the title

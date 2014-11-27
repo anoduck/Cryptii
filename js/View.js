@@ -28,7 +28,6 @@ var Cryptii = Cryptii || {};
 		var $element = $('<div></div>');
 
 		return $element;
-
 	};
 
 	View.getElement = function()
@@ -36,6 +35,7 @@ var Cryptii = Cryptii || {};
 		if (this._$element === null)
 		{
 			this._$element = this._build();
+			this.onBuild();
 		}
 
 		return this._$element;
@@ -49,6 +49,11 @@ var Cryptii = Cryptii || {};
 		element.style.display = 'none';
 		element.offsetHeight;
 		element.style.display = '';
+	};
+
+	View.onBuild = function()
+	{
+		
 	};
 
 })(Cryptii, jQuery);

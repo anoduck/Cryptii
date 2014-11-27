@@ -51,7 +51,7 @@
 	{
 		return CardView._buildHeader.apply(this)
 			.append(
-				$('<h3></h3>')
+				$('<h2></h2>')
 					.addClass('format')
 					.text(this._format.getName())
 			);

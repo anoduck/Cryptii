@@ -44,27 +44,30 @@
 	line-height: 0;
 	cursor: default;
 
-	h3 {
+	h2 {
 		display: table;
 		position: absolute;
 		top: 0;
 		left: 0;
 		bottom: 0;
+		padding: 0 ($card-content-padding-horizontal + 2px);
 		height: $card-header-height;
 		text-transform: uppercase;
 		font-size: 14px;
 		line-height: $card-header-height;
-		font-weight: normal;
+		color: $color-text-black;
+		font-weight: 400;
 		border-radius: 2px 0 0 0;
 
 		&.format {
 			top: -1px;
 			left: -1px;
+			padding-right: 10px;
 			height: $format-arrow-height;
 			line-height: $format-arrow-height;
-			padding: 0 10px 0 ($card-content-padding-horizontal + 2px);
 			background: $card-format-color;
 			color: $card-background-color;
+			font-weight: 500;
 
 			&:after {
 				content: '';
@@ -182,6 +185,65 @@
 			margin: 0;
 		}
 	}
+
+	.directory {
+		
+		h3 {
+			border-top: 1px solid $card-content-border-color;
+			padding: $card-content-padding-vertical $card-content-padding-horizontal 5px;
+			font-weight: 500;
+		}
+
+		h3:first-child {
+			border: none;
+		}
+
+		ul {
+			padding: 0 $card-content-padding-horizontal $card-content-padding-vertical;
+			margin-bottom: -10px;
+
+			li {
+				display: table;
+				float: left;
+				padding: 0 20px 10px 0;
+				
+				a {
+					display: block;
+					position: relative;
+					padding: 0 4px 0 7px;
+					height: $format-arrow-small-height;
+					line-height: $format-arrow-small-height;
+					background: $card-content-border-color;
+					color: $color-text-black;
+					font-weight: 400;
+					text-decoration: none;
+					border-radius: 2px 0 0 2px;
+
+					&:after {
+						content: '';
+						display: block;
+						position: absolute;
+						top: 0;
+						bottom: 0;
+						right: (- $format-arrow-small-height * 0.5);
+						width: 0;
+						height: 0;
+						border-style: solid;
+						border-width: ($format-arrow-small-height * 0.5);
+						border-right-width: 0;
+						border-color: transparent;
+						border-left-color: $card-content-border-color;
+					}
+				}
+			}
+
+			&:after {
+				content: '';
+				display: block;
+				clear: both;
+			}
+		}
+	}
 }
 
 .options {
@@ -203,10 +265,6 @@
 		padding-top: 0;
 		margin-top: -2px;
 		opacity: 0.0;
-
-		> .inner {
-
-		}
 	}
 
 	.option {
@@ -276,10 +334,6 @@
 	&.hidden .option {
 		height: 0;
 		margin-bottom: -1px;
-	}
-
-	&.hidden {
-
 	}
 }
 

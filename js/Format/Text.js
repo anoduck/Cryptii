@@ -38,6 +38,11 @@
 		return 'Text';
 	};
 
+	Format.getCategory = function()
+	{
+		return 'Alphabet';
+	};
+
 	TextFormat._getSeparator = function()
 	{
 		return null;

@@ -33,38 +33,12 @@
 			padding: 2px $body-margin;
 
 			a {
-				display: table;
-				position: relative;
-				height: $format-arrow-height;
-				line-height: $format-arrow-height;
-				padding: 0 10px;
+				color: $side-color;
 				text-decoration: none;
-				text-transform: uppercase;
-				color: $side-background-color;
-				background: $side-color;
-
-				&:after {
-					content: '';
-					display: block;
-					position: absolute;
-					top: 0;
-					bottom: 0;
-					right: (- $format-arrow-height * 0.5);
-					width: 0;
-					height: 0;
-					border-style: solid;
-					border-width: ($format-arrow-height * 0.5);
-					border-right-width: 0;
-					border-color: transparent;
-					border-left-color: $side-color;
-				}
+				font-size: 16px;
 
 				&:hover {
-					background: $side-hover-color;
-
-					&:after {
-						border-left-color: $side-hover-color;
-					}
+					color: $side-hover-color;
 				}
 			}
 		}

@@ -20,7 +20,6 @@ var Cryptii = Cryptii || {};
 		// attributes
 		this._applicationView = applicationView;
 
-		this._registeredFormats = [];
 		this._formats = [];
 
 		this._blocks = [];
@@ -53,39 +52,6 @@ var Cryptii = Cryptii || {};
 
 			// add card of format to the deck
 			this._applicationView.getDeckView().addCardView(format.getCardView());
-		}
-	};
-
-	Conversation.registerFormat = function(Format, updateView)
-	{
-		if (updateView === undefined) {
-			updateView = true;
-		}
-
-		if (Object.prototype.toString.call(Format) !== "[object Array]")
-		{
-			// retrieve the slug by a format instance
-			var instance = new Format();
-			var slug = instance.getSlug();
-			this._registeredFormats[slug] = {
-				Format: Format,
-				name: instance.getName()
-			};
-		}
-		else
-		{
-			// register each format
-			var Formats = Format;
-			for (var i = 0; i < Formats.length; i ++)
-			{
-				this.registerFormat(Formats[i], false);
-			}
-		}
-
-		// update registered formats in side view
-		if (updateView) {
-			var sideView = this._applicationView.getSideView();
-			sideView.updateRegisteredFormats(this._registeredFormats);
 		}
 	};
 
