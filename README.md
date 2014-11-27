@@ -2,6 +2,30 @@
 
 An OpenSource web application used under the MIT license where you can convert, encrypt and decrypt content between different codes and formats. This happens fully in the browser using JavaScript with no server connection involved.
 
+## Build
+This repository does not contain a built version of it. To create your own build, open up the terminal, `cd` into your local repository and follow these steps:
+
+#### 1. Install Node.js and Gulp
+Download and install [Node.js](http://nodejs.org/download/).
+
+Install [Gulp](http://gulpjs.com/) globally by running:
+
+    sudo npm install --global gulp
+
+#### 2. Install the development dependencies
+External packages are required to create an own build of this project. These dependencies are described inside `package.json`. Install them by typing:
+
+    npm install
+
+#### 3. Build
+Create a build from the source files:
+
+    gulp build
+
+Watch the source files and create a build on every file change:
+
+    gulp
+
 ## License
 The MIT License (MIT)
 
