@@ -92,51 +92,17 @@
 				this.getElement().append($column);
 			}
 
-			// append clearfix
-			this.getElement().append($('<div></div>').addClass('clear'));
-
 			// bind columns
-			this._$columns = this.getElement().children('.column');
+			this._$columns = this.getElement().children();
 
 			// distribute cards to columns
 			this._distributeCardView(this._cardViews, false);
-		}
-
-		// layout column width
-		// when only one column is visible
-		//  it takes the full width available
-		if (this._$columns.length > 1)
-		{
-			// set a fixed column width
-			var columnWidth = parseInt((deckWidth + this._CARD_MARGIN) / this._$columns.length);
-			this._$columns
-				.width(columnWidth - this._CARD_MARGIN)
-				.addClass('fixed-width');
 		}
 
 		// layout each card view
 		for (var i = 0; i < this._cardViews.length; i ++)
 		{
 			this._cardViews[i].layout();
-		}
-
-		// layout column height
-		if (this._$columns.length > 1)
-		{
-			// retrieve the height of the largest column
-			var maxColumnHeight = 0;
-			for (var i = 0; i < this._$columns.length; i ++)
-			{
-				maxColumnHeight = Math.max(
-					maxColumnHeight,
-					this._calculateColumnHeight(i));
-			}
-
-			// set a fixed height for all columns
-			//  to improve the sortable interaction
-			this._$columns.css({
-				minHeight: maxColumnHeight
-			});
 		}
 	};
 

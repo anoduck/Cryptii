@@ -1,20 +1,22 @@
 
 #deck {
+	display: flex;
 	position: relative;
-	padding: $body-margin $body-margin ($body-margin - $card-margin);
+	width: 100%;
+	align-items: stretch;
+	flex-flow: row nowrap;
+	justify-content: stretch;
+	padding: $body-margin;
 	padding-left: $body-margin * 3;
+	box-sizing: border-box;
 
 	.column {
+		width: 0;
+		flex-grow: 1;
 		padding-left: $card-margin;
 
 		&:first-child {
 			padding-left: 0;
-		}
-
-		&.fixed-width {
-			// non-fixed-width columns take
-			//  the full width available
-			float: left;
 		}
 	}
 }

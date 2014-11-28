@@ -50,6 +50,8 @@
 }
 
 #main {
+	display: flex;
+	align-items: stretch;
 	background: $background-color;
 	position: relative;
 	z-index: 100;

@@ -247,31 +247,17 @@
 }
 
 .options {
-	padding: 0 $card-content-padding-horizontal;
-	padding-top: $card-content-padding-vertical;
-	transition-property: margin-top padding-top opacity;
-	transition-duration: 0.2s;
-	transition-timing-function: ease-in-out;
-	opacity: 1.0;
 	overflow: hidden;
 
-	> .inner {
-		border: 1px solid $card-content-border-color;
-		border-radius: 2px;
-		max-width: 350px;
-	}
-
-	&.hidden {
-		padding-top: 0;
-		margin-top: -2px;
-		opacity: 0.0;
-	}
-
 	.option {
-		border-top: 1px solid $card-content-border-color;
+		display: flex;
+		flex-flow: row nowrap;
+		padding: 0 $card-content-padding-horizontal;
+		border-bottom: 1px solid $card-content-border-color;
 		height: $options-height;
 		transition: height 0.2s ease-in-out;
 		overflow: hidden;
+		padding-top: 1px;
 		margin-top: -1px;
 
 		label,
@@ -279,34 +265,36 @@
 		.bar {
 			display: block;
 			height: $options-height;
+			line-height: $options-height;
 		}
 
 		label {
 			width: $options-label-width;
-			padding: 0 $options-padding-horizontal;
+			padding-right: $options-padding-horizontal;
 			border-right: 1px solid $card-content-border-color;
-			float: left;
-			font-size: 14px;
 			white-space: nowrap;
 			overflow: hidden;
-			line-height: $options-height;
 			color: $options-label-color;
+			font-size: 14px;
+		}
+
+		.bar {
+			display: table;
+			padding-left: $options-padding-horizontal;
 		}
 
 		.field {
-			margin-left: $options-padding-horizontal * 2 + $options-label-width + 1px;
-			margin-right: 1 * 16px + $options-height - 16px;
-
+			flex-grow: 1;
+			
 			input.text,
 			.value {
 				display: block;
 				box-sizing: border-box;
-				padding: 0 $options-padding-horizontal;
+				padding-left: $options-padding-horizontal;
 				margin: 0;
 				width: 100%;
 				height: $options-height;
 				border: none;
-				line-height: $options-height;
 				white-space: nowrap;
 				overflow: hidden;
 				background: transparent;
@@ -317,16 +305,6 @@
 			.value {
 				cursor: default;
 			}
-		}
-
-		.bar {
-			padding: 0 (($options-height - 16px) * 0.5);
-			display: table;
-			float: right;
-		}
-
-		&.bar-width-2 .field {
-			margin-right: 2 * 16px + $options-height - 16px;
 		}
 	}
 

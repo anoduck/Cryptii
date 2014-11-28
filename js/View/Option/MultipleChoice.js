@@ -22,12 +22,6 @@
 	};
 
 
-	MultipleChoiceOptionView._build = function()
-	{
-		return OptionView._build.apply(this)
-			.addClass('bar-width-2');
-	};
-
 	MultipleChoiceOptionView._buildField = function()
 	{
 		// call parent

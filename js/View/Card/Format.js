@@ -66,23 +66,17 @@
 		{
 			var options = this._format.getOptions();
 
-			// options inner element
-			var $optionsInner =
+			// options element
+			this._$options =
 				$('<div></div>')
-					.addClass('inner');
+					.addClass('options');
 
 			// append each option view to container
 			for (var name in options)
 			{
 				var optionView = options[name].getOptionView();
-				$optionsInner.append(optionView.getElement());
+				this._$options.append(optionView.getElement());
 			}
-
-			// options element
-			this._$options =
-				$('<div></div>')
-					.addClass('options')
-					.append($optionsInner);
 
 			if (this._optionalsHidden)
 			{
