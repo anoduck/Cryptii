@@ -78,13 +78,8 @@
 				this._$options.append(optionView.getElement());
 			}
 
-			if (this._optionalsHidden)
-			{
-				if (this._format.getOptionCount() == this._format.getOptionalOptionCount()) {
-					this._$options.addClass('hidden');
-				} else {
-					this._$options.addClass('hide-optionals');
-				}
+			if (this._optionalsHidden) {
+				this._$options.addClass('hide-optionals');
 			}
 
 			// append options
@@ -123,34 +118,12 @@
 			if (optionalsHidden)
 			{
 				this._$optionBarButton.removeClass('selected');
+				this._$options.addClass('hide-optionals');
 			}
 			else
 			{
 				this._$optionBarButton.addClass('selected');
-			}
-
-			if (this._format.getOptionCount() == this._format.getOptionalOptionCount())
-			{
-				if (optionalsHidden)
-				{
-					this._$options.addClass('hidden');
-				}
-				else
-				{
-					this._$options.removeClass('hidden');
-				}
-			}
-			else
-			{
-				if (optionalsHidden)
-				{
-					this._$options.addClass('hide-optionals');
-					
-				}
-				else
-				{
-					this._$options.removeClass('hide-optionals');
-				}
+				this._$options.removeClass('hide-optionals');
 			}
 		}
 	};

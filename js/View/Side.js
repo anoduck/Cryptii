@@ -38,7 +38,7 @@
 						$('<li></li>')
 							.append(
 								$('<a></a>')
-									.text('GitHub Repository')
+									.text('View on GitHub')
 									.attr('target', '_blank')
 									.attr('href', 'https://github.com/Cryptii/Cryptii')
 							)

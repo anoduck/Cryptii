@@ -17,7 +17,7 @@
 		// call parent init
 		TextFormat.init.call(this);
 
-		// separator option
+		// variant option
 		this.registerOption('variant', new Cryptii.MultipleChoiceOption({
 			label: 'Variant',
 			value: 'rot13',

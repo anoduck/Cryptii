@@ -44,12 +44,12 @@
 		return OptionView._buildBar.apply(this)
 			.append(
 				$('<a></a>')
-					.addClass('bar-button slim icon-left')
+					.addClass('bar-button icon-left')
 					.attr('href', 'javascript:void(0);')
 					.click(this.onPreviousButtonClick.bind(this))
 					.text('Previous'),
 				$('<a></a>')
-					.addClass('bar-button slim icon-right')
+					.addClass('bar-button icon-right')
 					.attr('href', 'javascript:void(0);')
 					.click(this.onNextButtonClick.bind(this))
 					.text('Next')
