@@ -17,12 +17,17 @@
 		return 'Binary';
 	};
 
+	BinaryFormat.validateContentBlock = function(contentBlock)
+	{
+		return new Cryptii.Utility().validateAllowedCharacters(
+			contentBlock, ['0', '1']);
+	};
+
 	BinaryFormat.interpretBlock = function(contentBlock)
 	{
 		var decimal = parseInt(contentBlock, 2);
 
-		if (!isNaN(decimal))
-		{
+		if (!isNaN(decimal)) {
 			return decimal;
 		}
 

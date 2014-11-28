@@ -69,9 +69,6 @@ var Cryptii = Cryptii || {};
 		// add example cards
 		this._conversation.addFormat(new Cryptii.TextFormat());
 		this._conversation.addFormat(new Cryptii.DecimalFormat());
-		this._conversation.addFormat(new Cryptii.BinaryFormat());
-		this._conversation.addFormat(new Cryptii.HexadecimalFormat());
-		this._conversation.addFormat(new Cryptii.OctalFormat());
 	};
 
 	

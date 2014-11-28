@@ -373,6 +373,7 @@
 		}
 
 		i {
+			border-bottom-width: 2px;
 			border-color: $composer-block-error-color;
 		}
 	}
@@ -381,7 +382,7 @@
 		position: relative;
 		z-index: 1;
 		color: $composer-color;
-		min-height: 100px;
+		min-height: 125px;
 		margin: 0;
 		background: transparent;
 		resize: none;

@@ -17,12 +17,17 @@
 		return 'Octal';
 	};
 
+	OctalFormat.validateContentBlock = function(contentBlock)
+	{
+		return new Cryptii.Utility().validateAllowedCharacters(
+			contentBlock, ['0', '1', '2', '3', '4', '5', '6', '7']);
+	};
+
 	OctalFormat.interpretBlock = function(contentBlock)
 	{
 		var decimal = parseInt(contentBlock, 8);
 
-		if (!isNaN(decimal))
-		{
+		if (!isNaN(decimal)) {
 			return decimal;
 		}
 

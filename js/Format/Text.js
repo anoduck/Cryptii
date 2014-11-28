@@ -75,6 +75,11 @@
 		return contentBlock.charCodeAt(0);
 	};
 
+	TextFormat.validateContentBlock = function(contentBlock)
+	{
+		return true;
+	};
+
 	TextFormat.convertBlock = function(decimal)
 	{
 		return String.fromCharCode(decimal);
@@ -143,20 +148,30 @@
 		for (var i = 0; i < contentBlocks.length; i ++)
 		{
 			var contentBlock = contentBlocks[i];
-			var decimal = this.interpretBlock(contentBlock);
 
-			// create highlighter elements
-			var $block = this.createBlockElement(decimal, contentBlock);
-			var $separator = this.createSeparatorElement();
-			$highlighter.append($block, $separator);
+			// ignore the blank content block
+			//  after the last separator
+			if (!(i == contentBlocks.length - 1 && contentBlock == ''))
+			{
+				// interpret block
+				var decimal = null;
+				if (this.validateContentBlock(contentBlock)) {
+					decimal = this.interpretBlock(contentBlock);
+				}
 
-			// store data
-			blocks.push(decimal);
-			blockMeta.push({
-				content: '' + contentBlock,
-				element: $block,
-				separatorElement: $separator
-			});
+				// create highlighter elements
+				var $block = this.createBlockElement(decimal, contentBlock);
+				var $separator = this.createSeparatorElement();
+				$highlighter.append($block, $separator);
+
+				// store data
+				blocks.push(decimal);
+				blockMeta.push({
+					content: '' + contentBlock,
+					element: $block,
+					separatorElement: $separator
+				});
+			}
 		}
 
 		this._blockMeta = blockMeta;
@@ -223,7 +238,7 @@
 		{
 			var index = difference.getStartOffset() + i;
 			var decimal = replacementBlocks[i];
-			var contentBlock = this.convertBlock(decimal);
+			var contentBlock = (decimal !== null ? this.convertBlock(decimal) : '?');
 
 			// create highlighter elements
 			var $block = this.createBlockElement(decimal, contentBlock);

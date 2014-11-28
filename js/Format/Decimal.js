@@ -15,7 +15,7 @@
 	DecimalFormat.init = function()
 	{
 		// call parent init
-		TextFormat.init.apply(this);
+		TextFormat.init.call(this);
 
 		// separator option
 		this.registerOption('separator', new Cryptii.MultipleChoiceOption({
@@ -48,10 +48,15 @@
 		return this.getOptionValue('separator');
 	};
 
+	DecimalFormat.validateContentBlock = function(contentBlock)
+	{
+		return new Cryptii.Utility().validateAllowedCharacters(
+			contentBlock, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+	};
+
 	DecimalFormat.interpretBlock = function(contentBlock)
 	{
-		if (!isNaN(contentBlock))
-		{
+		if (!isNaN(contentBlock)) {
 			return parseInt(contentBlock);
 		}
 
