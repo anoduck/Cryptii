@@ -203,6 +203,17 @@
 			leftUnchangedContent = lastContent.substr(0, contentStartLength);
 		}
 
+		// make sure the left content part
+		//  ends with a separator
+		if (
+			leftUnchangedContent.length > 0
+			&& separatorLength > 0
+			&& leftUnchangedContent.substr(- separatorLength) != separator
+		) {
+			// append the missing separator
+			leftUnchangedContent += separator;
+		}
+
 		// right unchanged content part
 		if (difference.getEndOffset() != this._blockMeta.length)
 		{
@@ -279,6 +290,16 @@
 
 		// add right unchanged content part
 		content += rightUnchangedContent;
+
+		// check if the content ends with a separator
+		if (
+			content.length > 0
+			&& separatorLength > 0
+			&& content.substr(- separatorLength) == separator
+		) {
+			// remove the needless separator
+			content = content.substr(0, content.length - separatorLength);
+		}
 
 		// force repaint
 		composerView.forceRepaint();
