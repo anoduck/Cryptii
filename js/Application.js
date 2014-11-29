@@ -38,12 +38,13 @@ var Cryptii = Cryptii || {};
 		// register formats
 		this._directory.registerFormat([
 			Cryptii.TextFormat,
+			Cryptii.MorsecodeFormat,
 			Cryptii.DecimalFormat,
 			Cryptii.BinaryFormat,
 			Cryptii.HexadecimalFormat,
 			Cryptii.OctalFormat,
 			Cryptii.Rot13Format,
-			Cryptii.MorsecodeFormat
+			Cryptii.CaesarCipherFormat
 		]);
 
 		// add directory card

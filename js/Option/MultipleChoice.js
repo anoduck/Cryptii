@@ -48,7 +48,7 @@ var Cryptii = Cryptii || {};
 
 	MultipleChoiceOption.getIndexForChoice = function(choice)
 	{
-		var index = this._choices.indexOf(choice);
+		var index = this._choices.indexOf(choice + '');
 
 		if (index != -1) {
 			return index;
