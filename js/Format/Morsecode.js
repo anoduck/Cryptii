@@ -21,34 +21,34 @@
 		this._alphabet = {
 
 			// a-z
-			 97: 'SL',		 98: 'LSSS',	 99: 'LSLS',
-			100: 'LSS',		101: 'S',		102: 'SSLS',
-			103: 'LLS',		104: 'SSSS',	105: 'SS',
-			106: 'SLLL',	107: 'LSL',		108: 'SLSS',
-			109: 'LL',		110: 'LS',		111: 'LLL',
-			112: 'SLLS',	113: 'LLSL',	114: 'SLS',
-			115: 'SSS',		116: 'L',		117: 'SSL',
-			118: 'SSSL',	119: 'SLL',		120: 'LSSL',
-			121: 'LSLL',	122: 'LLSS',
+			 97: 'SL',       98: 'LSSS',     99: 'LSLS',
+			100: 'LSS',     101: 'S',       102: 'SSLS',
+			103: 'LLS',     104: 'SSSS',    105: 'SS',
+			106: 'SLLL',    107: 'LSL',     108: 'SLSS',
+			109: 'LL',      110: 'LS',      111: 'LLL',
+			112: 'SLLS',    113: 'LLSL',    114: 'SLS',
+			115: 'SSS',     116: 'L',       117: 'SSL',
+			118: 'SSSL',    119: 'SLL',     120: 'LSSL',
+			121: 'LSLL',    122: 'LLSS',
 
 			// 0-9
-			 48: 'LLLLL',	 49: 'SLLLL',	 50: 'SSLLL',
-			 51: 'SSSLL',	 52: 'SSSSL',	 53: 'SSSSS',
-			 54: 'LSSSS',	 55: 'LLSSS',	 56: 'LLLSS',
+			 48: 'LLLLL',    49: 'SLLLL',    50: 'SSLLL',
+			 51: 'SSSLL',    52: 'SSSSL',    53: 'SSSSS',
+			 54: 'LSSSS',    55: 'LLSSS',    56: 'LLLSS',
 			 57: 'LLLLS',
 
 			// special characters
-			224: 'SLLSL',	228: 'SLSL', 	232: 'SLSSL',
-			233: 'SSLSS',	246: 'LLLS', 	252: 'SSLL',
+			224: 'SLLSL',   228: 'SLSL',    232: 'SLSSL',
+			233: 'SSLSS',   246: 'LLLS',    252: 'SSLL',
 			223: 'SSSLLSS',
 
 			// punctuation
-			 46: 'SLSLSL',	 44: 'LLSSLL',	 58: 'LLLSSS',
-			 59: 'LSLSLS',	 63: 'SSLLSS',	 38: 'SLSSS',
-			 36: 'SSSLSSL',	 45: 'LSSSSL',	 95: 'SSLLSL',
-			 40: 'LSLLS',	 41: 'LSLLSL',	 92: 'SLLLLS',
-			 34: 'SLSSLS',	 61: 'LSSSL',	 43: 'SLSLS',
-			 47: 'LSSLS',	 64: 'SLLSLS',	 32: 'E'
+			 46: 'SLSLSL',   44: 'LLSSLL',   58: 'LLLSSS',
+			 59: 'LSLSLS',   63: 'SSLLSS',   38: 'SLSSS',
+			 36: 'SSSLSSL',  45: 'LSSSSL',   95: 'SSLLSL',
+			 40: 'LSLLS',    41: 'LSLLSL',   92: 'SLLLLS',
+			 34: 'SLSSLS',   61: 'LSSSL',    43: 'SLSLS',
+			 47: 'LSSLS',    64: 'SLLSLS',   32: 'E'
 		};
 
 		// flip alphabet
