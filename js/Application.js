@@ -43,6 +43,7 @@ var Cryptii = Cryptii || {};
 			Cryptii.BinaryFormat,
 			Cryptii.HexadecimalFormat,
 			Cryptii.OctalFormat,
+			Cryptii.RomanNumeralsFormat,
 			Cryptii.Rot13Format,
 			Cryptii.CaesarCipherFormat
 		]);

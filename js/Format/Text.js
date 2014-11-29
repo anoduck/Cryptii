@@ -69,12 +69,17 @@
 		return $('<u>' + separator + '</u>');
 	};
 
+	TextFormat.validateContentBlock = function(contentBlock)
+	{
+		return true;
+	};
+
 	TextFormat.interpretBlock = function(contentBlock)
 	{
 		return contentBlock.charCodeAt(0);
 	};
 
-	TextFormat.validateContentBlock = function(contentBlock)
+	TextFormat.validateDecimal = function(decimal)
 	{
 		return true;
 	};
@@ -254,7 +259,7 @@
 
 			// handle missing decimal and
 			//  failing conversion
-			if (decimal !== null)
+			if (decimal !== null && this.validateDecimal(decimal))
 			{
 				var result = this.convertBlock(decimal);
 				if (result !== null) {
