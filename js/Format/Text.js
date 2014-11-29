@@ -53,17 +53,16 @@
 		return (this._getSeparator() !== null ? this._getSeparator().length : 0);
 	};
 
-	TextFormat.createBlockElement = function(decimal, contentBlock)
+	TextFormat.createBlockElement = function(contentBlock, isValid)
 	{
-		return $(decimal !== null ? '<b></b>' : '<i></i>').text(contentBlock);
+		return $(isValid ? '<b></b>' : '<i></i>').text(contentBlock);
 	};
 
 	TextFormat.createSeparatorElement = function()
 	{
 		var separator = this._getSeparator();
 
-		if (separator === null)
-		{
+		if (separator === null) {
 			return null;
 		}
 
@@ -160,7 +159,7 @@
 				}
 
 				// create highlighter elements
-				var $block = this.createBlockElement(decimal, contentBlock);
+				var $block = this.createBlockElement(contentBlock, decimal !== null);
 				var $separator = this.createSeparatorElement();
 				$highlighter.append($block, $separator);
 
@@ -249,10 +248,23 @@
 		{
 			var index = difference.getStartOffset() + i;
 			var decimal = replacementBlocks[i];
-			var contentBlock = (decimal !== null ? this.convertBlock(decimal) : '?');
+
+			var contentBlock = '?';
+			var isValid = false;
+
+			// handle missing decimal and
+			//  failing conversion
+			if (decimal !== null)
+			{
+				var result = this.convertBlock(decimal);
+				if (result !== null) {
+					contentBlock = result;
+					isValid = true;
+				}
+			}
 
 			// create highlighter elements
-			var $block = this.createBlockElement(decimal, contentBlock);
+			var $block = this.createBlockElement(contentBlock, isValid);
 			var $separator = this.createSeparatorElement();
 
 			// add content block

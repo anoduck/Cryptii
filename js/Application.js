@@ -42,7 +42,8 @@ var Cryptii = Cryptii || {};
 			Cryptii.BinaryFormat,
 			Cryptii.HexadecimalFormat,
 			Cryptii.OctalFormat,
-			Cryptii.Rot13Format
+			Cryptii.Rot13Format,
+			Cryptii.MorsecodeFormat
 		]);
 
 		// add directory card
