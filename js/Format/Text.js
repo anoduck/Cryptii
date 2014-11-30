@@ -163,6 +163,12 @@
 					decimal = this.interpretBlock(contentBlock);
 				}
 
+				// validate decimal
+				decimal = parseInt(decimal);
+				if (isNaN(decimal)) {
+					decimal = null;
+				}
+
 				// create highlighter elements
 				var $block = this.createBlockElement(contentBlock, decimal !== null);
 				var $separator = this.createSeparatorElement();
