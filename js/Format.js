@@ -25,7 +25,14 @@ var Cryptii = Cryptii || {};
 		this._options = {};
 
 		this._source = [];
-		this._content = '';
+		this._content = null;
+
+		if (
+			!this.isContentReadOnly()
+			&& this.isContentTextBased()
+		) {
+			this._content = '';
+		}
 	};
 
 	Format._createCardView = function()
@@ -76,6 +83,7 @@ var Cryptii = Cryptii || {};
 	{
 		// converts source blocks to content
 		//  and manipulates the card view
+		//  (e.g. highlighter)
 		
 		// the difference parameter describes
 		//  which blocks have been changed
@@ -158,7 +166,7 @@ var Cryptii = Cryptii || {};
 
 		// returns text based content if available
 		//  if not available, returns null
-		return null;
+		return this._content;
 	};
 
 	//
@@ -174,12 +182,6 @@ var Cryptii = Cryptii || {};
 	//
 	// accessors
 	//
-
-	Format.registerOption = function(name, option)
-	{
-		this._options[name] = option;
-		option.addDelegate(this);
-	};
 
 	Format.hasCardView = function()
 	{
@@ -201,9 +203,34 @@ var Cryptii = Cryptii || {};
 		return this._cardView;
 	};
 
+	Format.registerOption = function(name, option)
+	{
+		this._options[name] = option;
+		option.addDelegate(this);
+	};
+
 	Format.getOptionValue = function(name)
 	{
 		return this._options[name].getValue();
+	};
+
+	Format.setOptionValue = function(name, value)
+	{
+		var option = this._options[name];
+		var success = false;
+
+		if (option !== undefined) {
+			success = option.setValue(value);
+		} else {
+			console.error(name + ' option does not exist');
+		}
+
+		return success;
+	};
+
+	Format.hasOptions = function()
+	{
+		return (this.getOptionCount() > 0);
 	};
 
 	Format.getOptions = function()
@@ -231,11 +258,6 @@ var Cryptii = Cryptii || {};
 		}
 
 		return count;
-	};
-
-	Format.hasOptions = function()
-	{
-		return (this.getOptionCount() > 0);
 	};
 
 })(Cryptii, jQuery);
