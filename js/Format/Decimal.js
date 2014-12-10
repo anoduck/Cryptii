@@ -31,21 +31,38 @@
 			}
 		}));
 	};
-
+	
+	//
+	// information
+	//
 
 	DecimalFormat.getName = function()
 	{
 		return 'Decimal';
 	};
 
+	DecimalFormat.getSlug = function()
+	{
+		return 'decimal';
+	};
+
 	DecimalFormat.getCategory = function()
 	{
 		return 'Numeric';
 	};
+	
+	//
+	// convert and interpret
+	//
 
 	DecimalFormat._getSeparator = function()
 	{
 		return this.getOptionValue('separator');
+	};
+
+	DecimalFormat.convertBlock = function(decimal)
+	{
+		return decimal;
 	};
 
 	DecimalFormat.validateContentBlock = function(contentBlock)
@@ -61,11 +78,6 @@
 		}
 
 		return null;
-	};
-
-	DecimalFormat.convertBlock = function(decimal)
-	{
-		return decimal;
 	};
 
 })(Cryptii, jQuery);

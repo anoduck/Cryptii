@@ -90,16 +90,28 @@
 		}));
 	};
 
+	//
+	// information
+	//
 
 	MorsecodeFormat.getName = function()
 	{
 		return 'Morsecode';
 	};
 
+	MorsecodeFormat.getSlug = function()
+	{
+		return 'morsecode';
+	};
+
 	MorsecodeFormat.getCategory = function()
 	{
 		return 'Alphabet';
 	};
+
+	//
+	// convert and interpret
+	//
 
 	MorsecodeFormat.getFlippedAlphabet = function()
 	{
@@ -112,6 +124,39 @@
 		}
 
 		return this._flippedAlphabet;
+	};
+
+	MorsecodeFormat.convertBlock = function(decimal)
+	{
+		var contentBlock = null;
+
+		// convert decimal to string, lowercase it and convert it back
+		decimal = String.fromCharCode(decimal).toLowerCase().charCodeAt(0);
+
+		if (this._alphabet[decimal] !== undefined)
+		{
+			var pseudoBlock = this._alphabet[decimal];
+
+			// collect the replacement characters
+			//  to build the content block
+			var replacement = {
+				'S': this.getOptionValue('short'),
+				'L': this.getOptionValue('long'),
+				'E': this.getOptionValue('space')
+			};
+
+			var i = 0;
+
+			contentBlock = '';
+
+			while (i < pseudoBlock.length)
+			{
+				var pseudoCharacter = pseudoBlock[i ++];
+				contentBlock += replacement[pseudoCharacter];
+			}
+		}
+
+		return contentBlock;
 	};
 
 	MorsecodeFormat.validateContentBlock = function(contentBlock)
@@ -163,39 +208,6 @@
 		}
 
 		return decimal;
-	};
-
-	MorsecodeFormat.convertBlock = function(decimal)
-	{
-		var contentBlock = null;
-
-		// convert decimal to string, lowercase it and convert it back
-		decimal = String.fromCharCode(decimal).toLowerCase().charCodeAt(0);
-
-		if (this._alphabet[decimal] !== undefined)
-		{
-			var pseudoBlock = this._alphabet[decimal];
-
-			// collect the replacement characters
-			//  to build the content block
-			var replacement = {
-				'S': this.getOptionValue('short'),
-				'L': this.getOptionValue('long'),
-				'E': this.getOptionValue('space')
-			};
-
-			var i = 0;
-
-			contentBlock = '';
-
-			while (i < pseudoBlock.length)
-			{
-				var pseudoCharacter = pseudoBlock[i ++];
-				contentBlock += replacement[pseudoCharacter];
-			}
-		}
-
-		return contentBlock;
 	};
 
 })(Cryptii, jQuery);

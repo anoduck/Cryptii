@@ -11,10 +11,27 @@
 	var DecimalFormat = Cryptii.DecimalFormat.prototype;
 	var BinaryFormat = Cryptii.BinaryFormat.prototype;
 
+	//
+	// information
+	//
 
 	BinaryFormat.getName = function()
 	{
 		return 'Binary';
+	};
+
+	BinaryFormat.getSlug = function()
+	{
+		return 'binary';
+	};
+
+	//
+	// convert and interpret
+	//
+
+	BinaryFormat.convertBlock = function(decimal)
+	{
+		return decimal.toString(2);
 	};
 
 	BinaryFormat.validateContentBlock = function(contentBlock)
@@ -32,11 +49,6 @@
 		}
 
 		return null;
-	};
-
-	BinaryFormat.convertBlock = function(decimal)
-	{
-		return decimal.toString(2);
 	};
 
 })(Cryptii, jQuery);

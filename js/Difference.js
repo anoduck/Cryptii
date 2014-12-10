@@ -12,16 +12,17 @@ var Cryptii = Cryptii || {};
 	var Difference = Cryptii.Difference.prototype;
 	
 
-	Difference.init = function(startOffset, endOffset, blocks)
+	Difference.init = function(blocks, startOffset, endOffset)
 	{
 		// call parent init
 		Adam.init.call(this);
 
 		// attributes
-		this._startOffset = startOffset;
-		this._endOffset = endOffset;
 		this._blocks = blocks;
+		this._startOffset = startOffset || 0;
+		this._endOffset = endOffset || 0;
 	};
+
 
 	Difference.getStartOffset = function()
 	{

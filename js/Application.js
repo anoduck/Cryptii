@@ -24,7 +24,7 @@ var Cryptii = Cryptii || {};
 		this._conversation = new Cryptii.Conversation(this._applicationView);
 
 		// default blocks
-		this._conversation.setBlocks([
+		this._conversation.setDefaultSource([
 			84, 104, 101, 32, 113, 117, 105, 99, 107, 32, 98, 114,
 			111, 119, 110, 32, 102, 111, 120, 32, 106, 117, 109, 112,
 			115, 32, 111, 118, 101, 114, 32, 49, 51, 32, 108, 97,
@@ -56,7 +56,6 @@ var Cryptii = Cryptii || {};
 		this._tickTimer = null;
 
 		// finalize initialization
-		this._conversation.updateLocation();
 		this._applicationView.focus();
 		this._setTickTimerEnabled(true);
 

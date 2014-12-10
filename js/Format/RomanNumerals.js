@@ -26,11 +26,57 @@
 			1000: 'M'
 		};
 	};
-
+	
+	//
+	// information
+	//
 
 	RomanNumeralsFormat.getName = function()
 	{
 		return 'Roman Numerals';
+	};
+
+	RomanNumeralsFormat.getSlug = function()
+	{
+		return 'roman-numerals';
+	};
+	
+	//
+	// convert and interpret
+	//
+
+	RomanNumeralsFormat.validateDecimal = function(decimal)
+	{
+		return (decimal > 0 && decimal < 3999);
+	};
+
+	RomanNumeralsFormat.convertBlock = function(decimal)
+	{
+		var result = '';
+
+		do
+		{
+			// find highest roman numeral that is less
+			//  or equal to the decimal
+			var highestDecimalValue = 0;
+			for (var romanNumeral in this._romanNumerals)
+			{
+				if (romanNumeral <= decimal) {
+					highestDecimalValue = Math.max(highestDecimalValue, romanNumeral);
+				}
+			}
+
+			// add roman numeral to result
+			result += this._romanNumerals[highestDecimalValue];
+
+			// consume decimal
+			decimal -= highestDecimalValue;
+
+			// do this until the decimal is
+			//  completely consumed
+		} while (decimal > 0);
+
+		return result;
 	};
 
 	RomanNumeralsFormat.validateContentBlock = function(contentBlock)
@@ -87,40 +133,6 @@
 		}
 
 		return null;
-	};
-
-	RomanNumeralsFormat.validateDecimal = function(decimal)
-	{
-		return (decimal > 0 && decimal < 3999);
-	};
-
-	RomanNumeralsFormat.convertBlock = function(decimal)
-	{
-		var result = '';
-
-		do
-		{
-			// find highest roman numeral that is less
-			//  or equal to the decimal
-			var highestDecimalValue = 0;
-			for (var romanNumeral in this._romanNumerals)
-			{
-				if (romanNumeral <= decimal) {
-					highestDecimalValue = Math.max(highestDecimalValue, romanNumeral);
-				}
-			}
-
-			// add roman numeral to result
-			result += this._romanNumerals[highestDecimalValue];
-
-			// consume decimal
-			decimal -= highestDecimalValue;
-
-			// do this until the decimal is
-			//  completely consumed
-		} while (decimal > 0);
-
-		return result;
 	};
 
 })(Cryptii, jQuery);

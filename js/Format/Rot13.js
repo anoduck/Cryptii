@@ -30,16 +30,36 @@
 			}
 		}));
 	};
-
+	
+	//
+	// information
+	//
 
 	Rot13Format.getName = function()
 	{
 		return 'ROT13';
 	};
 
+	Rot13Format.getSlug = function()
+	{
+		return 'rot13';
+	};
+
 	Rot13Format.getCategory = function()
 	{
 		return 'Cipher';
+	};
+	
+	//
+	// convert and interpret
+	//
+
+	Rot13Format.convertBlock = function(decimal)
+	{
+		// rotate
+		decimal = this.rotateBlock(decimal);
+
+		return TextFormat.convertBlock.call(this, decimal);
 	};
 
 	Rot13Format.interpretBlock = function(contentBlock)
@@ -48,14 +68,6 @@
 
 		// rotate
 		return this.rotateBlock(decimal);
-	};
-
-	Rot13Format.convertBlock = function(decimal)
-	{
-		// rotate
-		decimal = this.rotateBlock(decimal);
-
-		return TextFormat.convertBlock.call(this, decimal);
 	};
 
 	Rot13Format.rotateBlock = function(decimal)

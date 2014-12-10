@@ -42,15 +42,35 @@
 		}));
 	};
 
+	//
+	// information
+	//
 
 	CaesarCipherFormat.getName = function()
 	{
 		return 'Caesar Cipher';
 	};
 
+	CaesarCipherFormat.getSlug = function()
+	{
+		return 'caesar-cipher';
+	};
+
 	CaesarCipherFormat.getCategory = function()
 	{
 		return 'Cipher';
+	};
+
+	//
+	// convert and interpret
+	//
+
+	CaesarCipherFormat.convertBlock = function(decimal)
+	{
+		// rotate
+		decimal = this.rotateBlock(decimal, true);
+
+		return TextFormat.convertBlock.call(this, decimal);
 	};
 
 	CaesarCipherFormat.interpretBlock = function(contentBlock)
@@ -59,14 +79,6 @@
 
 		// rotate
 		return this.rotateBlock(decimal, false);
-	};
-
-	CaesarCipherFormat.convertBlock = function(decimal)
-	{
-		// rotate
-		decimal = this.rotateBlock(decimal, true);
-
-		return TextFormat.convertBlock.call(this, decimal);
 	};
 
 	CaesarCipherFormat.rotateBlock = function(decimal, forward)

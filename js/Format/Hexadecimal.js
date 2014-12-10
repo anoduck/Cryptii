@@ -11,10 +11,27 @@
 	var DecimalFormat = Cryptii.DecimalFormat.prototype;
 	var HexadecimalFormat = Cryptii.HexadecimalFormat.prototype;
 
+	//
+	// information
+	//
 
 	HexadecimalFormat.getName = function()
 	{
 		return 'Hexadecimal';
+	};
+
+	HexadecimalFormat.getSlug = function()
+	{
+		return 'hexadecimal';
+	};
+
+	//
+	// convert and interpret
+	//
+
+	HexadecimalFormat.convertBlock = function(decimal)
+	{
+		return decimal.toString(16);
 	};
 
 	HexadecimalFormat.validateContentBlock = function(contentBlock)
@@ -35,11 +52,6 @@
 		}
 
 		return null;
-	};
-
-	HexadecimalFormat.convertBlock = function(decimal)
-	{
-		return decimal.toString(16);
 	};
 
 })(Cryptii, jQuery);

@@ -138,4 +138,13 @@
 		this.toggleOptionalsHidden();
 	};
 
+	//
+	// accessors
+	//
+
+	FormatCardView.getFormat = function()
+	{
+		return this._format;
+	};
+
 })(Cryptii, jQuery);

@@ -22,11 +22,8 @@ var Cryptii = Cryptii || {};
 
 		this._formats = [];
 
-		this._blocks = [];
-		this._difference = [];
-
-		this._location = new Cryptii.Location();
-		this._location.addDelegate(this);
+		this._defaultSource = [];
+		this._groupSources = {};
 
 		// delegates
 		this._applicationView.getDeckView().addDelegate(this);
@@ -44,44 +41,57 @@ var Cryptii = Cryptii || {};
 			// add format
 			this._formats.push(format);
 
-			// bind this
-			format.setConversation(this);
+			// get format card view before setting the
+			//  source to prevent a refresh conversion
+			var cardView = format.getCardView();
 
-			// convert
-			format.convert(this._blocks, this.calculateDifference());
+			// set source
+			format.setSource(this.getSource(format.getGroup()));
 
-			// add card of format to the deck
-			this._applicationView.getDeckView().addCardView(format.getCardView());
+			// bind delegate
+			format.addDelegate(this);
+			cardView.addDelegate(this);
+
+			// add card to deck
+			this._applicationView.getDeckView().addCardView(cardView);
 		}
 	};
 
-	Conversation.getBlocks = function()
+	Conversation.getSource = function(group)
 	{
-		return this._blocks;
-	}
+		if (this._groupSources[group] === undefined) {
+			this._groupSources[group] = this._defaultSource;
+		}
 
-	Conversation.setBlocks = function(blocks, triggeredByFormat)
+		return this._groupSources[group];
+	};
+
+	Conversation.setSource = function(blocks, group, triggeredByFormat)
 	{
-		// determin difference range
-		var difference = this.calculateDifference(blocks, this._blocks);
+		var previousBlocks = this.getSource(group);
+
+		// determin difference
+		var difference = this.calculateDifference(blocks, previousBlocks);
 
 		// is there a difference
 		if (difference !== null)
 		{
 			// set blocks
-			this._blocks = blocks;
+			this._groupSources[group] = blocks;
 
-			// call convert method on formats
+			// update source on formats
 			for (var i = 0; i < this._formats.length; i ++)
 			{
-				// do not call convert on the format which triggered the change
-				if (this._formats[i] !== triggeredByFormat)
-				{
-					this._formats[i].convert(this._blocks, difference);
+				if (
+					// only update formats of this group
+					this._formats[i].getGroup() === group
+
+					// ignore the format the update was triggered by
+					&& this._formats[i] !== triggeredByFormat
+				) {
+					this._formats[i].setSource(blocks, difference);
 				}
 			}
-
-			this._difference = difference;
 		}
 	};
 
@@ -89,12 +99,6 @@ var Cryptii = Cryptii || {};
 	{
 		// discussed here:
 		// http://stackoverflow.com/questions/26208569
-
-		// calling this method without any parameters
-		//  returns a difference where every block changed
-		if (blocks === undefined) {
-			blocks = this._blocks;
-		}
 
 		var length = blocks.length;
 		var start = 0;
@@ -142,62 +146,41 @@ var Cryptii = Cryptii || {};
 		}
 
 		// create difference object
-		return new Cryptii.Difference(start, end, rangeBlocks);
-	};
-
-	Conversation.updateLocation = function()
-	{
-		// compose url
-		var url = '/';
-
-		for (var i = 0; i < this._formats.length; i ++)
-		{
-			var format = this._formats[i];
-
-			// add format name
-			url += (i > 0 ? '+' : '') + format.getSlug();
-
-			// add options
-			var options = format.getOptions();
-			for (var name in options)
-			{
-				var option = options[name];
-
-				// only add non-default options
-				//  to keep the url short
-				if (!option.isDefaultValue())
-				{
-					url += '~' + name + '=' + option.getEscapedValue();
-				}
-			}
-		}
-
-		// change location
-		this._location.setUrl(url);
+		return new Cryptii.Difference(rangeBlocks, start, end);
 	};
 
 	//
-	// format delegates
+	// delegates
 	//
 
-	Conversation.onFormatContentChange = function(format, blocks)
+	Conversation.onFormatSourceChange = function(format, blocks)
 	{
-		this.setBlocks(blocks, format);
+		this.setSource(blocks, format.getGroup(), format);
 	};
 
-	Conversation.onFormatOptionChange = function(format)
+	Conversation.onFormatContentChange = function(format, content)
 	{
-		this.updateLocation();
+
 	};
 
-	Conversation.onFormatRemove = function(format)
+	Conversation.onCardViewClose = function(cardView)
 	{
-		// remove format
-		var index = this._formats.indexOf(format);
+		// find format attached to this card
+		var index = this._formats.indexOf(cardView.getFormat());
 		if (index !== -1)
 		{
+			// remove format
 			this._formats.splice(index, 1);
 		}
+	};
+
+	//
+	// accessors
+	//
+
+	Conversation.setDefaultSource = function(defaultSource)
+	{
+		this._defaultSource = defaultSource;
 	};
 
 })(Cryptii, jQuery);

@@ -11,11 +11,23 @@
 	var DecimalFormat = Cryptii.DecimalFormat.prototype;
 	var OctalFormat = Cryptii.OctalFormat.prototype;
 
+	//
+	// information
+	//
 
 	OctalFormat.getName = function()
 	{
 		return 'Octal';
 	};
+
+	OctalFormat.getSlug = function()
+	{
+		return 'octal';
+	};
+
+	//
+	// convert and interpret
+	//
 
 	OctalFormat.validateContentBlock = function(contentBlock)
 	{
