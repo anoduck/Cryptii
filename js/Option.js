@@ -24,7 +24,7 @@ var Cryptii = Cryptii || {};
 		this._optional = (details['optional'] !== false);
 
 		this._defaultValue = details['value'];
-		this._value = details['value'];
+		this._value = details['value'] + '';
 	};
 
 	Option._createOptionView = function()

@@ -10,12 +10,15 @@ var input = "Hello World";
 var textFormat = new Cryptii.TextFormat();
 textFormat.setContent(input);
 
+console.log(textFormat.getSource());
+// logs [72, 101, 108, 108, ...]
+
 var rot13Format = new Cryptii.Rot13Format();
 rot13Format.setOptionValue('variant', 'rot47');
 rot13Format.setSource(textFormat.getSource());
 
-var output = rot13Format.getContent();
-// output = "w6==@ (@C=5"
+console.log(rot13Format.getContent());
+// logs "w6==@ (@C=5"
 ```
 
 ## Build

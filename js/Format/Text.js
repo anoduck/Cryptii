@@ -24,10 +24,7 @@
 	TextFormat._createCardView = function()
 	{
 		var textFormatCardView = new Cryptii.TextFormatCardView(this);
-
-		// add delegate
 		textFormatCardView.getComposerView().addDelegate(this);
-
 		return textFormatCardView;
 	};
 	
@@ -352,11 +349,6 @@
 	TextFormat.onComposerViewChange = function(composerView, content)
 	{
 		this.setContent(content);
-	};
-
-	TextFormat.onComposerViewSelect = function(composerView, range)
-	{
-
 	};
 
 })(Cryptii, jQuery);

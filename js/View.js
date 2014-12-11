@@ -43,12 +43,15 @@ var Cryptii = Cryptii || {};
 
 	View.forceRepaint = function()
 	{
-		// using many dom elements can cause missing repaint events
-		// http://stackoverflow.com/questions/3485365
-		var element = this._$element[0];
-		element.style.display = 'none';
-		element.offsetHeight;
-		element.style.display = '';
+		if (this._$element !== null)
+		{
+			// using many dom elements can cause missing repaint events
+			// http://stackoverflow.com/questions/3485365
+			var element = this._$element[0];
+			element.style.display = 'none';
+			element.offsetHeight;
+			element.style.display = '';
+		}
 	};
 
 	View.onBuild = function()

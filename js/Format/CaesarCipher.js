@@ -36,7 +36,7 @@
 
 		this.registerOption('shift', new Cryptii.MultipleChoiceOption({
 			label: 'Shift',
-			value: '3',
+			value: 3,
 			optional: false,
 			choices: choices
 		}));
