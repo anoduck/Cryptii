@@ -59,10 +59,8 @@
 			label: 'Short',
 			value: '.',
 			optional: true,
-			choices: {
-				'.': 'Baseline dot',
-				'·': 'Middle dot'
-			}
+			choices: ['.', '·'],
+			labels: ['Baseline dot', 'Middle dot']
 		}));
 
 		// long character option
@@ -70,11 +68,8 @@
 			label: 'Long',
 			value: '-',
 			optional: true,
-			choices: {
-				'-': 'Dash',
-				'–': 'En dash',
-				'_': 'Underscore'
-			}
+			choices: ['-', '–', '_'],
+			labels: ['Dash', 'En dash', 'Underscore']
 		}));
 
 		// space character option
@@ -82,11 +77,8 @@
 			label: 'Space',
 			value: '/',
 			optional: true,
-			choices: {
-				'/': 'Forward slash',
-				'\\': 'Backslash',
-				'|': 'Vertical bar'
-			}
+			choices: ['/', '\\', '|'],
+			labels: ['Forward slash', 'Backslash', 'Vertical bar']
 		}));
 	};
 

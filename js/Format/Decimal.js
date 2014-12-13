@@ -22,13 +22,8 @@
 			label: 'Separator',
 			value: ' ',
 			optional: true,
-			choices: {
-				' ': 'Space',
-				',': 'Comma',
-				', ': 'Comma with Space',
-				';': 'Semicolon',
-				'+': 'Plus'
-			}
+			choices: [' ', ',', ', ', ';', '+'],
+			labels: ['Space', 'Comma', 'Comma with Space', 'Semicolon', 'Plus']
 		}));
 	};
 	

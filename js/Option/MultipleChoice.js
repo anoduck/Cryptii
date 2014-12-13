@@ -18,14 +18,24 @@ var Cryptii = Cryptii || {};
 		Option.init.call(this, details);
 
 		// attributes
-		this._choices = [];
-		this._labels = [];
+		this._choices = details.choices || [];
+		this._labels = details.labels || null;
+		this._description = details.descriptions || null;
 
-		var choices = details['choices'];
-		for (var value in choices)
-		{
-			this._choices.push(value);
-			this._labels.push(choices[value]);
+		// handle missing labels
+		if (this._labels === null) {
+			this._labels = [];
+			for (var i = 0; i < this._choices.length; i ++) {
+				this._labels.push(this._choices[i]);
+			}
+		}
+
+		// handle missing descriptions
+		if (this._description === null) {
+			this._description = [];
+			for (var i = 0; i < this._choices.length; i ++) {
+				this._description.push(null);
+			}
 		}
 	};
 
@@ -48,7 +58,7 @@ var Cryptii = Cryptii || {};
 
 	MultipleChoiceOption.getIndexForChoice = function(choice)
 	{
-		var index = this._choices.indexOf(choice + '');
+		var index = this._choices.indexOf(choice);
 
 		if (index != -1) {
 			return index;
@@ -60,6 +70,13 @@ var Cryptii = Cryptii || {};
 	//
 	// accessors
 	//
+
+	MultipleChoiceOption.addChoice = function(choice, label, description)
+	{
+		this._choices.push(choice);
+		this._labels.push(label || choice);
+		this._description.push(description || null);
+	};
 
 	MultipleChoiceOption.getChoiceCount = function()
 	{
@@ -79,6 +96,11 @@ var Cryptii = Cryptii || {};
 	MultipleChoiceOption.getLabelAtIndex = function(index)
 	{
 		return this._labels[index];
+	};
+
+	MultipleChoiceOption.getDescriptionAtIndex = function(index)
+	{
+		return this._description[index];
 	};
 
 })(Cryptii, jQuery);

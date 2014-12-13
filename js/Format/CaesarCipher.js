@@ -18,28 +18,20 @@
 		TextFormat.init.call(this);
 
 		// shift option
-		var choices = {};
-
-		var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		for (var i = 1; i < 26; i ++)
-		{
-			var label = '';
-
-			// show the actual shift
-			label = '+' + i;
-
-			// represent the shift
-			label += ' (A=' + alphabet[i] + ')';
-
-			choices[i] = label;
-		}
-
-		this.registerOption('shift', new Cryptii.MultipleChoiceOption({
+		var shiftOption = new Cryptii.MultipleChoiceOption({
 			label: 'Shift',
 			value: 3,
-			optional: false,
-			choices: choices
-		}));
+			optional: false
+		});
+
+		for (var i = 1; i < 26; i ++)
+		{
+			var label = '+' + i;
+			var description = 'A=' + String.fromCharCode(i + 65);
+			shiftOption.addChoice(i, label, description);
+		}
+
+		this.registerOption('shift', shiftOption);
 	};
 
 	//

@@ -18,7 +18,7 @@
 		OptionView.init.call(this, option);
 
 		// attributes
-		this._$choice = null;
+		this._$value = null;
 	};
 
 
@@ -27,14 +27,14 @@
 		// call parent
 		var $element = OptionView._buildField.apply(this);
 		
-		// choice element
-		this._$choice =
+		// value element
+		this._$value =
 			$('<div></div>')
 				.addClass('value');
 
 		this._applyValue(this._lastKnownValue);
 
-		$element.append(this._$choice);
+		$element.append(this._$value);
 
 		return $element;
 	};
@@ -67,7 +67,18 @@
 	{
 		var index = this._option.getIndexForChoice(value);
 		var label = this._option.getLabelAtIndex(index);
-		this._$choice.text(label);
+		var description = this._option.getDescriptionAtIndex(index);
+
+		this._$value.text(label);
+
+		if (description !== null) {
+			this._$value.append(
+				' ',
+				$('<span></span>')
+					.addClass('description')
+					.text('(' + description + ')')
+			);
+		}
 	};
 
 	MultipleChoiceOptionView.onNextButtonClick = function(evt)

@@ -315,6 +315,10 @@
 
 			.value {
 				cursor: default;
+
+				.description {
+					color: $color-text-gray;
+				}
 			}
 		}
 	}

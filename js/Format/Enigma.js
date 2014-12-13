@@ -20,101 +20,101 @@
 		// call parent init
 		Format.init.call(this);
 
-		// register rotors
+		// rotors
 		this._rotors = {
-			'I':   new Cryptii.EnigmaFormat.Rotor('I',   'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ['Q']),
-			'II':  new Cryptii.EnigmaFormat.Rotor('II',  'AJDKSIRUXBLHWTMCQGZNPYFVOE', ['E']),
-			'III': new Cryptii.EnigmaFormat.Rotor('III', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ['V']),
-			'IV':  new Cryptii.EnigmaFormat.Rotor('IV',  'ESOVPZJAYQUIRHXLNFTGKDCMWB', ['J']),
-			'V':   new Cryptii.EnigmaFormat.Rotor('V',   'VZBRGITYUPSDNHLXAWMJQOFECK', ['Z'])
+			'I':    new Cryptii.EnigmaFormat.Rotor('I', 'army, air force', 'EKMFLGDQVZNTOWYHXUSPAIBRCJ', ['Q']),
+			'II':   new Cryptii.EnigmaFormat.Rotor('II', 'army, air force', 'AJDKSIRUXBLHWTMCQGZNPYFVOE', ['E']),
+			'III':  new Cryptii.EnigmaFormat.Rotor('III', 'army, air force', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', ['V']),
+			'IV':   new Cryptii.EnigmaFormat.Rotor('IV', 'army, air force', 'ESOVPZJAYQUIRHXLNFTGKDCMWB', ['J']),
+			'V':    new Cryptii.EnigmaFormat.Rotor('V', 'army, air force', 'VZBRGITYUPSDNHLXAWMJQOFECK', ['Z']),
+			'VI':   new Cryptii.EnigmaFormat.Rotor('VI', 'navy', 'JPGVOUMFYQBENHZRDKASXLICTW', ['Z', 'M']),
+			'VII':  new Cryptii.EnigmaFormat.Rotor('VII', 'navy', 'NZJHGRCXMYSWBOUFAIVLPEKQDT', ['Z', 'M']),
+			'VIII': new Cryptii.EnigmaFormat.Rotor('VIII', 'navy', 'FKQHTLXOCBJSPDZRAMEWNIUYGV', ['Z', 'M'])
 		};
 
-		// register entry rotors
-		this._entryRotor = new Cryptii.EnigmaFormat.Rotor('ETW', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-
-		// register reflector rotors
+		// reflector rotor
 		this._reflectorRotors = {
-			'A': new Cryptii.EnigmaFormat.Rotor('UKW A (1930-1937)', 'EJMZALYXVBWFCRQUONTSPIKHGD'),
-			'B': new Cryptii.EnigmaFormat.Rotor('UKW B (1937-1945)', 'YRUHQSLDPXNGOKMIEBFZCWVJAT'),
-			'C': new Cryptii.EnigmaFormat.Rotor('UKW C (1940-1941)', 'FVPJIAOYEDRZXWGCTKUQSBNMHL')
+			'A': new Cryptii.EnigmaFormat.Rotor('UKW A', '1930-1937', 'EJMZALYXVBWFCRQUONTSPIKHGD'),
+			'B': new Cryptii.EnigmaFormat.Rotor('UKW B', '1937-1945', 'YRUHQSLDPXNGOKMIEBFZCWVJAT'),
+			'C': new Cryptii.EnigmaFormat.Rotor('UKW C', '1940-1941', 'FVPJIAOYEDRZXWGCTKUQSBNMHL')
 		};
-
-		// collect reflector rotor choices
-		var reflectorChoices = {};
-		for (var name in this._reflectorRotors)
-		{
-			var rotor = this._reflectorRotors[name];
-			reflectorChoices[name] = rotor.getLabel();
-		}
 
 		// reflector rotor option
-		this.registerOption('reflector', new Cryptii.MultipleChoiceOption({
+		var reflectorRotorOption = new Cryptii.MultipleChoiceOption({
 			label: 'Reflector',
 			value: 'B',
-			optional: false,
-			choices: reflectorChoices
-		}));
+			optional: false
+		});
 
-		// collect rotor choices
-		var rotorChoices = {};
-		for (var name in this._rotors)
-		{
-			var rotor = this._rotors[name];
-			rotorChoices[name] = rotor.getLabel();
+		for (var name in this._reflectorRotors) {
+			var rotor = this._reflectorRotors[name];
+			reflectorRotorOption.addChoice(name, rotor.getLabel(), rotor.getDescription());
 		}
 
-		// wheel order option
-		this.registerOption('left-rotor', new Cryptii.MultipleChoiceOption({
+		this.registerOption('reflector', reflectorRotorOption);
+
+		// rotor options
+		var leftRotorOption = new Cryptii.MultipleChoiceOption({
 			label: 'Left rotor',
 			value: 'I',
-			optional: false,
-			choices: rotorChoices
-		}));
+			optional: false
+		});
 
-		this.registerOption('middle-rotor', new Cryptii.MultipleChoiceOption({
+		var middleRotorOption = new Cryptii.MultipleChoiceOption({
 			label: 'Middle rotor',
 			value: 'II',
-			optional: false,
-			choices: rotorChoices
-		}));
+			optional: false
+		});
 
-		this.registerOption('right-rotor', new Cryptii.MultipleChoiceOption({
+		var rightRotorOption = new Cryptii.MultipleChoiceOption({
 			label: 'Right rotor',
 			value: 'III',
-			optional: false,
-			choices: rotorChoices
-		}));
+			optional: false
+		});
 
-		// collect initial position choices
-		var initialPositionChoices = {};
-		for (var i = 0; i < 26; i ++)
-		{
-			var character = String.fromCharCode(i + 65);
-			initialPositionChoices[i] = (i + 1) + ' / ' + character;
+		for (var name in this._rotors) {
+			var rotor = this._rotors[name];
+			leftRotorOption.addChoice(name, rotor.getLabel(), rotor.getDescription());
+			middleRotorOption.addChoice(name, rotor.getLabel(), rotor.getDescription());
+			rightRotorOption.addChoice(name, rotor.getLabel(), rotor.getDescription());
 		}
 
-		// rotor position option
-		this.registerOption('left-position', new Cryptii.MultipleChoiceOption({
+		this.registerOption('left-rotor', leftRotorOption);
+		this.registerOption('middle-rotor', middleRotorOption);
+		this.registerOption('right-rotor', rightRotorOption);
+
+		// initial rotor position options
+		var leftPositionOption = new Cryptii.MultipleChoiceOption({
 			label: 'Left position',
 			value: 12,
-			optional: false,
-			choices: initialPositionChoices
-		}));
+			optional: false
+		});
 
-		this.registerOption('middle-position', new Cryptii.MultipleChoiceOption({
+		var middlePositionOption = new Cryptii.MultipleChoiceOption({
 			label: 'Middle position',
-			value: 2,
-			optional: false,
-			choices: initialPositionChoices
-		}));
+			value: 02,
+			optional: false
+		});
 
-		this.registerOption('right-position', new Cryptii.MultipleChoiceOption({
+		var rightPositionOption = new Cryptii.MultipleChoiceOption({
 			label: 'Right position',
 			value: 10,
-			optional: false,
-			choices: initialPositionChoices
-		}));
+			optional: false
+		});
 
+		for (var i = 0; i < 26; i ++) {
+			var character = String.fromCharCode(i + 65);
+			var number = i + 1;
+			var label = (number < 10 ? '0' : '') + number + ' / ' + character;
+
+			leftPositionOption.addChoice(i, label);
+			middlePositionOption.addChoice(i, label);
+			rightPositionOption.addChoice(i, label);
+		}
+
+		this.registerOption('left-position', leftPositionOption);
+		this.registerOption('middle-position', middlePositionOption);
+		this.registerOption('right-position', rightPositionOption);
 	};
 
 	EnigmaFormat._createCardView = function()
@@ -130,7 +130,7 @@
 
 	EnigmaFormat.getName = function()
 	{
-		return 'Enigma I';
+		return 'Enigma';
 	};
 
 	EnigmaFormat.getSlug = function()
@@ -140,7 +140,7 @@
 
 	EnigmaFormat.getCategory = function()
 	{
-		return 'Cipher';
+		return 'Cipher Machines';
 	};
 
 	EnigmaFormat.isContentReadOnly = function()
@@ -206,10 +206,9 @@
 		var rightRotor = this._rotors[this.getOptionValue('right-rotor')];
 
 		// reconfigurable reflector
-		var entryRotor = this._entryRotor;
 		var reflectorRotor = this._reflectorRotors[this.getOptionValue('reflector')];
 
-		// initial position of the rotors
+		// set the rotor's initial position
 		leftRotor.setPosition(parseInt(this.getOptionValue('left-position')));
 		middleRotor.setPosition(parseInt(this.getOptionValue('middle-position')));
 		rightRotor.setPosition(parseInt(this.getOptionValue('right-position')));
@@ -253,7 +252,6 @@
 				rightRotor.increment();
 
 				// send index through each rotor
-				index = entryRotor.map(index, false);
 
 				// forward, from right to left
 				index = rightRotor.map(index, false);
@@ -267,8 +265,6 @@
 				index = leftRotor.map(index, true);
 				index = middleRotor.map(index, true);
 				index = rightRotor.map(index, true);
-
-				index = entryRotor.map(index, true);
 
 				// convert index back to decimal ascii value
 				decimal = index + 65;
@@ -293,9 +289,10 @@
 	// rotor
 	//
 
-	Rotor.init = function(label, wiring, notches)
+	Rotor.init = function(label, description, wiring, notches)
 	{
 		this._label = label;
+		this._description = description;
 		this._position = 0;
 
 		// ring setting (Ringstellung)
@@ -329,6 +326,11 @@
 	Rotor.getLabel = function()
 	{
 		return this._label;
+	};
+
+	Rotor.getDescription = function()
+	{
+		return this._description;
 	};
 
 	Rotor.map = function(index, reversed)

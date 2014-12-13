@@ -22,12 +22,9 @@
 			label: 'Variant',
 			value: 'rot13',
 			optional: false,
-			choices: {
-				'rot5': 'ROT5 (0-9)',
-				'rot13': 'ROT13 (a-z, A-Z)',
-				'rot5+rot13': 'ROT5+ROT13 (0-9, a-z, A-Z)',
-				'rot47': 'ROT47 (!-~)'
-			}
+			choices: ['rot5', 'rot13', 'rot5+rot13', 'rot47'],
+			labels: ['ROT5', 'ROT13', 'ROT5+ROT13', 'ROT47'],
+			descriptions: ['0-9', 'a-z, A-Z', '0-9, a-z, A-Z', '!-~']
 		}));
 	};
 	
