@@ -237,21 +237,20 @@
 
 			if (index !== null)
 			{
-				// the right rotor is incremented
-				//  before each character is encoded
-				rightRotor.increment();
-
-				// notches inside the right rotor
-				//  cause the middle rotor to increment
-				if (rightRotor.hasPassedNotch()) {
+				// handle rotor notches
+				if (middleRotor.isAtNotch())
+				{
+					middleRotor.increment();
+					leftRotor.increment();
+				}
+				else if (rightRotor.isAtNotch())
+				{
 					middleRotor.increment();
 				}
 
-				// notches inside the middle rotor
-				//  cause the left rotor to increment
-				if (middleRotor.hasPassedNotch()) {
-					leftRotor.increment();
-				}
+				// the right rotor is incremented
+				//  before each character is encoded
+				rightRotor.increment();
 
 				// send index through each rotor
 				index = entryRotor.map(index, false);
@@ -317,7 +316,6 @@
 
 		// notches (Übertragskerben)
 		this._notches = [];
-		this._hasPassedNotch = false;
 
 		if (notches !== null && notches !== undefined)
 		{
@@ -353,18 +351,15 @@
 		return index;
 	};
 
-	Rotor.increment = function()
-	{
-		// check if there is a notch at the current position
-		this._hasPassedNotch = (this._notches.indexOf(this._position) !== -1);
-
-		// increment position
-		this._position = (this._position + 1) % 26;
-	};
-
 	Rotor.getPosition = function()
 	{
 		return this._position;
+	};
+
+	Rotor.increment = function()
+	{
+		// increment position
+		this.setPosition((this._position + 1) % 26);
 	};
 
 	Rotor.setPosition = function(position)
@@ -372,11 +367,9 @@
 		this._position = position;
 	};
 
-	Rotor.hasPassedNotch = function()
+	Rotor.isAtNotch = function()
 	{
-		var cache = this._hasPassedNotch;
-		this._hasPassedNotch = false;
-		return cache;
+		return (this._notches.indexOf(this._position) !== -1);
 	};
 
 })(Cryptii, jQuery);
