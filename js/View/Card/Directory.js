@@ -19,6 +19,8 @@
 
 		// elements
 		this._$directory = null;
+
+		this._title = 'Directory';
 	};
 
 
@@ -27,7 +29,7 @@
 		return CardView._buildHeader.apply(this)
 			.append(
 				$('<h2></h2>')
-					.text('Directory')
+					.text(this._title)
 			);
 	};
 

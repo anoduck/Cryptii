@@ -1,7 +1,7 @@
 
 var Cryptii = Cryptii || {};
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -39,4 +39,4 @@ var Cryptii = Cryptii || {};
 		return this._blocks;
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

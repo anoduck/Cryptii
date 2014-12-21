@@ -19,6 +19,8 @@
 
 		// attributes
 		this._deckView = null;
+
+		this._title = null;
 	};
 
 	CardView._build = function()
@@ -158,6 +160,15 @@
 	CardView.onClose = function()
 	{
 		this.delegate('onCardViewClose');
+	};
+
+	//
+	// accessors
+	//
+
+	CardView.getTitle = function()
+	{
+		return this._title;
 	};
 
 })(Cryptii, jQuery);

@@ -1,7 +1,7 @@
 
 var Cryptii = Cryptii || {};
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -29,7 +29,7 @@ var Cryptii = Cryptii || {};
 		this._applicationView.getDeckView().addDelegate(this);
 	};
 
-	Conversation.addFormat = function(format)
+	Conversation.addFormat = function(format, userInteraction)
 	{
 		if (
 			// check if this is a valid format
@@ -53,7 +53,7 @@ var Cryptii = Cryptii || {};
 			cardView.addDelegate(this);
 
 			// add card to deck
-			this._applicationView.getDeckView().addCardView(cardView);
+			this._applicationView.getDeckView().addCardView(cardView, userInteraction);
 		}
 	};
 
@@ -183,4 +183,4 @@ var Cryptii = Cryptii || {};
 		this._defaultSource = defaultSource;
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

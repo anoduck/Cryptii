@@ -45,15 +45,11 @@
 				.append(
 					$('<button></button>')
 						.addClass('hamburger')
-						.click(function() {
-							this.toggleSide();
-						}.bind(this)),
+						.click(this.onHamburgerClick.bind(this)),
 					this.getDeckView().getElement(),
 					$('<div></div>')
 						.addClass('overlay')
-						.click(function() {
-							this.toggleSide();
-						}.bind(this))
+						.click(this.onOverlayClick.bind(this))
 				);
 
 		// populate element
@@ -114,7 +110,15 @@
 	// delegates
 	//
 
-	ApplicationView.onSideViewClose = function(Format)
+	ApplicationView.onHamburgerClick = function()
+	{
+		this.toggleSide();
+
+		// track event
+		Cryptii.Analytics.trackEvent('Application', 'Hamburger', 'click');
+	};
+
+	ApplicationView.onOverlayClick = function()
 	{
 		this.toggleSide();
 	};

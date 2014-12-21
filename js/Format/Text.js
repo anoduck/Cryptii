@@ -1,7 +1,7 @@
 
 // requires Cryptii.Format
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -351,4 +351,4 @@
 		this.setContent(content);
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

@@ -182,7 +182,7 @@
 		this._distributeCardView(this._cardViews, false);
 	};
 
-	DeckView.addCardView = function(cardView)
+	DeckView.addCardView = function(cardView, userInteraction)
 	{
 		if (cardView instanceof Cryptii.CardView)
 		{
@@ -191,6 +191,10 @@
 
 			this._cardViews.push(cardView);
 			this._distributeCardView(cardView, true);
+
+			// track event
+			Cryptii.Analytics.trackEvent(
+				'Card', cardView.getTitle(), 'open', null, userInteraction);
 		}
 	};
 
@@ -210,6 +214,10 @@
 
 			// layout
 			this.layout();
+
+			// track event
+			Cryptii.Analytics.trackEvent(
+				'Card', cardView.getTitle(), 'close');
 		}
 	};
 

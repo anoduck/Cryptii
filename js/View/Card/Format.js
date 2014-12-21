@@ -19,6 +19,7 @@
 		
 		// attributes
 		this._format = format;
+		this._title = format.getName();
 
 		this._$options = null;
 		this._$optionBarButton = null;
@@ -53,7 +54,7 @@
 			.append(
 				$('<h2></h2>')
 					.addClass('format')
-					.text(this._format.getName())
+					.text(this._title)
 			);
 	};
 
@@ -136,6 +137,10 @@
 	FormatCardView.onOptionBarButtonClick = function(evt)
 	{
 		this.toggleOptionalsHidden();
+
+		// track event
+		Cryptii.Analytics.trackEvent(
+			'Format', this._format.getName(), 'toggle options');
 	};
 
 	//

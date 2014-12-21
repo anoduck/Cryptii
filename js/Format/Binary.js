@@ -1,7 +1,7 @@
 
 // requires Cryptii.DecimalFormat
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -51,4 +51,4 @@
 		return null;
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

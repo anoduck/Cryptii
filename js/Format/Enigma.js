@@ -1,7 +1,7 @@
 
 // requires Cryptii.Format
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -374,4 +374,4 @@
 		return (this._notches.indexOf(this._position) !== -1);
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

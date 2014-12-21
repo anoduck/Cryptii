@@ -1,7 +1,7 @@
 
 // requires Cryptii.TextFormat
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -75,4 +75,4 @@
 		return null;
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

@@ -1,7 +1,7 @@
 
 var Cryptii = Cryptii || {};
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -53,7 +53,7 @@ var Cryptii = Cryptii || {};
 
 		// add directory card
 		this._applicationView.getDeckView().addCardView(
-			this._directory.getCardView());
+			this._directory.getCardView(), false);
 
 		// attributes
 		this._tickTimer = null;
@@ -72,8 +72,8 @@ var Cryptii = Cryptii || {};
 		}
 
 		// add example cards
-		this._conversation.addFormat(new Cryptii.TextFormat());
-		this._conversation.addFormat(new Cryptii.DecimalFormat());
+		this._conversation.addFormat(new Cryptii.TextFormat(), false);
+		this._conversation.addFormat(new Cryptii.DecimalFormat(), false);
 	};
 
 	
@@ -117,7 +117,7 @@ var Cryptii = Cryptii || {};
 	{
 		// create new instance of format
 		var instance = new Format();
-		this._conversation.addFormat(instance);
+		this._conversation.addFormat(instance, true);
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);

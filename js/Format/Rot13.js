@@ -1,7 +1,7 @@
 
 // requires Cryptii.TextFormat
 
-(function(Cryptii, $) {
+(function(Cryptii) {
 	'use strict';
 
 	// define class
@@ -114,4 +114,4 @@
 		return decimal;
 	};
 
-})(Cryptii, jQuery);
+})(Cryptii);
