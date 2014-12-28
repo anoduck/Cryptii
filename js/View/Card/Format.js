@@ -100,11 +100,11 @@
 
 	};
 
-	FormatCardView.tick = function()
+	FormatCardView.tick = function(index)
 	{
 		// forward tick to embedded option views
 		for (var name in this._options) {
-			this._options[name].getOptionView().tick();
+			this._options[name].getOptionView().tick(index);
 		}
 	};
 

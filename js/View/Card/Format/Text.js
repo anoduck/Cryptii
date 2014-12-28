@@ -48,13 +48,13 @@
 		this.getComposerView().focus();
 	};
 
-	TextFormatCardView.tick = function()
+	TextFormatCardView.tick = function(index)
 	{
 		// call parent
-		FormatCardView.tick.apply(this, arguments);
+		FormatCardView.tick.call(this, index);
 
 		// forward to composer view
-		this.getComposerView().tick();
+		this.getComposerView().tick(index);
 	};
 
 	//

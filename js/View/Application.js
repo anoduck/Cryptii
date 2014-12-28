@@ -87,16 +87,16 @@
 		}
 	};
 
-	ApplicationView.tick = function()
+	ApplicationView.tick = function(index)
 	{
 		// forward to deck view
 		if (this._deckView !== null) {
-			this._deckView.tick();
+			this._deckView.tick(index);
 		}
 
 		// forward to side view
 		if (this._sideView !== null) {
-			this._sideView.tick();
+			this._sideView.tick(index);
 		}
 	};
 

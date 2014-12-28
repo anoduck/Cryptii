@@ -111,7 +111,7 @@
 		}.bind(this), 100);
 	};
 
-	LogoView.tick = function()
+	LogoView.tick = function(index)
 	{
 		if (Math.random() < this._glitchProbability) {
 			this.animateGlitch();

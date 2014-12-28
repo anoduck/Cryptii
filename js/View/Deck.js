@@ -282,12 +282,11 @@
 		return cardView;
 	};
 
-	DeckView.tick = function()
+	DeckView.tick = function(index)
 	{
 		// distribute tick to cards
-		for (var i = 0; i < this._cardViews.length; i ++)
-		{
-			this._cardViews[i].tick();
+		for (var i = 0; i < this._cardViews.length; i ++) {
+			this._cardViews[i].tick(index);
 		}
 	};
 

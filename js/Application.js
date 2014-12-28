@@ -56,7 +56,10 @@ var Cryptii = Cryptii || {};
 			this._directory.getCardView(), false);
 
 		// attributes
+		this._tickTimerInterval = 2000;
+		this._analyticsPingInterval = 10000;
 		this._tickTimer = null;
+		this._tickIndex = 0;
 
 		// finalize initialization
 		this._applicationView.focus();
@@ -85,7 +88,7 @@ var Cryptii = Cryptii || {};
 			{
 				// enable timer
 				this._tickTimer = setInterval(
-					this.tick.bind(this), 1000);
+					this.tick.bind(this), this._tickTimerInterval);
 			}
 			else
 			{
@@ -99,7 +102,15 @@ var Cryptii = Cryptii || {};
 	Application.tick = function()
 	{
 		// forward tick to application view
-		this._applicationView.tick();
+		this._applicationView.tick(this._tickIndex);
+
+		// send a ping event to enhance session duration and bounce rate tracking
+		if (this._tickIndex % parseInt(this._analyticsPingInterval / this._tickTimerInterval) == 0) {
+			Cryptii.Analytics.trackEvent('Application', 'Application', 'ping');
+		}
+
+		// increment tick index
+		this._tickIndex ++;
 	};
 
 	//

@@ -52,14 +52,14 @@
 		return $element;
 	};
 
-	SideView.tick = function()
+	SideView.tick = function(index)
 	{
 		// only handle ticks when visible
 		if (!this._hidden)
 		{
 			// forward tick to logo view
 			if (this._logoView !== null) {
-				this._logoView.tick();
+				this._logoView.tick(index);
 			}
 		}
 	};

@@ -140,7 +140,7 @@
 
 	};
 
-	CardView.tick = function()
+	CardView.tick = function(index)
 	{
 		// gets called regularly by a timer inside the deck
 		//  to check for changes inside the view (e.g. textarea)
