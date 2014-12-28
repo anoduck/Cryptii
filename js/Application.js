@@ -57,7 +57,7 @@ var Cryptii = Cryptii || {};
 
 		// attributes
 		this._tickTimerInterval = 2000;
-		this._analyticsPingInterval = 10000;
+		this._analyticsPingInterval = 30000;
 		this._tickTimer = null;
 		this._tickIndex = 0;
 
